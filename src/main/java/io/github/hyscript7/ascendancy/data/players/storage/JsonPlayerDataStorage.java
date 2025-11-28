@@ -87,6 +87,12 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         JsonObject json = new JsonObject();
 
         json.addProperty("uuid", data.getUuid().toString());
+        json.addProperty("maxLives", data.getMaxLives());
+        json.addProperty("lives", data.getLives());
+        json.addProperty("dead", data.isDead());
+        json.addProperty("pvpDeaths", data.getPvpDeaths());
+        json.addProperty("pveDeaths", data.getPveDeaths());
+        json.addProperty("pvpKills", data.getPvpKills());
         json.addProperty("trueName", data.getTrueName());
         json.addProperty("firstSeenTimestamp", data.getFirstSeenTimestamp());
         json.addProperty("lastSeenTimestamp", data.getLastSeenTimestamp());
@@ -97,6 +103,30 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
     private PlayerData deserialize(JsonObject json) {
         UUID uuid = UUID.fromString(json.get("uuid").getAsString());
         PlayerData data = new PlayerData(uuid);
+
+        if (json.has("maxLives")) {
+            data.setMaxLives(json.get("maxLives").getAsInt());
+        }
+
+        if (json.has("lives")) {
+            data.setLives(json.get("lives").getAsInt());
+        }
+
+        if (json.has("dead")) {
+            data.setDead(json.get("dead").getAsBoolean());
+        }
+
+        if (json.has("pvpDeaths")) {
+            data.setPvpDeaths(json.get("pvpDeaths").getAsInt());
+        }
+
+        if (json.has("pveDeaths")) {
+            data.setPveDeaths(json.get("pveDeaths").getAsInt());
+        }
+
+        if (json.has("pvpKills")) {
+            data.setPvpKills(json.get("pvpKills").getAsInt());
+        }
 
         if (json.has("trueName")) {
             data.setTrueName(json.get("trueName").getAsString());
