@@ -18,6 +18,9 @@ public class GetOwnName extends AbstractInnateCommand {
     @Override
     public boolean execute(InnateContext context) {
         String trueName = TrueNameManager.getInstance().getTrueName(context.target().getUniqueId());
+        if (trueName == null) {
+            return false;
+        }
         // TODO: Format message
         context.invoker().sendMessage(Component.text("Your innate name is ").append(Component.text(trueName).style(Style.style(TextDecoration.BOLD).color(TextColor.color(0x1eacc8)))));
         return true;
