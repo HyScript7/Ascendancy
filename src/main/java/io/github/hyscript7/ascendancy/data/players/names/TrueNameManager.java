@@ -1,8 +1,8 @@
-package io.github.hyscript7.ascendancy.data.truenames;
+package io.github.hyscript7.ascendancy.data.players.names;
 
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.NotInitializedException;
-import io.github.hyscript7.ascendancy.data.PlayerData;
+import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 

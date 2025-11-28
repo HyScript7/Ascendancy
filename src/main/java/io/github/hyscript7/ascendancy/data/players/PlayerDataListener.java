@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.players;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import net.kyori.adventure.text.Component;

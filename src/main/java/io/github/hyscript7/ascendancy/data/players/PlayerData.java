@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.players;
 
 import lombok.Getter;
 

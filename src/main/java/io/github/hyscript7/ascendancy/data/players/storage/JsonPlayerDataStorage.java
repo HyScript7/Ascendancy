@@ -1,9 +1,10 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.players.storage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
+import io.github.hyscript7.ascendancy.data.players.PlayerData;
 
 import java.io.*;
 import java.nio.file.Files;

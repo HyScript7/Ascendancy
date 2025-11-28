@@ -1,4 +1,6 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.players.storage;
+
+import io.github.hyscript7.ascendancy.data.players.PlayerData;
 
 import java.io.IOException;
 import java.util.List;

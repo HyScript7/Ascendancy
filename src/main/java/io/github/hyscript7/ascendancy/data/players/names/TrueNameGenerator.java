@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.data.truenames;
+package io.github.hyscript7.ascendancy.data.players.names;
 
 import java.util.*;
 import java.util.function.Supplier;

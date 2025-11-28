@@ -1,9 +1,9 @@
 package io.github.hyscript7.ascendancy;
 
-import io.github.hyscript7.ascendancy.data.JsonPlayerDataStorage;
-import io.github.hyscript7.ascendancy.data.PlayerDataManager;
-import io.github.hyscript7.ascendancy.data.PlayerDataStorage;
-import io.github.hyscript7.ascendancy.data.truenames.TrueNameManager;
+import io.github.hyscript7.ascendancy.data.players.storage.JsonPlayerDataStorage;
+import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
+import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
+import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class AscendancyPlugin extends JavaPlugin {

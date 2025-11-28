@@ -1,8 +1,9 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.players;
 
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.NotInitializedException;
-import io.github.hyscript7.ascendancy.data.truenames.TrueNameManager;
+import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
+import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
