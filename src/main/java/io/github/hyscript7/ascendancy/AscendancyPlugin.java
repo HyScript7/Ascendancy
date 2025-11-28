@@ -16,7 +16,7 @@ public final class AscendancyPlugin extends JavaPlugin {
 
         saveDefaultConfig();
 
-        PlayerDataStorage playerStorage = new JsonPlayerDataStorage(getDataFolder());
+        PlayerDataStorage playerStorage = new JsonPlayerDataStorage(this);
 
         PlayerDataManager.initialize(this, playerStorage);
         getLogger().info("Player data system initialized");

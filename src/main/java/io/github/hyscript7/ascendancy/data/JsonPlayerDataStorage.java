@@ -3,6 +3,7 @@ package io.github.hyscript7.ascendancy.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.github.hyscript7.ascendancy.AscendancyPlugin;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,8 +13,11 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
     private final File dataFolder;
     private final Gson gson;
 
-    public JsonPlayerDataStorage(File dataFolder) {
-        this.dataFolder = dataFolder;
+    public JsonPlayerDataStorage(AscendancyPlugin plugin) {
+        this.dataFolder = new File(plugin.getDataFolder(), "playerdata");
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
         this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
