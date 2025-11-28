@@ -25,7 +25,7 @@ public class GetOwnName extends AbstractInnateCommand {
 
     @Override
     public boolean matchesMessage(String message) {
-        return InnateUtils.unifyInnateCommand(message).equalsIgnoreCase("I wish to know my name") || message.equalsIgnoreCase("I desire my name") || message.equalsIgnoreCase("I recall my name");
+        return InnateUtils.unifyInnateCommand(InnateUtils.removeNonAlpha(message)).equalsIgnoreCase("I wish to know my name") || message.equalsIgnoreCase("I desire my name") || message.equalsIgnoreCase("I recall my name");
     }
 
     @Override

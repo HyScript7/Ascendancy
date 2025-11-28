@@ -16,7 +16,7 @@ public class InnateUtils {
      * @return The unified message
      */
     public static String unifyInnateCommand(String message) {
-        return removeNonAlpha(message).replace("want", "wish");
+        return message.replace("want", "wish");
     }
 
     /**
@@ -26,6 +26,14 @@ public class InnateUtils {
      */
     public static String removeNonAlpha(String message) {
         return message.replaceAll("[^a-zA-Z0-9 ]", "");
+    }
+
+    /**
+     *
+     */
+    public static String removeNonAlpha(String message, boolean allowSeparators) {
+        if (!allowSeparators) return removeNonAlpha(message);
+        return message.replaceAll("[^a-zA-Z0-9_ ]", "");
     }
 
     /**
