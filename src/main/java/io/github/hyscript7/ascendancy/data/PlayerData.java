@@ -9,6 +9,8 @@ public class PlayerData {
     private final UUID uuid;
     private boolean dirty;
 
+    private String trueName;
+
     private long firstSeenTimestamp;
     private long lastSeenTimestamp;
 
@@ -23,6 +25,11 @@ public class PlayerData {
 
     public void markClean() {
         this.dirty = false;
+    }
+
+    public void setTrueName(String trueName) {
+        markDirty();
+        this.trueName = trueName;
     }
 
     public void setFirstSeenTimestamp(long timestamp) {
