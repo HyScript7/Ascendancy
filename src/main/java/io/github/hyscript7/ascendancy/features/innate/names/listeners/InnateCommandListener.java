@@ -4,6 +4,7 @@ import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateContext;
+import io.github.hyscript7.ascendancy.features.innate.names.InnateNameHiderRender;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateUtils;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -21,8 +22,11 @@ import java.util.logging.Level;
 
 public class InnateCommandListener implements Listener {
 
+    private static final InnateNameHiderRender renderer = new InnateNameHiderRender();
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onChatted(AsyncChatEvent event) {
+        event.renderer(renderer);
         Player invoker = event.getPlayer();
         String message = ((TextComponent) event.message()).content();
 
@@ -40,6 +44,9 @@ public class InnateCommandListener implements Listener {
             target = invoker;
         } else {
             String targetName = InnateUtils.parseInnateNameAtSentenceBeginning(message);
+            if (targetName == null) {
+                return;
+            }
             UUID targetUuid = TrueNameManager.getInstance().findTrueNameOwner(targetName);
             if (targetUuid == null) {
                 return;
