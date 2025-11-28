@@ -1,6 +1,7 @@
 package io.github.hyscript7.ascendancy.data;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public interface PlayerDataStorage {
@@ -11,4 +12,6 @@ public interface PlayerDataStorage {
     boolean exists(UUID uuid);
 
     void delete(UUID uuid) throws IOException;
+
+    List<PlayerData> loadAll() throws IOException;
 }

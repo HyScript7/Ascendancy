@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -265,6 +266,18 @@ public class PlayerDataManager {
      */
     public Collection<PlayerData> getAllCachedData() {
         return Collections.unmodifiableCollection(cache.values());
+    }
+
+    /**
+     * Returns an unmodifiable collection of all player data.
+     * @return An unmodifiable collection containing all PlayerData from the storage.
+     */
+    public Collection<PlayerData> getAllData() {
+        try {
+            return Collections.unmodifiableCollection(storage.loadAll());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

@@ -7,7 +7,8 @@ import io.github.hyscript7.ascendancy.AscendancyPlugin;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.UUID;
+import java.util.*;
+import java.util.logging.Level;
 
 public class JsonPlayerDataStorage implements PlayerDataStorage {
     private final File dataFolder;
@@ -56,6 +57,25 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         if (file.exists()) {
             Files.delete(file.toPath());
         }
+    }
+
+    @Override
+    public List<PlayerData> loadAll() {
+        var files = dataFolder.listFiles();
+        if (files == null) {
+            AscendancyPlugin.getInstance().getLogger().log(Level.WARNING, "List files on player data returned null, is the player data path correctly pointing to a directory?");
+            return Collections.emptyList();
+        }
+        return Arrays.stream(files).map(
+                file -> {
+                    try (Reader reader = new FileReader(file)) {
+                        JsonObject json = gson.fromJson(reader, JsonObject.class);
+                        return deserialize(json);
+                    } catch (IOException e) {
+                        return null;
+                    }
+                }
+        ).filter(Objects::nonNull).toList();
     }
 
     private File getPlayerFile(UUID uuid) {
