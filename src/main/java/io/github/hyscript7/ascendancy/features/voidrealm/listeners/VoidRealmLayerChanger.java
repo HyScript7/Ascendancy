@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.voidrealm.listeners;
 
+import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -21,6 +22,12 @@ import java.util.Optional;
  * Handles changing layers & entering the void realm
  */
 public class VoidRealmLayerChanger implements Listener {
+
+    private final double escapeThresholdPercentage;
+
+    public VoidRealmLayerChanger() {
+        escapeThresholdPercentage = 1.0d + AscendancyConfig.getInstance().getVoidRealm().escapeHeightOvershootPercentage() / 100.0d;
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVoidDamage(EntityDamageEvent event) {
@@ -59,7 +66,7 @@ public class VoidRealmLayerChanger implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         VoidRealmLayer layer = VoidRealmLayer.fromWorld(event.getPlayer().getWorld());
         if (layer != null) {
-            if (event.getPlayer().getLocation().getY() < layer.getWorld().getLogicalHeight() * 1.1) {
+            if (event.getPlayer().getLocation().getY() < layer.getWorld().getLogicalHeight() * escapeThresholdPercentage) {
                 return;
             }
             switch (layer) {
