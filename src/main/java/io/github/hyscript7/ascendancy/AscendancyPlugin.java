@@ -3,6 +3,7 @@ package io.github.hyscript7.ascendancy;
 import io.github.hyscript7.ascendancy.data.JsonPlayerDataStorage;
 import io.github.hyscript7.ascendancy.data.PlayerDataManager;
 import io.github.hyscript7.ascendancy.data.PlayerDataStorage;
+import io.github.hyscript7.ascendancy.data.truenames.TrueNameManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class AscendancyPlugin extends JavaPlugin {
@@ -19,7 +20,13 @@ public final class AscendancyPlugin extends JavaPlugin {
         PlayerDataStorage playerStorage = new JsonPlayerDataStorage(this);
 
         PlayerDataManager.initialize(this, playerStorage);
+        TrueNameManager.initialize(this);
         getLogger().info("Player data system initialized");
+
+        TrueNameManager.getInstance().indexAllTrueNames(
+                PlayerDataManager.getInstance().getAllData()
+        );
+        getLogger().info("True Names indexed successfully");
 
         getLogger().info("Plugin enabled successfully!");
     }

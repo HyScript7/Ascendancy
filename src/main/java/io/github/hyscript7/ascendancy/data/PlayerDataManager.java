@@ -2,6 +2,7 @@ package io.github.hyscript7.ascendancy.data;
 
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.NotInitializedException;
+import io.github.hyscript7.ascendancy.data.truenames.TrueNameManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -71,6 +72,17 @@ public class PlayerDataManager {
                 // If no data exists, create new
                 if (data == null) {
                     data = createNewPlayerData(uuid);
+                } else {
+                    // Register existing true name
+                    if (data.getTrueName() != null) {
+                        TrueNameManager.getInstance()
+                                .registerTrueName(uuid, data.getTrueName());
+                    } else {
+                        // Handle legacy data without true name
+                        String trueName = TrueNameManager.getInstance()
+                                .generateAndRegisterTrueName(uuid);
+                        data.setTrueName(trueName);
+                    }
                 }
 
                 // Cache it
@@ -195,7 +207,10 @@ public class PlayerDataManager {
      * @return A completable future which doesn't return anything
      */
     public CompletableFuture<Void> unloadPlayerData(UUID uuid) {
-        return savePlayerData(uuid).thenRun(() -> cache.remove(uuid));
+        return savePlayerData(uuid).thenRun(() -> {
+            TrueNameManager.getInstance().unregisterTrueName(uuid);
+            cache.remove(uuid);
+        });
     }
 
     /**
@@ -207,10 +222,15 @@ public class PlayerDataManager {
     private PlayerData createNewPlayerData(UUID uuid) {
         PlayerData data = new PlayerData(uuid);
 
-        // TODO: Generate and set true name
-        data.setFirstSeenTimestamp(); // Defaults to now
+        // Generate true name using TrueNameManager
+        String trueName = TrueNameManager.getInstance()
+                .generateAndRegisterTrueName(uuid);
+        data.setTrueName(trueName);
 
-        plugin.getLogger().info("Created new player data for " + uuid + " with true name: " + "TODO");// + trueName);
+        data.setFirstSeenTimestamp();
+
+        plugin.getLogger().info("Created new player data for " + uuid
+                + " with true name: " + trueName);
 
         return data;
     }
@@ -256,6 +276,9 @@ public class PlayerDataManager {
         for (UUID uuid : cache.keySet()) {
             savePlayerDataSync(uuid);
         }
+
+        // Clear true name cache
+        TrueNameManager.getInstance().clearCache();
 
         plugin.getLogger().info("Player data saved successfully");
     }
