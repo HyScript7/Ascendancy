@@ -87,6 +87,7 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         JsonObject json = new JsonObject();
 
         json.addProperty("uuid", data.getUuid().toString());
+        json.addProperty("trueName", data.getTrueName());
         json.addProperty("firstSeenTimestamp", data.getFirstSeenTimestamp());
         json.addProperty("lastSeenTimestamp", data.getLastSeenTimestamp());
 
@@ -96,6 +97,10 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
     private PlayerData deserialize(JsonObject json) {
         UUID uuid = UUID.fromString(json.get("uuid").getAsString());
         PlayerData data = new PlayerData(uuid);
+
+        if (json.has("trueName")) {
+            data.setTrueName(json.get("trueName").getAsString());
+        }
 
         if (json.has("firstSeenTimestamp")) {
             data.setFirstSeenTimestamp(json.get("firstSeenTimestamp").getAsLong());
