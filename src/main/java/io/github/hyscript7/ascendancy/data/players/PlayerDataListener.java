@@ -2,7 +2,10 @@ package io.github.hyscript7.ascendancy.data.players;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,7 +60,11 @@ public class PlayerDataListener implements Listener {
         // If the player is new, disclose their true name to them
         // firstSeenTimestamp is set by the data manager when it creates a new instance of Player Data.
         if (!player.hasPlayedBefore()) {
-            // TODO
+            // TODO: Format
+            player.sendMessage(Component.text("Welcome to the Server!")
+                    .append(Component.text("\nYour true name is "))
+                    .append(Component.text(data.getTrueName())
+                            .style(Style.style(TextDecoration.BOLD).color(TextColor.color(0x1eacc8)))));
         }
 
         data.updateLastSeenTimestamp();
