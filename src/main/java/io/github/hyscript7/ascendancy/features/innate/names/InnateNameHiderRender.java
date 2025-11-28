@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.innate.names;
 
+import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.papermc.paper.chat.ChatRenderer;
 import net.kyori.adventure.audience.Audience;
@@ -10,17 +11,16 @@ import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public class InnateNameHiderRender implements ChatRenderer {
-    // TODO: Load from config
-    private Optional<String> honeypotName = Optional.empty();
+    private final String honeypotName = AscendancyConfig.getInstance().getInnateNames().honeypot().name();
+    private final boolean honeypotEnabled = AscendancyConfig.getInstance().getInnateNames().honeypot().enabled();
 
     public Component obfuscateName(String originalName) {
-
-        String display = honeypotName.orElse("*".repeat(originalName.length()));
+        String display = honeypotEnabled ? honeypotName : "*".repeat(originalName.length());
 
         Component base = Component.text(display)
                 .style(Style.style(TextDecoration.OBFUSCATED));
@@ -35,17 +35,14 @@ public class InnateNameHiderRender implements ChatRenderer {
     }
 
     @Override
-    public Component render(Player source, Component sourceDisplayName, Component message, Audience viewer) {
-
-        String honeypot = honeypotName.orElse(null);
-
+    public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         String content = (message instanceof TextComponent tc)
                 ? tc.content()
                 : "";
 
         // Honeypot check
-        if (honeypot != null &&
-                content.toLowerCase().contains(honeypot.toLowerCase())) {
+        if (honeypotEnabled &&
+                content.toLowerCase().contains(honeypotName.toLowerCase())) {
 
             return Component.translatable(
                     "chat.type.text",
