@@ -4,6 +4,7 @@ import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.commands.other.Bestow;
 import io.github.hyscript7.ascendancy.features.innate.names.commands.self.GetOwnName;
+import io.github.hyscript7.ascendancy.features.rituals.Ritual;
 import lombok.Getter;
 
 /**
@@ -14,12 +15,14 @@ public class RegistryManager {
     private static RegistryManager instance;
 
     private final Registry<InnateCommand> innateCommandRegistry;
+    private final Registry<Ritual> ritualRegistry;
 
     private boolean initialized;
 
     private RegistryManager() {
         this.initialized = false;
         this.innateCommandRegistry = new Registry<>("InnateCommands");
+        this.ritualRegistry = new Registry<>("Rituals");
     }
 
     public static RegistryManager getInstance() {
@@ -36,6 +39,7 @@ public class RegistryManager {
 
         // Add all instances
         registerInnateCommands();
+        registerRituals();
 
         // Lock all registries
 
@@ -46,5 +50,9 @@ public class RegistryManager {
         innateCommandRegistry.register(new GetOwnName());
         innateCommandRegistry.register(new Bestow());
         // TODO: Add commands
+    }
+
+    private void registerRituals() {
+        // TODO: Add rituals
     }
 }
