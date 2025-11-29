@@ -22,11 +22,8 @@ import java.util.logging.Level;
 
 public class InnateCommandListener implements Listener {
 
-    private static final InnateNameHiderRender renderer = new InnateNameHiderRender();
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onChatted(AsyncChatEvent event) {
-        event.renderer(renderer);
         Player invoker = event.getPlayer();
         String message = ((TextComponent) event.message()).content();
 
