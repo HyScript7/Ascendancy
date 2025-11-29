@@ -1,1 +1,34 @@
-# fuck me i guess
+innate_names:
+  honeypot:
+    # Should the obfuscated innate names, instead of being replaced with stars, be replaced with a predefined name?
+    # Players attempting to use this name in dissonant commands will be publicly humiliated.
+    enabled: false
+    name: Obscuron
+void_ban:
+  # What is the maximum cap on lives?
+  default_max_lives: 10
+  # How many lives does a new player begin with?
+  starting_lives: 10
+  # How many lives is the player reset to when they resurrect?
+  resurrection_lives: 10
+  # How many lives is the player reset to when they are revived?
+  revive_lives: 10
+  # Should PvE deaths take away lives?
+  pve_enabled: false
+void_realm:
+  # How many % above the maximum world height does a player have to be to "climb" up to the next layer?
+  escape_height_overshoot_percentage: 10
+  strain:
+    # Should being in complete darkness while in the Void Realm inflict debuffs?
+    enabled: true
+    # Whether the strain should target dead players
+    target_dead: true
+    # Whether the strain should target living players
+    target_living: true
+    # Whether the strain should target mobs that fell into the void
+    target_non_players: false
+  # What restrictions should be imposed upon void banned players?
+  dead_player_restrictions:
+    no_build: true
+    no_break: true
+    no_interact: false
