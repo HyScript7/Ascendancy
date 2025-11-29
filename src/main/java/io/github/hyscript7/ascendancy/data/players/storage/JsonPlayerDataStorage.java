@@ -1,8 +1,6 @@
 package io.github.hyscript7.ascendancy.data.players.storage;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 
@@ -94,6 +92,13 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         json.addProperty("pveDeaths", data.getPveDeaths());
         json.addProperty("pvpKills", data.getPvpKills());
         json.addProperty("trueName", data.getTrueName());
+
+        JsonArray knownSpells = new JsonArray();
+        for (String spellId : data.getKnownSpells()) {
+            knownSpells.add(spellId);
+        }
+        json.add("knownSpells", knownSpells);
+
         json.addProperty("firstSeenTimestamp", data.getFirstSeenTimestamp());
         json.addProperty("lastSeenTimestamp", data.getLastSeenTimestamp());
 
@@ -130,6 +135,15 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
 
         if (json.has("trueName")) {
             data.setTrueName(json.get("trueName").getAsString());
+        }
+
+        if (json.has("knownSpells")) {
+            Set<String> knownSpellIds = new HashSet<>();
+            JsonArray knownSpells = json.getAsJsonArray("knownSpells");
+            for (JsonElement spellId : knownSpells) {
+                knownSpellIds.add(spellId.getAsString());
+            }
+            data.setKnownSpells(knownSpellIds);
         }
 
         if (json.has("firstSeenTimestamp")) {

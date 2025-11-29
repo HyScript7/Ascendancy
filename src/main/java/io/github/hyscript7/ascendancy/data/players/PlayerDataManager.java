@@ -4,6 +4,7 @@ import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.NotInitializedException;
 import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
+import io.github.hyscript7.ascendancy.features.magic.SpellCooldownManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -210,6 +211,7 @@ public class PlayerDataManager {
     public CompletableFuture<Void> unloadPlayerData(UUID uuid) {
         return savePlayerData(uuid).thenRun(() -> {
             TrueNameManager.getInstance().unregisterTrueName(uuid);
+            SpellCooldownManager.getInstance().queuePlayerRemoval(uuid);
             cache.remove(uuid);
         });
     }

@@ -6,14 +6,21 @@ import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.listeners.InnateCommandListener;
+import io.github.hyscript7.ascendancy.features.magic.listeners.BookCastListener;
+import io.github.hyscript7.ascendancy.features.magic.listeners.SpellIncantationListener;
 import io.github.hyscript7.ascendancy.features.rituals.listeners.RitualCraftingListener;
 import io.github.hyscript7.ascendancy.features.voidrealm.listeners.*;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Random;
+
 public final class AscendancyPlugin extends JavaPlugin {
     private static AscendancyPlugin instance;
+    @Getter
+    private final Random random = new Random();
 
     @Override
     public void onEnable() {
@@ -63,6 +70,8 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmStateListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmEffects(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new RitualCraftingListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new BookCastListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new SpellIncantationListener(), this);
     }
 
     public static AscendancyPlugin getInstance() {

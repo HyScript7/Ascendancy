@@ -5,7 +5,7 @@ import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 public class PlayerData {
@@ -29,6 +29,8 @@ public class PlayerData {
 
     private String trueName;
 
+    private Set<String> knownSpells;
+
     private long firstSeenTimestamp;
     private long lastSeenTimestamp;
 
@@ -44,6 +46,7 @@ public class PlayerData {
         this.pveDeaths = 0;
         this.pvpKills = 0;
         this.trueName = null;
+        this.knownSpells = new HashSet<>();
     }
 
     public void markDirty() {
@@ -112,6 +115,28 @@ public class PlayerData {
     public void setTrueName(String trueName) {
         markDirty();
         this.trueName = trueName;
+    }
+
+    public void setKnownSpells(Set<String> knownSpells) {
+        markDirty();
+        this.knownSpells = knownSpells;
+    }
+
+    public void learnSpells(String ...spells) {
+        markDirty();
+        knownSpells.addAll(Arrays.asList(spells));
+    }
+
+    public boolean knowsSpell(String spell) {
+        return knownSpells.contains(spell);
+    }
+
+    /**
+     * Returns an immutable list of known spells.
+     * @return A list of all learned spells IDs (as in registries)
+     */
+    public Set<String> getKnownSpells() {
+        return Collections.unmodifiableSet(knownSpells);
     }
 
     public void setFirstSeenTimestamp(long timestamp) {

@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.features.innate.names.commands.self;
+package io.github.hyscript7.ascendancy.builtins.innate.commands.self;
 
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.AbstractInnateCommand;
