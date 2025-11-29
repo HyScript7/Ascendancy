@@ -29,6 +29,8 @@ public class PlayerData {
 
     private String trueName;
 
+    private Set<String> knownTrueNames;
+
     private Set<String> knownSpells;
 
     private long firstSeenTimestamp;
@@ -46,6 +48,7 @@ public class PlayerData {
         this.pveDeaths = 0;
         this.pvpKills = 0;
         this.trueName = null;
+        this.knownTrueNames = new HashSet<>();
         this.knownSpells = new HashSet<>();
     }
 
@@ -115,6 +118,24 @@ public class PlayerData {
     public void setTrueName(String trueName) {
         markDirty();
         this.trueName = trueName;
+    }
+
+    public void setKnownTrueNames(Set<String> knownTrueNames) {
+        markDirty();
+        this.knownTrueNames = knownTrueNames;
+    }
+
+    public void learnName(String name) {
+        markDirty();
+        this.trueName = name;
+    }
+
+    public boolean knowsTrueName(String name) {
+        return knownTrueNames.contains(name) || name.equalsIgnoreCase(trueName);
+    }
+
+    public Set<String> getKnownTrueNames() {
+        return Collections.unmodifiableSet(knownTrueNames);
     }
 
     public void setKnownSpells(Set<String> knownSpells) {

@@ -99,6 +99,12 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         }
         json.add("knownSpells", knownSpells);
 
+        JsonArray knownTrueNames = new JsonArray();
+        for (String name : data.getKnownTrueNames()) {
+            knownTrueNames.add(name);
+        }
+        json.add("knownTrueNames", knownTrueNames);
+
         json.addProperty("firstSeenTimestamp", data.getFirstSeenTimestamp());
         json.addProperty("lastSeenTimestamp", data.getLastSeenTimestamp());
 
@@ -144,6 +150,15 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
                 knownSpellIds.add(spellId.getAsString());
             }
             data.setKnownSpells(knownSpellIds);
+        }
+
+        if  (json.has("knownTrueNames")) {
+            Set<String> knownTrueNames = new HashSet<>();
+            JsonArray knownTrueNamesArray = json.getAsJsonArray("knownTrueNames");
+            for (JsonElement name : knownTrueNamesArray) {
+                knownTrueNames.add(name.getAsString());
+            }
+            data.setKnownTrueNames(knownTrueNames);
         }
 
         if (json.has("firstSeenTimestamp")) {

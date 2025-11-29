@@ -1,10 +1,11 @@
 package io.github.hyscript7.ascendancy.features.innate.names.listeners;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
+import io.github.hyscript7.ascendancy.data.players.PlayerData;
+import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateContext;
-import io.github.hyscript7.ascendancy.features.innate.names.InnateNameHiderRender;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateUtils;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -82,13 +83,17 @@ public class InnateCommandListener implements Listener {
     }
 
     private void revealTrueNameToNearbyPlayers(InnateContext context, Player invoker) {
+        PlayerData targetData = PlayerDataManager.getInstance().getPlayerData(context.target());
+        String playerName = context.target().getName();
+        String trueName = targetData.getTrueName();
         Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () ->
                 Bukkit.selectEntities(invoker, "@a[distance=..64]").forEach(entity -> {
                     if (entity instanceof Player player) {
-                        // TODO: Implement
-                        player.sendMessage("You would discover the true name of "
-                                + context.target().getName() +
-                                " if someone bothered to implement it.");
+                        PlayerData playerData = PlayerDataManager.getInstance().getPlayerData(player);
+                        if (playerData.knowsTrueName(trueName)) return;
+                        playerData.learnName(trueName);
+                        // TODO: Format message
+                        player.sendMessage("You have learned " + playerName + "'s innate name: " + trueName);
                     }
                 })
         );
