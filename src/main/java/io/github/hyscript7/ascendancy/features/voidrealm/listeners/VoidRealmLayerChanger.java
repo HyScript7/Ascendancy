@@ -146,6 +146,11 @@ public class VoidRealmLayerChanger implements Listener {
                 // Any -> Reflection is a special case. It always leads to 0, 320, 0 in the Reflection
                 if (entity instanceof Player player) {
                     if (PlayerDataManager.getInstance().getPlayerData(player).isDead()) {
+                        Location location = player.getLocation();
+                        if (location.getY() < location.getWorld().getMinHeight()) {
+                            location.setY(location.getWorld().getMaxHeight());
+                            player.teleport(location);
+                        }
                         return;
                     }
                 }
