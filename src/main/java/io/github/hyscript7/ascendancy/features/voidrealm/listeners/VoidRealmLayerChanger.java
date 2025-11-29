@@ -269,7 +269,7 @@ public class VoidRealmLayerChanger implements Listener {
                 return;
             }
 
-            removeBedrockSphere(player, 3.5);
+            removeBedrockSphere(player, radius);
         }
 
         private void removeBedrockSphere(Player player, double radius) {
