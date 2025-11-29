@@ -1,0 +1,94 @@
+package io.github.hyscript7.ascendancy.data.factions;
+
+import io.github.hyscript7.ascendancy.AlreadyInitializedException;
+import io.github.hyscript7.ascendancy.NotInitializedException;
+import io.github.hyscript7.ascendancy.data.factions.simple.EFactionPermission;
+import io.github.hyscript7.ascendancy.data.factions.simple.Faction;
+import io.github.hyscript7.ascendancy.data.factions.simple.FactionMember;
+import io.github.hyscript7.ascendancy.data.factions.simple.FullFactionMember;
+import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.text.html.Option;
+import java.lang.reflect.Member;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
+
+public class FactionManager {
+    /**
+     * Manages factions
+     */
+
+    // TODO autosave
+// === singleton logic ===
+    private static FactionManager instance;
+
+    public static void initialize() {
+        if (instance != null) {
+            throw new AlreadyInitializedException("PlayerDataManager has already been initialized!");
+        }
+        instance = new FactionManager();
+        //instance.startAutoSave();
+    }
+
+    public static FactionManager getInstance() {
+        if (instance == null) {
+            throw new NotInitializedException("PlayerDataManager hasn't been initialized yet!");
+        }
+        return instance;
+    }
+
+// === faction operations ===
+
+    private ArrayList<Faction> factions = new ArrayList();
+
+    public void createFaction(String factionName, UUID owner) {
+        Faction f = new Faction(factionName);
+        FactionMember m = new FactionMember(owner, EFactionPermission.OWNER);
+        f.getMembers().add(m);
+        factions.add(f);
+    }
+
+    public void addMember(String factionName, UUID member) {
+        Faction f = factions.stream().filter(faction -> faction.getName().equals(factionName)).findFirst().orElse(null);
+        if (f != null) {
+            f.getMembers().add(new FactionMember(member, EFactionPermission.MEMBER));
+        } else {
+            // what happens when you
+        }
+    }
+
+    public void deleteFaction(String factionName) {
+        factions.removeIf(faction -> faction.getName().equals(factionName));
+    }
+
+    public FullFactionMember getFactionMember(UUID member) {
+        for (Faction f : factions) {
+            Optional<FactionMember> fm = f.getMembers().stream().filter(a -> a.getUuid().equals(member)).findFirst();
+            if (fm.isPresent()) {
+                FactionMember fmm = fm.get();
+                return new FullFactionMember(fmm.getUuid(), fmm.getPermission(), f.getName());
+            }
+        }
+        return null;
+    }
+
+    public UUID getFactionOwner(String factionName) {
+        Faction faction = factions.stream().filter(a -> a.getName().equals(factionName)).findFirst().orElse(null);
+        if (faction != null) {
+            Optional<FactionMember> owner = faction.getMembers().stream().filter(a -> a.getPermission().equals(EFactionPermission.OWNER)).findFirst();
+            if (owner.isPresent()) {
+                return owner.get().getUuid();
+            } else {
+                // maybe delete the faction if it somehow doesn't have an owner
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Faction> getFactions() {
+        return factions;
+    }
+}
