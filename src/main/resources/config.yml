@@ -18,6 +18,10 @@ void_ban:
 void_realm:
   # How many % above the maximum world height does a player have to be to "climb" up to the next layer?
   escape_height_overshoot_percentage: 10
+  # How many blocks above the minimal world height can the player go before the bedrock breaker terminates?
+  default_world_height_void_terminator_offset: 10
+  # What radius around the player should bedrock be broken around when leaving the void realm?
+  bedrock_breaker_radius: 3.0
   strain:
     # Should being in complete darkness while in the Void Realm inflict debuffs?
     enabled: true

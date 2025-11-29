@@ -1,5 +1,5 @@
 {
-  "type": "ascendancy:void_world",
+  "type": "ascendancy:void_world_l3",
   "generator": {
     "type": "minecraft:flat",
     "settings": {
