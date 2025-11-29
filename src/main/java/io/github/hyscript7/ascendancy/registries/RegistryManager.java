@@ -5,6 +5,7 @@ import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.commands.other.Bestow;
 import io.github.hyscript7.ascendancy.features.innate.names.commands.self.GetOwnName;
 import io.github.hyscript7.ascendancy.features.rituals.Ritual;
+import io.github.hyscript7.ascendancy.features.rituals.recipes.instant.RitualOfLevitation;
 import lombok.Getter;
 
 /**
@@ -53,6 +54,7 @@ public class RegistryManager {
     }
 
     private void registerRituals() {
+        ritualRegistry.register(new RitualOfLevitation());
         // TODO: Add rituals
     }
 }

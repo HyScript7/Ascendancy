@@ -27,10 +27,12 @@ public interface Ritual extends Identifiable {
      * @param context The ritual context
      * @return True if the ritual succeeded, otherwise false.
      */
-    boolean perform(RitualContext context);
+    ActiveRitualContext perform(RitualContext context);
 
     /**
      * Allows you to run various checks before perform is called.
+     * <p>
+     * <b>THIS METHOD SHOULDN'T HAVE ANY SIDE EFFECTS</b>
      * @param context The ritual context
      * @return true if the ritual can be performed, otherwise false
      */

@@ -4,8 +4,21 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-public record ActiveRitualContext(Player player, Location location, Ritual ritual, BukkitTask task) {
+import java.util.Optional;
+
+/**
+ * Represents a ritual which was activated.
+ * @param player The invoker (original casting circle owner)
+ * @param location The location of the casting flame
+ * @param ritual The ritual reference
+ * @param task A bukkit task if this is a lasting ritual, otherwise an empty optional.
+ */
+public record ActiveRitualContext(Player player, Location location, Ritual ritual, Optional<BukkitTask> task) {
     public void cancel() {
-        task.cancel();
+        task.ifPresent(BukkitTask::cancel);
+    }
+
+    public boolean isLasting() {
+        return task.isPresent();
     }
 }

@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class AbstractRitual implements Ritual {
     @Getter
@@ -54,5 +55,9 @@ public abstract class AbstractRitual implements Ritual {
         RitualGrade otherGrade = RitualGrade.fromCatalyst(itemStack.getType());
         if (otherGrade == null) return false;
         return otherGrade.compareTo(grade) >= 0;
+    }
+
+    public static ActiveRitualContext defaultInstantRitualContext(Ritual ritual, RitualContext context) {
+        return new ActiveRitualContext(context.getInvoker(), context.getLocation(), ritual, Optional.empty());
     }
 }
