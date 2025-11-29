@@ -21,7 +21,7 @@ public class AscendancyConfig {
 
     public record VoidBan(int defaultMaxLives, int startingLives, int resurrectionLives, int reviveLives, boolean pveEnabled) {}
 
-    public record VoidRealm(int escapeHeightOvershootPercentage, int defaultWorldHeightVoidTerminatorOffset, double bedrockBreakerRadius, Strain strain, DeadPlayerRestrictions deadPlayerRestrictions) {
+    public record VoidRealm(int escapeHeightOvershootPercentage, int defaultWorldHeightVoidTerminatorOffset, double bedrockBreakerRadius, int reflectionWorldSizeRadius, Strain strain, DeadPlayerRestrictions deadPlayerRestrictions) {
         public record Strain(boolean enabled, boolean targetDead, boolean targetLiving, boolean targetNonPlayers) {}
         public record DeadPlayerRestrictions(boolean noBuild, boolean noBreak, boolean noInteract) {}
     }
@@ -52,6 +52,7 @@ public class AscendancyConfig {
                 config.getInt("void_realm.escape_height_overshoot_percentage", 10),
                 config.getInt("void_realm.default_world_height_void_terminator_offset", 10),
                 config.getDouble("void_realm.bedrock_breaker_radius", 3.0),
+                config.getInt("void_realm.reflection_world_size_radius", 500),
                 new VoidRealm.Strain(
                         config.getBoolean("void_realm.strain.enabled", true),
                         config.getBoolean("void_realm.strain.target_dead", true),

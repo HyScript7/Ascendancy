@@ -34,10 +34,12 @@ public class VoidRealmLayerChanger implements Listener {
 
     private final double escapeThresholdPercentage;
     private final int defaultWorldHeightVoidTerminatorOffset;
+    private final int reflectionWorldSizeRadius;
 
     public VoidRealmLayerChanger() {
         escapeThresholdPercentage = 1.0d + AscendancyConfig.getInstance().getVoidRealm().escapeHeightOvershootPercentage() / 100.0d;
         defaultWorldHeightVoidTerminatorOffset = AscendancyConfig.getInstance().getVoidRealm().defaultWorldHeightVoidTerminatorOffset();
+        reflectionWorldSizeRadius = AscendancyConfig.getInstance().getVoidRealm().reflectionWorldSizeRadius();
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -101,6 +103,10 @@ public class VoidRealmLayerChanger implements Listener {
     public void onPlayerMoveWhileInTheVoid(PlayerMoveEvent event) {
         VoidRealmLayer layer = VoidRealmLayer.fromWorld(event.getPlayer().getWorld());
         if (layer != null) {
+            if (layer == VoidRealmLayer.REFLECTION) {
+                handleReflectionWraparound(event.getPlayer());
+            }
+
             if (event.getPlayer().getLocation().getY() < layer.getWorld().getLogicalHeight() * escapeThresholdPercentage) {
                 return;
             }
@@ -110,6 +116,33 @@ public class VoidRealmLayerChanger implements Listener {
                 case REFLECTION -> changeLayer(event.getPlayer(), VoidRealmLayer.REFLECTION, true);
                 default -> {}
             }
+        }
+    }
+
+    private void handleReflectionWraparound(Player player) {
+        Location loc = player.getLocation();
+        double x = loc.getX();
+        double z = loc.getZ();
+
+        // Calculate distance from [0, y, 0]
+        double distanceSquared = x * x + z * z;
+        double radiusSquared = reflectionWorldSizeRadius * reflectionWorldSizeRadius;
+
+        // Check if player is outside the circular boundary
+        if (distanceSquared > radiusSquared) {
+            // Calculate the angle from origin
+            double angle = Math.atan2(z, x);
+
+            // Teleport to opposite side of the circle
+            // Subtract a small epsilon to ensure they're inside the boundary
+            double newX = -Math.cos(angle) * (reflectionWorldSizeRadius - 2);
+            double newZ = -Math.sin(angle) * (reflectionWorldSizeRadius - 2);
+
+            Location newLoc = loc.clone();
+            newLoc.setX(newX);
+            newLoc.setZ(newZ);
+
+            player.teleport(newLoc);
         }
     }
 

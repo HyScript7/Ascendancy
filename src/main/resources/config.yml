@@ -22,6 +22,8 @@ void_realm:
   default_world_height_void_terminator_offset: 10
   # What radius around the player should bedrock be broken around when leaving the void realm?
   bedrock_breaker_radius: 3.0
+  # How big is the void realm's reflection (self) layer?
+  reflection_world_size_radius: 500
   strain:
     # Should being in complete darkness while in the Void Realm inflict debuffs?
     enabled: true
