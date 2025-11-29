@@ -1,6 +1,7 @@
 package io.github.hyscript7.ascendancy.registries;
 
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
+import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.Fireball;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.Bestow;
@@ -65,6 +66,7 @@ public class RegistryManager {
 
     private void registerSpells() {
         spellRegistry.register(new Fireball());
+        spellRegistry.register(new VoidWalk());
         // TODO: Add spells
     }
 }

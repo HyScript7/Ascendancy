@@ -13,6 +13,7 @@ public class SpellCooldownManager {
     private static SpellCooldownManager instance;
 
     private final Map<UUID, Map<Spell, Long>> cooldowns = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> arcanaCooldownExpiry = new ConcurrentHashMap<>();
 
     private SpellCooldownManager() {}
 
@@ -29,6 +30,9 @@ public class SpellCooldownManager {
      * @param spell Which spell the cooldown belongs to
      */
     public void setPlayerOnCooldown(Player player, Spell spell) {
+        if (spell.getTier().equals(SpellTier.ARCANA)) {
+            arcanaCooldownExpiry.put(player.getUniqueId(), System.currentTimeMillis() + spell.getCooldownMillis());
+        }
         cooldowns.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>()).put(spell, System.currentTimeMillis());
     }
 
@@ -49,6 +53,9 @@ public class SpellCooldownManager {
      * @return A negative integer if the cooldown is up, otherwise positive (in milliseconds)
      */
     public long getRemainingCooldownMillis(Player player, Spell spell) {
+        if (spell.getTier().equals(SpellTier.ARCANA)) {
+            return arcanaCooldownExpiry.getOrDefault(player.getUniqueId(), 0L) - now();
+        }
         long timeSinceLastCast = now() - cooldowns.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>()).getOrDefault(spell, 0L);
         return spell.getCooldownMillis() - timeSinceLastCast;
     }
@@ -69,10 +76,10 @@ public class SpellCooldownManager {
         long now = now();
 
         // Finds the timestamp (millis) at which the last cooldown ends.
-        long latestEnd = playerCooldowns.entrySet().stream()
+        long latestEnd = Math.max(playerCooldowns.entrySet().stream()
                 .mapToLong(e -> e.getValue() + e.getKey().getCooldownMillis())
                 .max()
-                .orElse(now);
+                .orElse(now), arcanaCooldownExpiry.getOrDefault(uuid, 0L));
 
         long delay = latestEnd - now;
 
