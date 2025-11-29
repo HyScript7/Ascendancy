@@ -1,11 +1,13 @@
 package io.github.hyscript7.ascendancy.registries;
 
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
+import io.github.hyscript7.ascendancy.builtins.magic.spells.Fireball;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
-import io.github.hyscript7.ascendancy.features.innate.names.commands.other.Bestow;
-import io.github.hyscript7.ascendancy.features.innate.names.commands.self.GetOwnName;
+import io.github.hyscript7.ascendancy.builtins.innate.commands.other.Bestow;
+import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnName;
+import io.github.hyscript7.ascendancy.features.magic.Spell;
 import io.github.hyscript7.ascendancy.features.rituals.Ritual;
-import io.github.hyscript7.ascendancy.features.rituals.recipes.instant.RitualOfLevitation;
+import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfLevitation;
 import lombok.Getter;
 
 /**
@@ -17,6 +19,7 @@ public class RegistryManager {
 
     private final Registry<InnateCommand> innateCommandRegistry;
     private final Registry<Ritual> ritualRegistry;
+    private final Registry<Spell> spellRegistry;
 
     private boolean initialized;
 
@@ -24,6 +27,7 @@ public class RegistryManager {
         this.initialized = false;
         this.innateCommandRegistry = new Registry<>("InnateCommands");
         this.ritualRegistry = new Registry<>("Rituals");
+        this.spellRegistry= new Registry<>("Spells");
     }
 
     public static RegistryManager getInstance() {
@@ -41,6 +45,7 @@ public class RegistryManager {
         // Add all instances
         registerInnateCommands();
         registerRituals();
+        registerSpells();
 
         // Lock all registries
 
@@ -56,5 +61,10 @@ public class RegistryManager {
     private void registerRituals() {
         ritualRegistry.register(new RitualOfLevitation());
         // TODO: Add rituals
+    }
+
+    private void registerSpells() {
+        spellRegistry.register(new Fireball());
+        // TODO: Add spells
     }
 }
