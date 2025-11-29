@@ -40,22 +40,28 @@ public class VoidRealmLayerChanger implements Listener {
                     case OBLIVION, REFLECTION -> changeLayer(event.getEntity(), VoidRealmLayer.REFLECTION);
                     default -> {}
                 }
+                event.setCancelled(true);
             } else {
                 switch (event.getEntity()) {
-                    case Player playerEntity ->
+                    case Player playerEntity -> {
                         // Teleport players who jump into the void out of combat into the Void Realm
                         // TODO: If in combat, don't teleport.
-                            changeLayer(playerEntity, VoidRealmLayer.ABYSS);
+                        changeLayer(playerEntity, VoidRealmLayer.ABYSS);
+                        event.setCancelled(true);
+                    }
                     case LivingEntity entity -> {
                         // Save mobs with more than 50% HP
                         double maxHealth = Optional.ofNullable(entity.getAttribute(Attribute.MAX_HEALTH)).map(AttributeInstance::getValue).orElse(20.0d);
                         if (entity.getHealth() > (maxHealth / 2)) {
                             changeLayer(entity, VoidRealmLayer.ABYSS);
+                            event.setCancelled(true);
                         }
                     }
-                    case Item itemEntity ->
+                    case Item itemEntity -> {
                         // Always save items
-                            changeLayer(itemEntity, VoidRealmLayer.ABYSS);
+                        changeLayer(itemEntity, VoidRealmLayer.ABYSS);
+                        event.setCancelled(true);
+                    }
                     default -> {}
                 }
             }
@@ -71,33 +77,45 @@ public class VoidRealmLayerChanger implements Listener {
             }
             switch (layer) {
                 case ABYSS -> changeToOverworld(event.getPlayer());
-                case OBLIVION -> changeLayer(event.getPlayer(), VoidRealmLayer.ABYSS);
-                case REFLECTION -> changeLayer(event.getPlayer(), VoidRealmLayer.REFLECTION);
+                case OBLIVION -> changeLayer(event.getPlayer(), VoidRealmLayer.ABYSS, true);
+                case REFLECTION -> changeLayer(event.getPlayer(), VoidRealmLayer.REFLECTION, true);
                 default -> {}
             }
         }
     }
 
     private void changeLayer(Entity entity, @Nullable VoidRealmLayer newLayer) {
+        changeLayer(entity, newLayer, false);
+    }
+
+    private void changeLayer(Entity entity, @Nullable VoidRealmLayer newLayer, boolean spawnAtBottom) {
         if (newLayer == null) {
             return;
         }
         switch (newLayer) {
             case ABYSS -> {
                 Location location = entity.getLocation();
-                location.setY(VoidRealmLayer.ABYSS.getWorld().getMaxHeight());
+                if (spawnAtBottom) {
+                    location.setY(VoidRealmLayer.ABYSS.getWorld().getMinHeight());
+                } else {
+                    location.setY(VoidRealmLayer.ABYSS.getWorld().getMaxHeight());
+                }
                 location.setWorld(VoidRealmLayer.ABYSS.getWorld());
                 entity.teleport(location);
             }
             case OBLIVION -> {
                 Location location = entity.getLocation();
-                location.setY(VoidRealmLayer.OBLIVION.getWorld().getMaxHeight());
+                if (spawnAtBottom) {
+                    location.setY(VoidRealmLayer.OBLIVION.getWorld().getMinHeight());
+                } else {
+                    location.setY(VoidRealmLayer.OBLIVION.getWorld().getMaxHeight());
+                }
                 location.setWorld(VoidRealmLayer.OBLIVION.getWorld());
                 entity.teleport(location);
             }
             case REFLECTION -> {
                 World world = VoidRealmLayer.REFLECTION.getWorld();
-                Location location = new Location(world, 0, world.getMaxHeight(), 0, 0, 0);
+                Location location = new Location(world, 0, spawnAtBottom ? world.getMinHeight() : world.getMaxHeight(), 0, 0, 0);
                 entity.teleport(location);
             }
         }
@@ -105,7 +123,9 @@ public class VoidRealmLayerChanger implements Listener {
 
     private void changeToOverworld(Entity entity) {
         Location location = entity.getLocation();
-        location.setWorld(Bukkit.getWorld("minecraft:overworld")); // Not sorry for hardcoding this
+        World world = Bukkit.getWorld("world");
+        location.setY(world.getMaxHeight());
+        location.setWorld(world); // Not sorry for hardcoding this
         entity.teleport(location);
     }
 

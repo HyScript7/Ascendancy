@@ -60,6 +60,7 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new DeadPlayerRestrictionListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmLayerChanger(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmStateListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmEffects(), this);
     }
 
     public static AscendancyPlugin getInstance() {
