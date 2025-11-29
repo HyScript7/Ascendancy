@@ -7,6 +7,7 @@ import io.github.hyscript7.ascendancy.data.factions.simple.Faction;
 import io.github.hyscript7.ascendancy.data.factions.simple.FactionMember;
 import io.github.hyscript7.ascendancy.data.factions.simple.FullFactionMember;
 import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,5 +91,33 @@ public class FactionManager {
 
     public ArrayList<Faction> getFactions() {
         return factions;
+    }
+
+
+    public void create(String faction, Player player) {
+        if (getFactionMember(player.getUniqueId()) != null) {
+            player.sendMessage("Player "+player.getName()+" already joined a faction");
+            return;
+        }
+        if (getFactions().stream().anyMatch(a -> a.getName().equals(faction))) {
+            player.sendMessage("Faction already exists");
+            return;
+        }
+        createFaction(faction, player.getUniqueId());
+        player.sendMessage("Faction "+faction+" created");
+    }
+
+    public void delete(String faction, Player player) {
+        deleteFaction(faction);
+        player.sendMessage("Faction "+faction+" deleted");
+    }
+
+    public void join(String faction, Player player) {
+        if (getFactionMember(player.getUniqueId()) != null) {
+            player.sendMessage("Player "+player.getName()+" already joined a faction");
+            return;
+        }
+        addMember(faction, player.getUniqueId());
+        player.sendMessage("Added "+player.getName()+" to "+faction+" created");
     }
 }
