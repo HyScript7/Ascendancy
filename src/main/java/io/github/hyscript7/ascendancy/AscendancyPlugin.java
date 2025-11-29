@@ -6,6 +6,7 @@ import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.listeners.InnateCommandListener;
+import io.github.hyscript7.ascendancy.features.rituals.listeners.RitualCraftingListener;
 import io.github.hyscript7.ascendancy.features.voidrealm.listeners.*;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
 import org.bukkit.Bukkit;
@@ -61,6 +62,7 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmLayerChanger(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmStateListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmEffects(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new RitualCraftingListener(), this);
     }
 
     public static AscendancyPlugin getInstance() {
