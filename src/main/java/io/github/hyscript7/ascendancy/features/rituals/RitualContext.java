@@ -35,6 +35,7 @@ public class RitualContext {
     @Builder.Default
     private Optional<Ritual> identifiedRitual = Optional.empty();
 
+    @Builder.Default
     private List<Ritual> possibleRituals = null;
 
     public @Nullable Ritual getIdentifiedRitual() {
