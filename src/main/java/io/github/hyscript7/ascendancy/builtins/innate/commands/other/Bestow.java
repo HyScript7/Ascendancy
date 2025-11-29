@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.features.innate.names.commands.other;
+package io.github.hyscript7.ascendancy.builtins.innate.commands.other;
 
 import io.github.hyscript7.ascendancy.features.innate.names.AbstractInnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateContext;

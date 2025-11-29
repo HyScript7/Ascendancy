@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.features.rituals.recipes.instant;
+package io.github.hyscript7.ascendancy.builtins.rituals.instant;
 
 import io.github.hyscript7.ascendancy.features.rituals.*;
 import org.bukkit.Material;
