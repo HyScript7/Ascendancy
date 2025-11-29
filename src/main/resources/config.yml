@@ -36,3 +36,7 @@ void_realm:
     no_build: true
     no_break: true
     no_interact: false
+spell_books:
+  # Floats to use for CustomModelData
+  custom_model_data:
+    - 777.0

@@ -3,6 +3,8 @@ package io.github.hyscript7.ascendancy;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.List;
+
 @Getter
 public class AscendancyConfig {
     private static AscendancyConfig instance;
@@ -24,9 +26,12 @@ public class AscendancyConfig {
         public record DeadPlayerRestrictions(boolean noBuild, boolean noBreak, boolean noInteract) {}
     }
 
+    public record SpellBooks(List<Float> customModelData) {}
+
     private final InnateNames innateNames;
     private final VoidBan voidBan;
     private final VoidRealm voidRealm;
+    private final SpellBooks spellBooks;
 
     private AscendancyConfig(AscendancyPlugin plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -58,6 +63,9 @@ public class AscendancyConfig {
                         config.getBoolean("void_realm.dead_player_restrictions.no_break", true),
                         config.getBoolean("void_realm.dead_player_restrictions.no_interact", false)
                 )
+        );
+        this.spellBooks = new SpellBooks(
+                config.getFloatList("spell_books.custom_model_data")
         );
     }
 }
