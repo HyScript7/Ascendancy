@@ -102,7 +102,7 @@ public class LootGenerator implements Listener {
     private SpellTier determineVoidSpellTier(Location location) {
         return switch (VoidRealmLayer.fromWorld(location.getWorld())) {
             case VoidRealmLayer.ABYSS -> SpellTier.UNCOMMON;
-            case VoidRealmLayer.OBLIVION -> Math.random() > 0.5d ? SpellTier.EPIC : SpellTier.RARE;
+            case VoidRealmLayer.OBLIVION -> random.nextBoolean() ? SpellTier.EPIC : SpellTier.RARE;
             case VoidRealmLayer.REFLECTION -> SpellTier.ARCANA;
         };
     }
