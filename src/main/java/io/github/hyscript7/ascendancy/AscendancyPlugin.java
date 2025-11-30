@@ -1,9 +1,5 @@
 package io.github.hyscript7.ascendancy;
 
-import io.github.hyscript7.ascendancy.data.factions.FactionCraftingListener;
-import io.github.hyscript7.ascendancy.data.factions.FactionManager;
-import io.github.hyscript7.ascendancy.data.factions.FactionCommand;
-import io.github.hyscript7.ascendancy.data.factions.FactionItemInteractionListener;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataListener;
 import io.github.hyscript7.ascendancy.data.players.storage.JsonPlayerDataStorage;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
@@ -43,11 +39,6 @@ public final class AscendancyPlugin extends JavaPlugin {
         registerListeners();
         getLogger().info("Listeners registered successfully");
 
-
-        FactionManager.initialize();
-        // add debug faction command
-        this.registerCommand("faction", new FactionCommand());
-
         getLogger().info("Plugin enabled successfully!");
     }
 
@@ -70,8 +61,6 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmLayerChanger(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmStateListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new VoidRealmEffects(), this);
-        getServer().getPluginManager().registerEvents(new FactionItemInteractionListener(), this);
-        getServer().getPluginManager().registerEvents(new FactionCraftingListener(), this);
     }
 
     public static AscendancyPlugin getInstance() {
