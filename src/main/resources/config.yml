@@ -42,3 +42,13 @@ spell_books:
   # Floats to use for CustomModelData
   custom_model_data:
     - 777.0
+# Prevents using items of a higher tier than the player has unlocked by killing bosses
+boss_progression:
+  # How many bosses does the player need to kill in order to use diamond gear?
+  diamond_kills: 1
+  # How many bosses does the player need to kill in order to use netherite gear?
+  netherite_kills: 3
+  # All players within this range of a boss dying will get the kill
+  kill_credit_radius: 32
+  # How many bosses need to die before the nether is open?
+  nether_kills: 1

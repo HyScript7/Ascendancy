@@ -28,10 +28,13 @@ public class AscendancyConfig {
 
     public record SpellBooks(List<Float> customModelData) {}
 
+    public record BossProgression(int diamondKills, int netheriteKills, int killCreditRadius, int netherKills) {}
+
     private final InnateNames innateNames;
     private final VoidBan voidBan;
     private final VoidRealm voidRealm;
     private final SpellBooks spellBooks;
+    private final BossProgression bossProgression;
 
     private AscendancyConfig(AscendancyPlugin plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -67,6 +70,12 @@ public class AscendancyConfig {
         );
         this.spellBooks = new SpellBooks(
                 config.getFloatList("spell_books.custom_model_data")
+        );
+        this.bossProgression = new BossProgression(
+                config.getInt("boss_progression.diamond_kills"),
+                config.getInt("boss_progression.netherite_kills"),
+                config.getInt("boss_progression.kill_credit_radius"),
+                config.getInt("boss_progression.nether_kills")
         );
     }
 }

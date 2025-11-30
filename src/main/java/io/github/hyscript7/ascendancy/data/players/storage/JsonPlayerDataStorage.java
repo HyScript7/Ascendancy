@@ -3,6 +3,7 @@ package io.github.hyscript7.ascendancy.data.players.storage;
 import com.google.gson.*;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
+import io.github.hyscript7.ascendancy.features.bossprog.BossType;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -105,6 +106,12 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         }
         json.add("knownTrueNames", knownTrueNames);
 
+        JsonArray killedBosses = new JsonArray();
+        for (BossType bossType : data.getKilledBosses()) {
+            killedBosses.add(bossType.name());
+        }
+        json.add("killedBosses", killedBosses);
+
         json.addProperty("firstSeenTimestamp", data.getFirstSeenTimestamp());
         json.addProperty("lastSeenTimestamp", data.getLastSeenTimestamp());
 
@@ -159,6 +166,20 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
                 knownTrueNames.add(name.getAsString());
             }
             data.setKnownTrueNames(knownTrueNames);
+        }
+
+        if (json.has("killedBosses")) {
+            Set<BossType> killedBosses = new HashSet<>();
+            JsonArray killedBossesArray = json.getAsJsonArray("killedBosses");
+            for (JsonElement bossId : killedBossesArray) {
+                try {
+                    BossType bossType = BossType.valueOf(bossId.getAsString());
+                    killedBosses.add(bossType);
+                } catch (IllegalArgumentException e) {
+                    AscendancyPlugin.getInstance().getLogger().log(Level.WARNING, "Invalid boss id " + bossId.getAsString() + " in player data of " + data.getUuid() + ". Skipping!");
+                }
+            }
+            data.setKilledBosses(killedBosses);
         }
 
         if (json.has("firstSeenTimestamp")) {
