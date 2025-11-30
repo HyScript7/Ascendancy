@@ -1,6 +1,7 @@
 package io.github.hyscript7.ascendancy.data.players;
 
 import io.github.hyscript7.ascendancy.AscendancyConfig;
+import io.github.hyscript7.ascendancy.features.bossprog.BossType;
 import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,8 @@ public class PlayerData {
 
     private Set<String> knownSpells;
 
+    private Set<BossType> killedBosses;
+
     private long firstSeenTimestamp;
     private long lastSeenTimestamp;
 
@@ -50,6 +53,7 @@ public class PlayerData {
         this.trueName = null;
         this.knownTrueNames = new HashSet<>();
         this.knownSpells = new HashSet<>();
+        this.killedBosses = new HashSet<>();
     }
 
     public void markDirty() {
@@ -158,6 +162,33 @@ public class PlayerData {
      */
     public Set<String> getKnownSpells() {
         return Collections.unmodifiableSet(knownSpells);
+    }
+
+    public void setKilledBosses(Set<BossType> killedBosses) {
+        markDirty();
+        this.killedBosses = killedBosses;
+    }
+
+    public void addBossKill(BossType bossType) {
+        markDirty();
+        this.killedBosses.add(bossType);
+    }
+
+    public void removeBossKill(BossType bossType) {
+        markDirty();
+        this.killedBosses.remove(bossType);
+    }
+
+    public int getKilledBossesCount() {
+        return killedBosses.size();
+    }
+
+    public boolean hasKilledBoss(BossType bossType) {
+        return killedBosses.contains(bossType);
+    }
+
+    public Set<BossType> getKilledBosses() {
+        return Collections.unmodifiableSet(killedBosses);
     }
 
     public void setFirstSeenTimestamp(long timestamp) {
