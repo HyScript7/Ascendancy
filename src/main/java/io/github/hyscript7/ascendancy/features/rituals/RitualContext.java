@@ -55,20 +55,53 @@ public class RitualContext {
     private record Intermediary(Ritual ritual, long completedStages) {}
 
     private void attemptToIdentifyRitual() {
+        // Already identified, nothing to do
+        if (identifiedRitual.isPresent()) {
+            return;
+        }
+
+        // Initialize possible rituals on first call
         if (possibleRituals == null) {
             possibleRituals = List.copyOf(RegistryManager.getInstance().getRitualRegistry().getAll());
         }
-        if (possibleRituals.isEmpty() || identifiedRitual.isPresent()) {
+
+        // No rituals available
+        if (possibleRituals.isEmpty()) {
             return;
         }
+
+        // Filter and sort rituals by completion
         possibleRituals = possibleRituals.stream()
                 .filter(ritual -> ritual.catalystAppropriate(catalyst))
                 .map(ritual -> new Intermediary(ritual, ritual.getStages().stream()
                         .filter(stage -> stage.isComplete(this)).count()))
-                .sorted(Comparator.comparingInt(im -> (int) (im.completedStages())))
-                .map(Intermediary::ritual).toList();
+                .sorted(Comparator.comparingLong(Intermediary::completedStages).reversed()) // DESCENDING order
+                .map(Intermediary::ritual)
+                .toList();
+
+        // Check if we can uniquely identify a ritual
+        if (possibleRituals.isEmpty()) {
+            return; // No matching rituals
+        }
+
         if (possibleRituals.size() == 1) {
             identifiedRitual = Optional.of(possibleRituals.getFirst());
+        } else {
+            // Get the top ritual(s) by completion count
+            Ritual topRitual = possibleRituals.getFirst();
+            long topCompletedStages = topRitual.getStages().stream()
+                    .filter(stage -> stage.isComplete(this)).count();
+
+            // Check if there's a clear winner (no ties at the top)
+            long secondBestStages = possibleRituals.size() > 1
+                    ? possibleRituals.get(1).getStages().stream()
+                    .filter(stage -> stage.isComplete(this)).count()
+                    : -1;
+
+            if (topCompletedStages > secondBestStages) {
+                identifiedRitual = Optional.of(topRitual);
+            }
+            // Otherwise, keep possibleRituals for next attempt
         }
     }
 

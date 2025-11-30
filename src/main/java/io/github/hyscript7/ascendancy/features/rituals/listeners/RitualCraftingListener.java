@@ -68,11 +68,13 @@ public class RitualCraftingListener implements Listener {
         // Check if ritual already exists at this location
         if (ritualsByLocation.containsKey(block.getLocation())) {
             RitualContext ritualContext = ritualsByLocation.get(block.getLocation());
-            if (ritualContext.isRitualIdentified() && ritualContext.isRitualReady()) {
-                if (player.isSneaking()) {
-                    activateRitual(ritualContext, event.getPlayer());
-                } else {
-                    // TODO: Announce that the ritual can be activated
+            if (ritualContext.isRitualIdentified()) {
+                if (ritualContext.isRitualReady()) {
+                    if (player.isSneaking()) {
+                        activateRitual(ritualContext, event.getPlayer());
+                    } else {
+                        // TODO: Announce that the ritual can be activated
+                    }
                 }
             } else {
                 // TODO: Format message about there already being a ritual here.
