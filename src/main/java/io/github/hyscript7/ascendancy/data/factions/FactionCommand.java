@@ -1,9 +1,7 @@
-package io.github.hyscript7.ascendancy.data.factions.commands;
+package io.github.hyscript7.ascendancy.data.factions;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
-import io.github.hyscript7.ascendancy.data.factions.FactionManager;
 import io.github.hyscript7.ascendancy.data.factions.simple.Faction;
-import io.github.hyscript7.ascendancy.data.factions.simple.FactionMember;
 import io.github.hyscript7.ascendancy.data.factions.simple.FullFactionMember;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -11,7 +9,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -74,21 +71,8 @@ public class FactionCommand implements BasicCommand {
         }
 
         if (args.length == 3) {
-
             if (args[0].equals("item")) {
-                String[] actions = new String[]{"create", "delete", "join"};
-                if (!Arrays.asList(actions).contains(args[2])) {
-                    return;
-                }
-                ItemStack item = new ItemStack(Material.LIGHT_BLUE_DYE);
-                ItemMeta meta = item.getItemMeta();
-                PersistentDataContainer pdc = meta.getPersistentDataContainer();
-                pdc.set(new NamespacedKey(AscendancyPlugin.getInstance(), "faction"), PersistentDataType.STRING, args[1]);
-                pdc.set(new NamespacedKey(AscendancyPlugin.getInstance(), "action"), PersistentDataType.STRING, args[2]);
-                meta.customName(Component.text(args[1] + " " + args[2], NamedTextColor.AQUA));
-                item.setItemMeta(meta);
-                player.getInventory().addItem(item);
-
+                fm.giveItem(args[1], player, args[2]);
             }
         }
     }

@@ -1,7 +1,6 @@
-package io.github.hyscript7.ascendancy.data.factions.simple;
+package io.github.hyscript7.ascendancy.data.factions;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
-import io.github.hyscript7.ascendancy.data.factions.FactionManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -9,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
