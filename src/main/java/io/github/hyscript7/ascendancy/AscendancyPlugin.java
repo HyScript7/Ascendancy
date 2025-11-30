@@ -5,6 +5,8 @@ import io.github.hyscript7.ascendancy.data.players.storage.JsonPlayerDataStorage
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.data.players.storage.PlayerDataStorage;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
+import io.github.hyscript7.ascendancy.features.bossprog.listeners.BossKillListener;
+import io.github.hyscript7.ascendancy.features.bossprog.listeners.EquipmentRestrictionEnforcer;
 import io.github.hyscript7.ascendancy.features.innate.names.listeners.InnateCommandListener;
 import io.github.hyscript7.ascendancy.features.magic.listeners.BookCastListener;
 import io.github.hyscript7.ascendancy.features.magic.listeners.LootGenerator;
@@ -74,6 +76,8 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new BookCastListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new SpellIncantationListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new LootGenerator(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new BossKillListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new EquipmentRestrictionEnforcer(), this);
     }
 
     public static AscendancyPlugin getInstance() {

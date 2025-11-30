@@ -93,10 +93,16 @@ public class LootGenerator implements Listener {
             return determineOverworldSpellTier(location);
         } else if (VoidRealmLayer.fromWorld(world) != null) {
             return determineVoidSpellTier(location);
+        } else if (worldName.contains("ginnungagap")) { // Yggdrasil compatability
+            return determineYggdrasilSpellTier();
         }
 
         // Default for other worlds
         return SpellTier.COMMON;
+    }
+
+    private SpellTier determineYggdrasilSpellTier() {
+        return random.nextBoolean() ?  SpellTier.RARE : SpellTier.EPIC;
     }
 
     private SpellTier determineVoidSpellTier(Location location) {
