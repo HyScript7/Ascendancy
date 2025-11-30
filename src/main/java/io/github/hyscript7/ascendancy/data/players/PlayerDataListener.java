@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.data.players;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -60,11 +61,7 @@ public class PlayerDataListener implements Listener {
         // If the player is new, disclose their true name to them
         // firstSeenTimestamp is set by the data manager when it creates a new instance of Player Data.
         if (!player.hasPlayedBefore()) {
-            // TODO: Format
-            player.sendMessage(Component.text("Welcome to the Server!")
-                    .append(Component.text("\nYour true name is "))
-                    .append(Component.text(data.getTrueName())
-                            .style(Style.style(TextDecoration.BOLD).color(TextColor.color(0x1eacc8)))));
+            AscendancyMessagingAPI.getInstance().send(player, AscendancyMessagingAPI.MessageType.INFO, "Welcome to the ScriptSMP!\n\nYour true name is " + data.getTrueName() + ".\nGuard it carefully, those who speak your true name hold power over you...");
         }
 
         data.updateLastSeenTimestamp();

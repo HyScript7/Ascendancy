@@ -33,9 +33,9 @@ public class LootGenerator implements Listener {
 
     private static Map<SpellTier, Double> createSpellDropChances() {
         Map<SpellTier, Double> map = new EnumMap<>(SpellTier.class);
-        map.put(SpellTier.COMMON, 0.4);
-        map.put(SpellTier.UNCOMMON, 0.2);
-        map.put(SpellTier.RARE, 0.15);
+        map.put(SpellTier.COMMON, 0.25);
+        map.put(SpellTier.UNCOMMON, 0.15);
+        map.put(SpellTier.RARE, 0.10);
         map.put(SpellTier.EPIC, 0.05);
         return Collections.unmodifiableMap(map);
     }

@@ -1,11 +1,13 @@
 package io.github.hyscript7.ascendancy.features.voidrealm.listeners;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,17 +66,23 @@ public class PlayerDeathListener implements Listener {
 
         if (currentLives > 0) {
             // Still alive
-            // TODO: Format & change
-            player.sendMessage("You have died, blah blah blah... you have " + currentLives + " lives left bitchass.");
+            AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Life Lost", null, "You have died to " + killer.getName() + "!\nYou are now at " + playerData.getLives() + "/" + playerData.getMaxLives() + " lives!");
         } else {
             if (!playerData.isDead()) {
+                PlayerData killerData = PlayerDataManager.getInstance().getPlayerData(killer);
                 // Fucking dead
-                // TODO: Format & change
-                player.sendMessage("You have lost all your lives and will respawn in the void realm.");
-                // TODO: Announce the void ban to the server
-                Bukkit.getServer().broadcast(player.displayName().append(Component.text(" has been void banned. Git gut.")));
-                // TODO: Handle void death flags & animations
+                if (!playerData.knowsTrueName(playerData.getTrueName())) {
+                    killerData.learnName(playerData.getTrueName());
+                    AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Final Kill", null, "You have void banned " + player.getName() + " and learned their true name: " + playerData.getTrueName() + "!");
+                } else {
+                    AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Final Kill", null, "You have void banned " + player.getName() + "!");
+                }
                 playerData.setDead(true);
+
+                AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Out of Lives", null, "You have run out of all your lives!\nYou will respawn in the Void Realm, good luck!\n\nYour true name has been disclosed to " + killer.getName());
+                AscendancyMessagingAPI.getInstance().broadcastBoxed(AscendancyMessagingAPI.MessageType.INFO, "Void Death", null, player.getName() + " has died to " + killer.getName() + " and will respawn in the Void Realm!");
+
+                player.getLocation().getNearbyPlayers(64).forEach(nearby -> nearby.playSound(nearby.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0f, 0.5f));
             }
         }
     }

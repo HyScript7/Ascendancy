@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.rituals.listeners;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.features.rituals.ActiveRitualContext;
 import io.github.hyscript7.ascendancy.features.rituals.Ritual;
 import io.github.hyscript7.ascendancy.features.rituals.RitualContext;
@@ -73,12 +74,11 @@ public class RitualCraftingListener implements Listener {
                     if (player.isSneaking()) {
                         activateRitual(ritualContext, event.getPlayer());
                     } else {
-                        // TODO: Announce that the ritual can be activated
+                        AscendancyMessagingAPI.getInstance().send(event.getPlayer(), AscendancyMessagingAPI.MessageType.INFO, "Shift + Right Click to activate the ritual.");
                     }
                 }
             } else {
-                // TODO: Format message about there already being a ritual here.
-                event.getPlayer().sendMessage(Component.text("There is already a ritual here!", NamedTextColor.RED));
+                AscendancyMessagingAPI.getInstance().send(event.getPlayer(), AscendancyMessagingAPI.MessageType.ERROR, "There is already a ritual here!");
             }
             event.setCancelled(true);
             return;
@@ -282,11 +282,9 @@ public class RitualCraftingListener implements Listener {
         if (!context.isRitualIdentified()) throw new IllegalStateException("Called on an unidentified ritual");
         if (!context.isRitualReady()) throw new IllegalStateException("Called on an unfinished ritual");
         if (actor == null) actor = context.getInvoker();
-        // TODO: Format
-        actor.sendMessage(Component.text("The ", NamedTextColor.GRAY)
-                .append(Component.text(context.getIdentifiedRitual().getDisplayName(), NamedTextColor.AQUA).style(Style.style(TextDecoration.BOLD)))
-                .append(Component.text(" is ready!"))
-                .append(Component.text("\nShift Right-click the ritual flame to activate it!", NamedTextColor.RED)));
+        String ritualName = context.getIdentifiedRitual().getDisplayName();
+        String message = "The <bold>" + ritualName + "</bold> ritual is ready!" + "\nShift + Right Click to activate the ritual.";
+        AscendancyMessagingAPI.getInstance().sendBoxed(actor, AscendancyMessagingAPI.MessageType.INFO, "Ritual", null, message);
     }
 
     private void activateRitual(RitualContext context, @NotNull Player actor) {

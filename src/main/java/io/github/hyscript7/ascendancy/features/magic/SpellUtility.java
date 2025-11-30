@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.magic;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
@@ -21,22 +22,26 @@ public class SpellUtility {
 
     public static void runSpell(SpellContext context, Spell spell) {
         if (SpellCooldownManager.getInstance().isPlayerOnCooldown(context.getCaster(), spell)) {
-            // TODO: Send cooldown message
+            double cooldownSeconds = Math.round(SpellCooldownManager.getInstance().getRemainingCooldownMillis(context.getCaster(), spell) / 100d) / 10d;
+            AscendancyMessagingAPI.getInstance().send(context.getCaster(), AscendancyMessagingAPI.MessageType.ERROR, spell.getDisplayName() + " is still on cooldown for " + cooldownSeconds + "s!");
             return;
         }
         if (spell.getTier().requiresLearning()) {
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerData(context.getCaster());
             if (!playerData.knowsSpell(spell.getId())) {
-                // TODO: Send need to learn message
+                AscendancyMessagingAPI.getInstance().send(context.getCaster(), AscendancyMessagingAPI.MessageType.ERROR, "You whisper the words, but nothing happens...\nThis " + (spell.getTier().equals(SpellTier.ARCANA) ? "arcana" : "spell") + " is beyond your current knowledge.");
                 return;
             }
         }
         if (spell.canCast(context)) {
-            // TODO: Check mana
-            // TODO: Send feedback
+            // TODO: Check mana & send feedback if low
             SpellCooldownManager.getInstance().setPlayerOnCooldown(context.getCaster(), spell);
             Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () -> {
-                spell.cast(context);
+                if (spell.cast(context)) {
+                    AscendancyMessagingAPI.getInstance().send(context.getCaster(), AscendancyMessagingAPI.MessageType.SUCCESS, "You cast " + spell.getDisplayName() + "!");
+                } else {
+                    AscendancyMessagingAPI.getInstance().send(context.getCaster(), AscendancyMessagingAPI.MessageType.ERROR, "You whispered the words to cast " + spell.getDisplayName() + ", but the spell failed!");
+                }
             });
         }
     }

@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.builtins.innate.commands.self;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.AbstractInnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateContext;
@@ -21,8 +22,7 @@ public class GetOwnName extends AbstractInnateCommand {
         if (trueName == null) {
             return false;
         }
-        // TODO: Format message
-        context.invoker().sendMessage(Component.text("Your innate name is ").append(Component.text(trueName).style(Style.style(TextDecoration.BOLD).color(TextColor.color(0x1eacc8)))));
+        AscendancyMessagingAPI.getInstance().send(context.invoker(), AscendancyMessagingAPI.MessageType.INFO, "Your true name is " + trueName);
         return true;
     }
 

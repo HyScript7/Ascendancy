@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.magic.listeners;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.features.magic.Spell;
@@ -48,8 +49,7 @@ public class BookCastListener implements Listener {
             // If you ever think this code base isn't retarded enough, just look at how the spell is accessed
             playerData.learnSpells(spell.spell().getId());
 
-            // TODO: Handle formatting
-            player.sendMessage(spell.spell().getIncantation());
+            AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.INFO, "Spell Incantation Learned", null, spell.spell.getIncantation());
             playLearnSpellEffect(player);
 
             player.getInventory().remove(item);

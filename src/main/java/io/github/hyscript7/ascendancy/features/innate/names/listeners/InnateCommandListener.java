@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.innate.names.listeners;
 
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
@@ -92,8 +93,7 @@ public class InnateCommandListener implements Listener {
                         PlayerData playerData = PlayerDataManager.getInstance().getPlayerData(player);
                         if (playerData.knowsTrueName(trueName)) return;
                         playerData.learnName(trueName);
-                        // TODO: Format message
-                        player.sendMessage("You have learned " + playerName + "'s innate name: " + trueName);
+                        AscendancyMessagingAPI.getInstance().send(player, AscendancyMessagingAPI.MessageType.INFO, "You have learned " + playerName + "'s true name: " + trueName);
                     }
                 })
         );

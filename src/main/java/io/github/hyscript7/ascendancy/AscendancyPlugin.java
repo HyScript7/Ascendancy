@@ -51,6 +51,8 @@ public final class AscendancyPlugin extends JavaPlugin {
         getLogger().info("Listeners registered successfully");
 
         getLogger().info("Plugin enabled successfully!");
+
+        AscendancyMessagingAPI.getInstance().broadcastBoxed(AscendancyMessagingAPI.MessageType.INFO, "Ascendancy", null, "Hello World");
     }
 
     @Override

@@ -1,11 +1,13 @@
 package io.github.hyscript7.ascendancy.features.bossprog.listeners;
 
 import io.github.hyscript7.ascendancy.AscendancyConfig;
+import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.features.bossprog.BossType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,15 +32,14 @@ public class BossKillListener implements Listener {
                 .map(player -> new PlayerDataUnion(player, playerDataManager.getPlayerData(player)))
                 .forEach(union -> {
                     union.data().addBossKill(bossType);
-                    // TODO: Format
-                    union.player().sendMessage(
-                            Component.text("You have killed the " +
-                                            bossType.name().replace("_", " ") + " boss!")
-                                    .append(Component.text("\nYou are now at " +
-                                            union.data().getKilledBossesCount() + " boss kills!")));
+                    AscendancyMessagingAPI.getInstance().send(union.player(), AscendancyMessagingAPI.MessageType.INFO, "You are now at " + union.data().getKilledBossesCount() + " boss kills!");
                 });
-        // TODO: Format
-        Bukkit.broadcast(Component.text("The " + bossType.name().replace("_", " ") + " has been killed!"));
+        AscendancyMessagingAPI.getInstance().broadcastBoxed(AscendancyMessagingAPI.MessageType.INFO, "Ascendancy : Boss Progression", null, "The " + bossType.name().replace("_", " ") + " boss has been killed!");
+        Bukkit.getOnlinePlayers().forEach(
+                player -> {
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);
+                }
+        );
     }
 
     private record PlayerDataUnion(Player player, PlayerData data) {
