@@ -17,6 +17,7 @@ import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,99 +25,151 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class AscendancyChatSecretRender implements ChatRenderer {
-    private static final double innateNameRevealDistance = 48.0d;
-    private final String honeypotName = AscendancyConfig.getInstance().getInnateNames().honeypot().name();
-    private final boolean honeypotEnabled = AscendancyConfig.getInstance().getInnateNames().honeypot().enabled();
 
-    public Component obfuscateName(String originalName) {
+    private static final double INNATE_NAME_REVEAL_DISTANCE = 48.0;
+    private static final TextColor OWN_NAME_COLOR = TextColor.color(0xB9926A);
+    private static final TextColor OTHER_NAME_COLOR = TextColor.color(0x6933b9);
+    private static final TextColor SPELL_INDICATOR_COLOR = TextColor.color(0x6933b9);
+
+    private final String honeypotName;
+    private final boolean honeypotEnabled;
+
+    public AscendancyChatSecretRender() {
+        AscendancyConfig config = AscendancyConfig.getInstance();
+        this.honeypotName = config.getInnateNames().honeypot().name();
+        this.honeypotEnabled = config.getInnateNames().honeypot().enabled();
+    }
+
+    @Override
+    public @NotNull Component render(
+            @NotNull Player source,
+            @NotNull Component sourceDisplayName,
+            @NotNull Component message,
+            @NotNull Audience viewer
+    ) {
+        if (!(viewer instanceof Player player)) {
+            return ChatRenderer.defaultRenderer().render(source, sourceDisplayName, message, viewer);
+        }
+
+        String content = extractTextContent(message);
+
+        // Check for honeypot violation
+        if (containsHoneypot(content)) {
+            return renderHoneypotViolation(source, sourceDisplayName, viewer);
+        }
+
+        // Process innate names
+        message = processInnateNames(message, content, source, player);
+
+        // Add spell indicator if applicable
+        message = addSpellIndicator(message, content);
+
+        return ChatRenderer.defaultRenderer().render(source, sourceDisplayName, message, viewer);
+    }
+
+    private String extractTextContent(Component message) {
+        return message instanceof TextComponent tc ? tc.content() : "";
+    }
+
+    private boolean containsHoneypot(String content) {
+        return honeypotEnabled && content.toLowerCase().contains(honeypotName.toLowerCase());
+    }
+
+    private Component renderHoneypotViolation(Player source, Component sourceDisplayName, Audience viewer) {
+        Component foolMessage = Component.text(
+                "I am a fool who thought Script doesn't know how obfuscated text works!"
+        );
+        return ChatRenderer.defaultRenderer().render(source, sourceDisplayName, foolMessage, viewer);
+    }
+
+    private Component processInnateNames(Component message, String content, Player source, Player viewer) {
+        String innateName = InnateUtils.findFirstValidInnateName(content, 0);
+        if (innateName == null) {
+            return message;
+        }
+
+        UUID ownerId = TrueNameManager.getInstance().findTrueNameOwner(innateName);
+        OfflinePlayer owner = ownerId != null ? Bukkit.getOfflinePlayer(ownerId) : null;
+
+        if (owner == null) {
+            return message;
+        }
+
+        PlayerData viewerData = PlayerDataManager.getInstance().getPlayerData(viewer);
+
+        // Handle name learning
+        if (isWithinRevealDistance(source, viewer) && !viewerData.knowsTrueName(innateName)) {
+            learnTrueName(viewer, owner, viewerData, innateName);
+        }
+
+        // Render name based on viewer's knowledge
+        return viewerData.knowsTrueName(innateName)
+                ? renderKnownName(message, innateName, viewerData, viewer)
+                : renderUnknownName(message, innateName);
+    }
+
+    private boolean isWithinRevealDistance(Player source, Player viewer) {
+        return source.getLocation().distance(viewer.getLocation()) < INNATE_NAME_REVEAL_DISTANCE;
+    }
+
+    private void learnTrueName(Player viewer, OfflinePlayer owner, PlayerData viewerData, String name) {
+        viewerData.learnName(name);
+        AscendancyMessagingAPI.getInstance().send(
+                viewer,
+                AscendancyMessagingAPI.MessageType.INFO,
+                "You have learned " + owner.getName() + "'s true name: " + name
+        );
+    }
+
+    private Component renderKnownName(Component message, String name, PlayerData viewerData, Player viewer) {
+        boolean isOwnName = viewerData.getTrueName().equalsIgnoreCase(name);
+        Style style = isOwnName
+                ? Style.style(OWN_NAME_COLOR, TextDecoration.UNDERLINED)
+                : Style.style(OTHER_NAME_COLOR);
+
+        if (isOwnName) {
+            viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+        }
+
+        return message.replaceText(builder ->
+                builder.matchLiteral(name)
+                        .replacement(Component.text(name).style(style))
+        );
+    }
+
+    private Component renderUnknownName(Component message, String name) {
+        return message.replaceText(builder ->
+                builder.matchLiteral(name)
+                        .replacement(obfuscateName(name))
+        );
+    }
+
+    private Component obfuscateName(String originalName) {
         String display = honeypotEnabled ? honeypotName : "*".repeat(originalName.length());
-
-        Component base = Component.text(display)
+        Component obfuscated = Component.text(display)
                 .style(Style.style(TextDecoration.OBFUSCATED));
 
-        // TODO: Format
-        Component hover = Component.text(
+        Component hoverText = Component.text(
                 "You have not heard this innate name yet.\n" +
                         "Try listening a little closer to see if you can hear someone whisper it."
         );
 
-        return base.hoverEvent(HoverEvent.showText(hover));
+        return obfuscated.hoverEvent(HoverEvent.showText(hoverText));
     }
 
-    @Override
-    public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
-        ChatRenderer defaultRender = ChatRenderer.defaultRenderer(); // Might be unnecessary
-        if (!(viewer instanceof Player player)) return defaultRender.render(source, sourceDisplayName, message, viewer);
-
-        String content = (message instanceof TextComponent tc)
-                ? tc.content()
-                : "";
-
-        // Honeypot check
-        if (honeypotEnabled &&
-                content.toLowerCase().contains(honeypotName.toLowerCase())) {
-            return defaultRender.render(source, sourceDisplayName, Component.text("I am a fool who thought Script doesn't know how obfuscated text works!"), viewer);
-        }
-
-        // Innate name detection
-        String name = InnateUtils.findFirstValidInnateName(content, 0);
-        // If a name was found
-        if (name != null) {
-
-            // Get the owner of the name
-            UUID uuid = TrueNameManager.getInstance().findTrueNameOwner(name);
-            Player owner = uuid != null ? Bukkit.getPlayer(uuid) : null;
-
-            // If the owner exists
-            if (owner != null) {
-                PlayerData viewerData = PlayerDataManager.getInstance().getPlayerData(player);
-                // If it was near me, learn the name
-                if (source.getLocation().distance(player.getLocation()) < innateNameRevealDistance) {
-                    viewerData.learnName(viewerData.getTrueName());
-                    AscendancyMessagingAPI.getInstance().send(player, AscendancyMessagingAPI.MessageType.INFO, "You have learned " + owner.getName() + "'s true name: " + name);
-                }
-                // Check if I know this name
-                if (viewerData.knowsTrueName(name)) {
-                    // I know the name! If it's mine, underline it and color it orange, otherwise purple
-                    Style style;
-                    if (viewerData.getTrueName().equalsIgnoreCase(name)) {
-                        style = Style.style(TextColor.color(0xB9926A), TextDecoration.UNDERLINED);
-                        // Play sound to alert us of our name being used.
-                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                    } else {
-                        style = Style.style(TextColor.color(0x6933b9));
-                    }
-                    // Replace the name string with the colored one
-                    message = message.replaceText(builder ->
-                            builder.matchLiteral(name)
-                                    .replacement(Component.text(name).style(style))
-                    );
-                } else {
-                    // I don't know this name, obfuscate it
-                    message = message.replaceText(builder ->
-                            builder.matchLiteral(name)
-                                    .replacement(obfuscateName(name))
-                    );
-                }
-            }
-        }
-
-        // Spell Detection
+    private Component addSpellIndicator(Component message, String content) {
         Spell spell = SpellUtility.getSpellFromString(content);
-        if (spell != null) {
-            message = message.append(Component.text(" ")
-                    .append(Component.text("Ⓘ")
-                            .hoverEvent(
-                                    HoverEvent.showText(
-                                            Component.text("Spell: " + spell.getDisplayName() + "\nID: " + spell.getId())
-                                    )
-                            ).style(
-                                    Style.style(TextColor.color(0x6933b9))
-                            )
-                    )
-            );
+        if (spell == null) {
+            return message;
         }
 
-        return defaultRender.render(source, sourceDisplayName, message, viewer);
+        Component indicator = Component.text(" ")
+                .append(Component.text("Ⓘ")
+                        .style(Style.style(SPELL_INDICATOR_COLOR))
+                ).hoverEvent(HoverEvent.showText(
+                        Component.text("Spell: " + spell.getDisplayName() + "\nID: " + spell.getId())
+                ));
+
+        return message.append(indicator);
     }
 }
