@@ -10,14 +10,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class RitualOfSoulSending extends AbstractRitual {
     // players in this range of the ritual will get teleported
     private static final double TARGET_RADIUS = 2.5d;
 
     public RitualOfSoulSending() {
-        super("teleport to innate", "Ritual of Soul Sending", RitualGrade.ADVANCED, buildStages());
+        super("ritual teleport innate", "Soul Sending", RitualGrade.ADVANCED, buildStages());
     }
 
     private static List<RitualStage> buildStages() {

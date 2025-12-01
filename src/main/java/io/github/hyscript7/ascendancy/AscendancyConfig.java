@@ -30,11 +30,16 @@ public class AscendancyConfig {
 
     public record BossProgression(int diamondKills, int netheriteKills, int killCreditRadius, int netherKills) {}
 
+    public record Rituals(VoidRevealing voidRevealing) {
+        public record VoidRevealing(int spawnProtectionDistance, int maxRange, int spawnProtectionBypassHeightBelow) {}
+    }
+
     private final InnateNames innateNames;
     private final VoidBan voidBan;
     private final VoidRealm voidRealm;
     private final SpellBooks spellBooks;
     private final BossProgression bossProgression;
+    private final Rituals rituals;
 
     private AscendancyConfig(AscendancyPlugin plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -76,6 +81,13 @@ public class AscendancyConfig {
                 config.getInt("boss_progression.netherite_kills"),
                 config.getInt("boss_progression.kill_credit_radius"),
                 config.getInt("boss_progression.nether_kills")
+        );
+        this.rituals = new Rituals(
+                new Rituals.VoidRevealing(
+                        config.getInt("rituals.void_revealing.spawn_protection_distance", 300),
+                        config.getInt("rituals.void_revealing.max_range", 32),
+                        config.getInt("rituals.void_revealing.spawn_protection_y_bypass_below", 0)
+                )
         );
     }
 }

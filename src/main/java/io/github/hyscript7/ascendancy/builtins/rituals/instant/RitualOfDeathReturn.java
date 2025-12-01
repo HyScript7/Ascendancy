@@ -6,8 +6,6 @@ import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 public class RitualOfDeathReturn extends AbstractRitual {
 
@@ -15,7 +13,7 @@ public class RitualOfDeathReturn extends AbstractRitual {
     private static final double TARGET_RADIUS = 2.5d;
 
     public RitualOfDeathReturn() {
-        super("return death", "Ritual of Return by Death", RitualGrade.INTERMEDIATE, buildStages());
+        super("ritual teleport grave", "Return to Death", RitualGrade.INTERMEDIATE, buildStages());
     }
 
     private static List<RitualStage> buildStages() {

@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class RitualOfHomeComing extends AbstractRitual {
 
@@ -15,7 +14,7 @@ public class RitualOfHomeComing extends AbstractRitual {
     private static final double TARGET_RADIUS = 2.5d;
 
     public RitualOfHomeComing() {
-        super("return home", "Ritual of Home Coming", RitualGrade.INTERMEDIATE, buildStages());
+        super("ritual teleport home", "Home Coming", RitualGrade.INTERMEDIATE, buildStages());
     }
 
     private static List<RitualStage> buildStages() {

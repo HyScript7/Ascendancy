@@ -1,8 +1,10 @@
 package io.github.hyscript7.ascendancy.builtins.rituals.lasting;
 
+import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.features.rituals.*;
+import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -13,8 +15,15 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class RitualOfVoidRevealing extends AbstractRitual {
+    private final int allowedHeight;
+    private final int spawnProtectionDistance;
+    private final int maximumRadius;
+
     public RitualOfVoidRevealing() {
-        super("orbital laser", "The Void Revealing Ritual", RitualGrade.MASTER, buildStages());
+        super("ritual orbital laser", "Void Revealing", RitualGrade.MASTER, buildStages());
+        allowedHeight = AscendancyConfig.getInstance().getRituals().voidRevealing().spawnProtectionBypassHeightBelow();
+        spawnProtectionDistance = AscendancyConfig.getInstance().getRituals().voidRevealing().spawnProtectionDistance();
+        maximumRadius = AscendancyConfig.getInstance().getRituals().voidRevealing().maxRange();
     }
 
     private static List<RitualStage> buildStages() {
@@ -56,10 +65,37 @@ public class RitualOfVoidRevealing extends AbstractRitual {
         );
     }
 
+    private World overworld = null;
+
+    private Location getWorldSpawn() {
+        if (overworld == null) {
+            overworld = Bukkit.getWorld("world");
+        }
+        assert overworld != null;
+        return overworld.getSpawnLocation();
+    }
+
+    private boolean isInProtectedDistance(Location location) {
+        Location castingLocation = location.clone();
+        castingLocation.setY(0);
+        Location spawnLocation = getWorldSpawn().clone();
+        location.setY(0);
+        return spawnLocation.distance(castingLocation) < spawnProtectionDistance;
+    }
+
+    @Override
+    public boolean canPerform(RitualContext context) {
+        // Disallow in the void realm
+        if (VoidRealmLayer.fromWorld(context.getLocation().getWorld()) != null) return false;
+        // Disallow too close to spawn
+        if (isInProtectedDistance(context.getLocation()) && context.getLocation().getY() > allowedHeight) return false;
+        return super.canPerform(context);
+    }
+
     @Override
     public ActiveRitualContext perform(RitualContext context, Consumer<Location> onSelfCancel) {
         int crystalCount = context.getSacrificedItems().stream().filter(itemStack -> itemStack.getType().equals(Material.END_CRYSTAL)).map(ItemStack::getAmount).findFirst().orElse(1);
-        int radius = Math.max(2, Math.min(crystalCount, 64) / 2);
+        int radius = Math.min(Math.max(2, crystalCount / 2), maximumRadius);
         AscendancyPlugin.getInstance().getLogger().info("Orbital Laser Ritual at " + context.getLocation().getBlockX() + " " + context.getLocation().getBlockY() + " " + context.getLocation().getBlockZ() + " initializing with radius " + radius + ".");
         return new ActiveRitualContext(
             context.getInvoker(),

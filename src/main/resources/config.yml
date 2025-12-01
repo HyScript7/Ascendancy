@@ -52,3 +52,13 @@ boss_progression:
   kill_credit_radius: 32
   # How many bosses need to die before the nether is open?
   nether_kills: 1
+rituals:
+  # Void Revealing Ritual Settings
+  void_revealing:
+    # How far from spawn must the player be to allow the ritual?
+    spawn_protection_distance: 300
+    # Below which Y should we allow the ritual inside the spawn protection distance?
+    # Set to -64 to disable (unless your world is deeper)
+    spawn_protection_y_bypass_below: 0
+    # Maximum allowed range for the crater
+    max_range: 32
