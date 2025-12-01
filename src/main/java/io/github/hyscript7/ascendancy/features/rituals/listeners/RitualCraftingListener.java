@@ -157,7 +157,8 @@ public class RitualCraftingListener implements Listener {
         LivingEntity entity = event.getEntity();
         Player killer = entity.getKiller();
 
-        if (killer == null) return;
+        if (killer == null && !(entity instanceof Player)) return;
+        else if (killer == null) killer = (Player) entity;
 
         RitualContext ritual = findNearestRitual(entity.getLocation(), MAX_SACRIFICE_DISTANCE);
 
