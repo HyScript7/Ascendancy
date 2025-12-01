@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'io.github.hyscript7'
-version = '2.0.0-MC1.21.8-SNAPSHOT'
+version = '2.1.0-MC1.21.8-SNAPSHOT'
 
 repositories {
     mavenCentral()
