@@ -131,7 +131,7 @@ public class PlayerData {
 
     public void learnName(String name) {
         markDirty();
-        this.trueName = name;
+        this.knownTrueNames.add(name);
     }
 
     public boolean knowsTrueName(String name) {
