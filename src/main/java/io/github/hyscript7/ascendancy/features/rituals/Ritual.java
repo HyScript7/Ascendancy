@@ -44,4 +44,11 @@ public interface Ritual extends Identifiable {
      * @return True if it can, false otherwise
      */
     boolean catalystAppropriate(ItemStack itemStack);
+
+    /**
+     * Called by the Ritual Listener when the soul fire block associated with this ritual is cancelled.
+     * Only applies to inactive rituals, as active rituals should override the task's cancel method.
+     * @param context The ritual context
+     */
+    default void onCancel(RitualContext context) {}
 }

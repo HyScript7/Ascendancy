@@ -250,7 +250,13 @@ public class RitualCraftingListener implements Listener {
                 .forEach(ritual -> {
                     pendingRituals.remove(ritual);
                     if (!ritual.isRitualReady()) {
-                        // If the ritual wasn't converted to an active one, announce it to the owner
+                        // If the ritual was identified, let it know it got cancelled
+                        // If the ritual ran already, isRitualReady **should** be true, meaning this won't run.
+                        if (ritual.isRitualIdentified()) {
+                            ritual.getIdentifiedRitual().onCancel(ritual);
+                        }
+                        // Also since isRitualReady is false, it means the ritual couldn't have run, and isn't active,
+                        // So we announce the ritual being cancelled to the owner.
                         playRitualBrokenEffects(ritual, ritual.getInvoker());
                     }
                 });
