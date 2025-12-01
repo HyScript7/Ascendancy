@@ -12,6 +12,7 @@ import io.github.hyscript7.ascendancy.features.magic.listeners.BookCastListener;
 import io.github.hyscript7.ascendancy.features.magic.listeners.LootGenerator;
 import io.github.hyscript7.ascendancy.features.magic.listeners.SpellIncantationListener;
 import io.github.hyscript7.ascendancy.features.rituals.listeners.RitualCraftingListener;
+import io.github.hyscript7.ascendancy.features.secretchat.SecretChatListener;
 import io.github.hyscript7.ascendancy.features.voidrealm.listeners.*;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
 import lombok.Getter;
@@ -80,6 +81,7 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new LootGenerator(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new BossKillListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new EquipmentRestrictionEnforcer(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new SecretChatListener(), this);
     }
 
     public static AscendancyPlugin getInstance() {
