@@ -1,6 +1,8 @@
 package io.github.hyscript7.ascendancy.registries;
 
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
+import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowHealth;
+import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowLive;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.Fireball;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfDeathReturn;
@@ -8,7 +10,7 @@ import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfHomeComin
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfSoulSending;
 import io.github.hyscript7.ascendancy.builtins.rituals.lasting.RitualOfVoidRevealing;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
-import io.github.hyscript7.ascendancy.builtins.innate.commands.other.Bestow;
+import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowItem;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnName;
 import io.github.hyscript7.ascendancy.features.magic.Spell;
 import io.github.hyscript7.ascendancy.features.rituals.Ritual;
@@ -59,7 +61,9 @@ public class RegistryManager {
 
     private void registerInnateCommands() {
         innateCommandRegistry.register(new GetOwnName());
-        innateCommandRegistry.register(new Bestow());
+        innateCommandRegistry.register(new BestowItem());
+        innateCommandRegistry.register(new BestowHealth());
+        innateCommandRegistry.register(new BestowLive());
         // TODO: Add commands
     }
 
