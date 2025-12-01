@@ -64,10 +64,6 @@ public class InnateCommandListener implements Listener {
         InnateContext context = builder.args(command.resolveArguments(message)).build();
 
         Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () -> handleExecution(context, command));
-
-        if (!command.targetsSelf()) {
-            revealTrueNameToNearbyPlayers(context, invoker);
-        }
     }
 
     private void handleExecution(InnateContext context, InnateCommand command) {
@@ -81,22 +77,6 @@ public class InnateCommandListener implements Listener {
         } else {
             playCommandFailEffects(context, command);
         }
-    }
-
-    private void revealTrueNameToNearbyPlayers(InnateContext context, Player invoker) {
-        PlayerData targetData = PlayerDataManager.getInstance().getPlayerData(context.target());
-        String playerName = context.target().getName();
-        String trueName = targetData.getTrueName();
-        Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () ->
-                Bukkit.selectEntities(invoker, "@a[distance=..64]").forEach(entity -> {
-                    if (entity instanceof Player player) {
-                        PlayerData playerData = PlayerDataManager.getInstance().getPlayerData(player);
-                        if (playerData.knowsTrueName(trueName)) return;
-                        playerData.learnName(trueName);
-                        AscendancyMessagingAPI.getInstance().send(player, AscendancyMessagingAPI.MessageType.INFO, "You have learned " + playerName + "'s true name: " + trueName);
-                    }
-                })
-        );
     }
 
     private void playCommandCastEffects(InnateContext ctx, InnateCommand cmd) {
