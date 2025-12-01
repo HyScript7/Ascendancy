@@ -146,11 +146,12 @@ public class EquipmentRestrictionEnforcer implements Listener {
 
         // Find free slot
         for (int slot : scanSlots) {
-            player.sendMessage("Found free slot " + slot + " containing " + inv.getItem(slot));
             inv.setItem(slot, item);
+            AscendancyPlugin.getInstance().getLogger().info("Player " + player.getName() + " has tried to hold an item which they haven't unlocked. It has been moved.");
             return;
         }
         // No free slots, drop that bitch
         player.getWorld().dropItemNaturally(player.getLocation(), item);
+        AscendancyPlugin.getInstance().getLogger().info("Player " + player.getName() + " has tried to hold an item which they haven't unlocked. It has been dropped at " + player.getLocation().getX() + " " + player.getLocation().getY() + " " + player.getLocation().getZ());
     }
 }
