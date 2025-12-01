@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Represents a ritual which was activated.

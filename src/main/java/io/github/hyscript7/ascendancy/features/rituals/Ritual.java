@@ -1,9 +1,11 @@
 package io.github.hyscript7.ascendancy.features.rituals;
 
 import io.github.hyscript7.ascendancy.registries.Identifiable;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface Ritual extends Identifiable {
     /**
@@ -27,7 +29,7 @@ public interface Ritual extends Identifiable {
      * @param context The ritual context
      * @return True if the ritual succeeded, otherwise false.
      */
-    ActiveRitualContext perform(RitualContext context);
+    ActiveRitualContext perform(RitualContext context, Consumer<Location> onSelfCancel);
 
     /**
      * Allows you to run various checks before perform is called.

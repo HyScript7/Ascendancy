@@ -1,11 +1,13 @@
 package io.github.hyscript7.ascendancy.features.rituals;
 
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class AbstractRitual implements Ritual {
     @Getter
@@ -48,6 +50,15 @@ public abstract class AbstractRitual implements Ritual {
             }
         }
         return true;
+    }
+
+    @Override
+    public ActiveRitualContext perform(RitualContext context, Consumer<Location> onSelfCancel) {
+        return perform(context);
+    }
+
+    public ActiveRitualContext perform(RitualContext context) {
+        return defaultInstantRitualContext(this, context);
     }
 
     @Override

@@ -143,10 +143,10 @@ public class RitualCraftingListener implements Listener {
 
         itemEntity.remove();
 
+        playItemSacrificedEffects(ritual, event.getPlayer());
+
         if (ritual.isRitualIdentified() && ritual.isRitualReady()) {
             handleRitualPrepared(ritual, event.getPlayer());
-        } else {
-            playItemSacrificedEffects(ritual, event.getPlayer());
         }
     }
 
@@ -170,10 +170,10 @@ public class RitualCraftingListener implements Listener {
         event.getDrops().clear();
         event.setDroppedExp(0);
 
+        playEntitySacrificedEffects(ritual, killer);
+
         if (ritual.isRitualIdentified() && ritual.isRitualReady()) {
             handleRitualPrepared(ritual, killer);
-        } else {
-            playEntitySacrificedEffects(ritual, killer);
         }
     }
 
@@ -289,7 +289,7 @@ public class RitualCraftingListener implements Listener {
         if (!context.isRitualReady()) throw new IllegalStateException("Called on an unfinished ritual");
         if (actor == null) actor = context.getInvoker();
         String ritualName = context.getIdentifiedRitual().getDisplayName();
-        String message = "The <bold>" + ritualName + "</bold> ritual is ready!" + "\nShift + Right Click to activate the ritual.";
+        String message = "The <bold>" + ritualName + "</bold> ritual is ready!" + "\nShift + Right Click to activate the ritual." + "\n<red>If you cancel the ritual now, you might not get your items back!";
         AscendancyMessagingAPI.getInstance().sendBoxed(actor, AscendancyMessagingAPI.MessageType.INFO, "Ritual", null, message);
     }
 
@@ -297,7 +297,7 @@ public class RitualCraftingListener implements Listener {
         Ritual ritual = context.getIdentifiedRitual();
         if (ritual == null) throw new IllegalStateException("Ritual not identified");
         cleanupPendingRitualsAt(context.getLocation());
-        ActiveRitualContext activeContext = ritual.perform(context);
+        ActiveRitualContext activeContext = ritual.perform(context, this::cleanupActiveRitualsAt);
         if (activeContext.isLasting()) {
             activeRituals.put(activeContext, activeContext.player().getUniqueId());
         } else {
@@ -331,18 +331,18 @@ public class RitualCraftingListener implements Listener {
     private void playRitualBrokenEffects(RitualContext ritual, Player actor) {
         actor.sendMessage(
                 Component.text("Ritual circle at ", NamedTextColor.DARK_GRAY)
-                        .append(Component.text(ritual.getLocation().toString(), NamedTextColor.RED)
+                        .append(Component.text(ritual.getLocation().getBlockX() + " " + ritual.getLocation().getBlockY() + " " + ritual.getLocation().getBlockZ(), NamedTextColor.RED)
                                 .style(Style.style(TextDecoration.BOLD)))
-                        .append(Component.text(" broken", NamedTextColor.DARK_GRAY))
+                        .append(Component.text(" has been broken!", NamedTextColor.DARK_GRAY))
         );
     }
 
     private void playActiveRitualBrokenEffects(ActiveRitualContext ritual, Player actor) {
         actor.sendMessage(
                 Component.text("Running ritual at ", NamedTextColor.DARK_GRAY)
-                        .append(Component.text(ritual.location().toString(), NamedTextColor.RED)
+                        .append(Component.text(ritual.location().getBlockX() + " " + ritual.location().getBlockY() + " " + ritual.location().getBlockZ(), NamedTextColor.RED)
                                 .style(Style.style(TextDecoration.BOLD)))
-                        .append(Component.text(" broken", NamedTextColor.DARK_GRAY))
+                        .append(Component.text(" has been broken!", NamedTextColor.DARK_GRAY))
         );
     }
 
