@@ -6,11 +6,11 @@ import org.bukkit.Material;
 import java.util.Set;
 
 public enum RitualGrade {
-    BASIC(Material.AMETHYST_SHARD, Material.ECHO_SHARD, Material.WHITE_BANNER), // White banner because of pillager banners and faction creation
-    INTERMEDIATE(Material.CREEPER_HEAD, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL, Material.PRISMARINE_SHARD, Material.PRISMARINE_CRYSTALS, Material.ENDER_EYE),
-    ADVANCED(Material.PLAYER_HEAD, Material.NETHERITE_INGOT),
-    MASTER(Material.DRAGON_HEAD, Material.TOTEM_OF_UNDYING, Material.PIGLIN_HEAD, Material.WITHER_SKELETON_SKULL),
-    MYTHIC(Material.NETHER_STAR, Material.DRAGON_EGG);
+    BASIC(Material.AMETHYST_SHARD, Material.WHITE_BANNER), // White banner because of pillager banners and faction creation
+    INTERMEDIATE(Material.BLAZE_POWDER, Material.BREEZE_ROD, Material.PRISMARINE_CRYSTALS, Material.ENDER_PEARL),
+    ADVANCED(Material.ENDER_EYE, Material.END_CRYSTAL, Material.COOKIE), // Cookie
+    MASTER(Material.ECHO_SHARD, Material.NETHERITE_INGOT, Material.WITHER_ROSE),
+    MYTHIC(Material.NETHER_STAR, Material.DRAGON_HEAD);
 
     @Getter
     private final Set<Material> catalysts;
@@ -31,5 +31,13 @@ public enum RitualGrade {
             }
         }
         return null;
+    }
+
+    public boolean greaterThan(RitualGrade other) {
+        return this.compareTo(other) > 0;
+    }
+
+    public boolean lesserThan(RitualGrade other) {
+        return this.compareTo(other) < 0;
     }
 }
