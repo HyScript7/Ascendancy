@@ -13,6 +13,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -164,10 +165,12 @@ public class AscendancyChatSecretRender implements ChatRenderer {
         }
 
         Component indicator = Component.text(" ")
-                .append(Component.text("Ⓘ")
+                .append(Component.text("(i)")
                         .style(Style.style(SPELL_INDICATOR_COLOR))
                 ).hoverEvent(HoverEvent.showText(
-                        Component.text("Spell: " + spell.getDisplayName() + "\nID: " + spell.getId())
+                        Component.text("Spell: ").style(Style.style(SPELL_INDICATOR_COLOR))
+                                .append(Component.text(spell.getDisplayName()).style(Style.style(TextColor.color(0x6933b9))))
+                                .append(Component.text("\nID: " + spell.getId()).style(Style.style(NamedTextColor.GRAY)))
                 ));
 
         return message.append(indicator);
