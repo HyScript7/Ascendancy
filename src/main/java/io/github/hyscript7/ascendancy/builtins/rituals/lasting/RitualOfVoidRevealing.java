@@ -5,6 +5,7 @@ import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.features.rituals.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -33,23 +34,23 @@ public class RitualOfVoidRevealing extends AbstractRitual {
             new RitualStage() {
                 @Override
                 public boolean isComplete(RitualContext context) {
-                    return context.getSacrificedItems().stream().anyMatch(item -> item.getType().equals(Material.TNT));
+                    return context.getSacrificedEntities().getOrDefault(EntityType.PLAYER, 0) > 0;
                 }
 
                 @Override
                 public String getHint(RitualContext context) {
-                    return "Sacrifice a TNT";
+                    return "Sacrifice a Player";
                 }
             },
             new RitualStage() {
                 @Override
                 public boolean isComplete(RitualContext context) {
-                    return context.getCatalyst().getType().equals(Material.END_CRYSTAL) || context.getSacrificedItems().stream().anyMatch(item -> item.getType().equals(Material.END_CRYSTAL));
+                    return context.getSacrificedItems().stream().anyMatch(item -> item.getType().equals(Material.END_CRYSTAL));
                 }
 
                 @Override
                 public String getHint(RitualContext context) {
-                    return "Sacrifice an End Crystal or restart the ritual using one as a catalyst.";
+                    return "Sacrifice an End Crystal.";
                 }
             }
         );
@@ -57,9 +58,8 @@ public class RitualOfVoidRevealing extends AbstractRitual {
 
     @Override
     public ActiveRitualContext perform(RitualContext context, Consumer<Location> onSelfCancel) {
-        int radiusTnt = context.getSacrificedItems().stream().filter(itemStack -> itemStack.getType().equals(Material.TNT)).map(ItemStack::getAmount).findFirst().orElse(1);
-        int radiusCrystal = Math.max(0, (int) (context.getSacrificedItems().stream().filter(itemStack -> itemStack.getType().equals(Material.END_CRYSTAL)).map(ItemStack::getAmount).findFirst().orElse(1) - 1L) * 8);
-        int radius = Math.max(2, Math.min(radiusTnt + radiusCrystal, 64) / 2);
+        int crystalCount = context.getSacrificedItems().stream().filter(itemStack -> itemStack.getType().equals(Material.END_CRYSTAL)).map(ItemStack::getAmount).findFirst().orElse(1);
+        int radius = Math.max(2, Math.min(crystalCount, 64) / 2);
         AscendancyPlugin.getInstance().getLogger().info("Orbital Laser Ritual at " + context.getLocation().getBlockX() + " " + context.getLocation().getBlockY() + " " + context.getLocation().getBlockZ() + " initializing with radius " + radius + ".");
         return new ActiveRitualContext(
             context.getInvoker(),
