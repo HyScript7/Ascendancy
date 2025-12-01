@@ -31,7 +31,7 @@ public class AscendancyMessagingAPI {
 
     public AscendancyMessagingAPI(String pluginName) {
         this.miniMessage = MiniMessage.miniMessage();
-        this.prefix = "<gradient:#6933b9:#8a5dcf>[" + pluginName + "]</gradient> ";
+        this.prefix = "<gradient:#6933b9:#896dcf>[" + pluginName + "]</gradient> ";
         this.typeConfigs = new HashMap<>();
 
         // Initialize default message type configurations
