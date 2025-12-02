@@ -8,7 +8,7 @@ import org.bukkit.attribute.Attribute;
 
 public class Sanatio extends AbstractRegexIncantationSpell {
     public Sanatio() {
-        super("sanatio", "Sanatio", ".*([Ss]anatio|[Hh]eal|[Mm]end).*", SpellTier.RARE, 50, 30 * 1000);
+        super("sanatio", "Sanatio", ".*([Ss]anatio|[Dd]ivine\\s[Ll]ight).*", SpellTier.RARE, 50, 30 * 1000);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class Sanatio extends AbstractRegexIncantationSpell {
         return true;
     }
 
-    private static final String[] incantations = new String[] {"Sanatio", "Heal", "Mend"};
+    private static final String[] incantations = new String[] {"Sanatio", "Divine Light"};
 
     @Override
     public String getIncantation() {
