@@ -31,7 +31,10 @@ public class ItemSacrifice implements RitualStage {
     @Override
     public boolean isComplete(RitualContext context) {
         Optional<ItemStack> stack = context.getSacrificedItems().stream().filter(meta -> meta.getType() == itemType).findFirst();
-        if (stack.isEmpty()) return false;
+        if (stack.isEmpty() && fallback == null) return false;
+        else if (fallback != null) {
+            return fallback.isComplete(context);
+        }
         if (metaPredicate != null && !metaPredicate.test(stack.get().getItemMeta())) return false;
         if (stack.get().getAmount() >= minAmount && stack.get().getAmount() <= maxAmount) {
             return true;

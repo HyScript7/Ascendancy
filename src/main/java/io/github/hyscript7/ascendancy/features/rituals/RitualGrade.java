@@ -6,10 +6,10 @@ import org.bukkit.Material;
 import java.util.Set;
 
 public enum RitualGrade {
-    BASIC(Material.AMETHYST_SHARD, Material.WHITE_BANNER), // White banner because of pillager banners and faction creation
-    INTERMEDIATE(Material.BLAZE_POWDER, Material.BREEZE_ROD, Material.PRISMARINE_CRYSTALS, Material.PRISMARINE_SHARD, Material.ENDER_PEARL),
-    ADVANCED(Material.ENDER_EYE, Material.END_CRYSTAL, Material.ANCIENT_DEBRIS),
-    MASTER(Material.ECHO_SHARD, Material.NETHERITE_INGOT, Material.WITHER_ROSE, Material.DRAGON_BREATH),
+    BASIC(Material.AMETHYST_SHARD, Material.WHITE_BANNER, Material.ZOMBIE_HEAD), // White banner because of pillager banners and faction creation
+    INTERMEDIATE(Material.BLAZE_POWDER, Material.BREEZE_ROD, Material.PRISMARINE_CRYSTALS, Material.PRISMARINE_SHARD, Material.ENDER_PEARL, Material.SKELETON_SKULL, Material.CREEPER_HEAD),
+    ADVANCED(Material.ENDER_EYE, Material.END_CRYSTAL, Material.ANCIENT_DEBRIS, Material.PIGLIN_HEAD, Material.WITHER_SKELETON_SKULL),
+    MASTER(Material.ECHO_SHARD, Material.NETHERITE_INGOT, Material.WITHER_ROSE, Material.DRAGON_BREATH, Material.PLAYER_HEAD),
     MYTHIC(Material.NETHER_STAR, Material.DRAGON_HEAD);
 
     @Getter
