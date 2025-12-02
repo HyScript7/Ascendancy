@@ -38,7 +38,7 @@ public class RitualOfLevitation extends AbstractRitual {
         int sacrificedItems = context.getSacrificedItems().stream().filter(itemStack -> itemStack.getType().equals(Material.FEATHER)).map(ItemStack::getAmount).findFirst().orElse(0);
         int sacrificedMobs = context.getSacrificedEntities().entrySet().stream().filter(kv -> kv.getKey().equals(EntityType.CHICKEN)).map(Map.Entry::getValue).findFirst().orElse(0);
         int strength = (int) Math.min(125, ((Math.log((sacrificedMobs * 2) + sacrificedItems) / Math.log(2))+1) * 20);
-        int duration = (int) (Math.min(25, Math.pow((sacrificedItems + sacrificedMobs * 2),2)) * 20);
+        int duration = (int) (Math.min(10, Math.pow((sacrificedItems + sacrificedMobs * 2),2)) * 20);
         AscendancyPlugin.getInstance().getLogger().info("Levitation ritual casted with duration " + duration + " and strength " + strength);
         context.getLocation().getNearbyEntitiesByType(Player.class, 5,5,5).forEach(
                 player -> {

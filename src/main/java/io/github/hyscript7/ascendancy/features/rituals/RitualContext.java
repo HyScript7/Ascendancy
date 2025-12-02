@@ -1,5 +1,6 @@
 package io.github.hyscript7.ascendancy.features.rituals;
 
+import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Builder
@@ -56,7 +58,7 @@ public class RitualContext {
 
     private void attemptToIdentifyRitual() {
         // Already identified, nothing to do
-        if (identifiedRitual.isPresent()) {
+        if (identifiedRitual.isPresent() && possibleRituals.size() == 1) {
             return;
         }
 
@@ -79,6 +81,20 @@ public class RitualContext {
                 .map(Intermediary::ritual)
                 .toList();
 
+        AscendancyPlugin.getInstance().getLogger().info("Possible rituals at "  + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + " computed with " + possibleRituals.size() + " possibilities: ");
+        possibleRituals.forEach(ritual -> {
+            int stagesComplete = (int) ritual.getStages().stream()
+                    .filter(stage -> stage.isComplete(this)).count();
+            AscendancyPlugin.getInstance().getLogger().info("- " + ritual.getId() + ": " + stagesComplete + (ritual.canPerform(this) ? "(READY)" : "") + (ritual.catalystAppropriate(this.catalyst) ? "[Catalyst OK]" : "[Catalyst INAPPROPRIATE]"));
+        });
+
+        List<Ritual> canActivateNow = possibleRituals.stream().filter(ritual -> ritual.canPerform(this)).toList();
+
+        if (canActivateNow.size() == 1) {
+            identifiedRitual = Optional.of(canActivateNow.getFirst());
+            AscendancyPlugin.getInstance().getLogger().info("PREEMPTIVE_MATCH: Ritual at " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + " has been identified as " + identifiedRitual.get().getDisplayName() + " (" + identifiedRitual.get().getId() + ") can be activated now!");
+        }
+
         // Check if we can uniquely identify a ritual
         if (possibleRituals.isEmpty()) {
             return; // No matching rituals
@@ -86,6 +102,7 @@ public class RitualContext {
 
         if (possibleRituals.size() == 1) {
             identifiedRitual = Optional.of(possibleRituals.getFirst());
+            AscendancyPlugin.getInstance().getLogger().info("SINGLE_MATCH: Ritual at " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + " has been identified as " + identifiedRitual.get().getDisplayName() + " (" + identifiedRitual.get().getId() + ")");
         } else {
             // Get the top ritual(s) by completion count
             Ritual topRitual = possibleRituals.getFirst();
@@ -100,6 +117,7 @@ public class RitualContext {
 
             if (topCompletedStages > secondBestStages) {
                 identifiedRitual = Optional.of(topRitual);
+                AscendancyPlugin.getInstance().getLogger().info("STAGES_MOST: Ritual at " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + " has been identified as " + identifiedRitual.get().getDisplayName() + " (" + identifiedRitual.get().getId() + ")");
             }
             // Otherwise, keep possibleRituals for next attempt
         }

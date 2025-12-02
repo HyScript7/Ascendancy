@@ -8,7 +8,9 @@ import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.vehicle.VehicleCollisionEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Optional;
@@ -76,11 +78,8 @@ public class RitualOfVoidRevealing extends AbstractRitual {
     }
 
     private boolean isInProtectedDistance(Location location) {
-        Location castingLocation = location.clone();
-        castingLocation.setY(0);
-        Location spawnLocation = getWorldSpawn().clone();
-        location.setY(0);
-        return spawnLocation.distance(castingLocation) < spawnProtectionDistance;
+        Location spawnLocation = getWorldSpawn();
+        return new Vector(location.getX(), 0, location.getZ()).distance(new Vector(spawnLocation.getX(), 0, getWorldSpawn().getZ())) < spawnProtectionDistance;
     }
 
     @Override
