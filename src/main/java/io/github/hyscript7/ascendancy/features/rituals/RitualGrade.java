@@ -7,9 +7,9 @@ import java.util.Set;
 
 public enum RitualGrade {
     BASIC(Material.AMETHYST_SHARD, Material.WHITE_BANNER), // White banner because of pillager banners and faction creation
-    INTERMEDIATE(Material.BLAZE_POWDER, Material.BREEZE_ROD, Material.PRISMARINE_CRYSTALS, Material.ENDER_PEARL),
-    ADVANCED(Material.ENDER_EYE, Material.END_CRYSTAL, Material.COOKIE), // Cookie
-    MASTER(Material.ECHO_SHARD, Material.NETHERITE_INGOT, Material.WITHER_ROSE),
+    INTERMEDIATE(Material.BLAZE_POWDER, Material.BREEZE_ROD, Material.PRISMARINE_CRYSTALS, Material.PRISMARINE_SHARD, Material.ENDER_PEARL),
+    ADVANCED(Material.ENDER_EYE, Material.END_CRYSTAL, Material.ANCIENT_DEBRIS),
+    MASTER(Material.ECHO_SHARD, Material.NETHERITE_INGOT, Material.WITHER_ROSE, Material.DRAGON_BREATH),
     MYTHIC(Material.NETHER_STAR, Material.DRAGON_HEAD);
 
     @Getter
