@@ -4,7 +4,7 @@ import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowHealth;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowLive;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
-import io.github.hyscript7.ascendancy.builtins.magic.spells.Fireball;
+import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfDeathReturn;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfHomeComing;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfSoulSending;
@@ -77,7 +77,7 @@ public class RegistryManager {
     }
 
     private void registerSpells() {
-        spellRegistry.register(new Fireball());
+        spellRegistry.register(new FireballSpell());
         spellRegistry.register(new VoidWalk());
         // TODO: Add spells
     }

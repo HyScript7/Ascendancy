@@ -5,9 +5,9 @@ import io.github.hyscript7.ascendancy.features.magic.AbstractRegexIncantationSpe
 import io.github.hyscript7.ascendancy.features.magic.SpellContext;
 import io.github.hyscript7.ascendancy.features.magic.SpellTier;
 
-public class Fireball extends AbstractRegexIncantationSpell {
-    public Fireball() {
-        super("fireball", "Fireball", ".*([Ff]ire\\s[Bb]all|[Ff]ire\\s[Ss]phere|[Ii]gnis).*", SpellTier.COMMON, 20, 10 * 1000);
+public class FireballSpell extends AbstractRegexIncantationSpell {
+    public FireballSpell() {
+        super("fireball", "Ignis", ".*([Ff]ire\\s[Bb]all|[Ff]ire\\s[Ss]phere|[Ii]gnis).*", SpellTier.COMMON, 20, 10 * 1000);
     }
 
     @Override
