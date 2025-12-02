@@ -3,7 +3,6 @@ package io.github.hyscript7.ascendancy.builtins.innate.commands.self;
 import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
-import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.AbstractInnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateContext;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateUtils;
