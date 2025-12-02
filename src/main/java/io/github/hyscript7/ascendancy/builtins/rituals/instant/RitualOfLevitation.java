@@ -2,6 +2,9 @@ package io.github.hyscript7.ascendancy.builtins.rituals.instant;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.features.rituals.*;
+import io.github.hyscript7.ascendancy.features.rituals.requirements.EntitySacrifice;
+import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemExclusivityFactory;
+import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemSacrifice;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -11,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RitualOfLevitation extends AbstractRitual {
     public RitualOfLevitation() {
@@ -19,17 +23,11 @@ public class RitualOfLevitation extends AbstractRitual {
 
     private static List<RitualStage> buildStages() {
         return List.of(
-                new RitualStage() {
-                    @Override
-                    public boolean isComplete(RitualContext context) {
-                        return context.getSacrificedItems().stream().anyMatch(itemStack -> itemStack.getType().equals(Material.FEATHER)) || context.getSacrificedEntities().containsKey(EntityType.CHICKEN);
-                    }
-
-                    @Override
-                    public String getHint(RitualContext context) {
-                        return "Add 1x feather or sacrifice a chicken.";
-                    }
-                }
+            new ItemExclusivityFactory(Set.of(Material.FEATHER)).on(
+                    ItemSacrifice.builder().itemType(Material.FEATHER).minAmount(1).fallback(
+                            EntitySacrifice.builder().entityType(EntityType.CHICKEN).minAmount(1).build()
+                    ).build()
+            )
         );
     }
 

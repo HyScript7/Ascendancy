@@ -2,10 +2,13 @@ package io.github.hyscript7.ascendancy.builtins.rituals.instant;
 
 import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.features.rituals.*;
+import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemExclusivityFactory;
+import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemSacrifice;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Set;
 
 public class RitualOfDeathReturn extends AbstractRitual {
 
@@ -18,26 +21,8 @@ public class RitualOfDeathReturn extends AbstractRitual {
 
     private static List<RitualStage> buildStages() {
         return List.of(
-                new RitualStage() {
-                    @Override
-                    public boolean isComplete(RitualContext context) {
-                        return context.getSacrificedItems().stream().anyMatch(item -> item.getType().equals(Material.RECOVERY_COMPASS));
-                    }
-
-                    @Override
-                    public String getHint(RitualContext context) {
-                        return "Sacrifice a recovery compass";
-                    }
-                }
+                new ItemExclusivityFactory(Set.of(Material.RECOVERY_COMPASS)).on(ItemSacrifice.builder().itemType(Material.RECOVERY_COMPASS).maxAmount(1).minAmount(1).build())
         );
-    }
-
-    @Override
-    public boolean catalystAppropriate(ItemStack itemStack) {
-        Material material = itemStack.getType();
-        RitualGrade catalyst = RitualGrade.fromCatalyst(material);
-        if (catalyst == null) return false; // the fuck?
-        return material.equals(Material.ENDER_EYE) || material.equals(Material.ENDER_PEARL) || catalyst.greaterThan(RitualGrade.ADVANCED);
     }
 
     @Override
