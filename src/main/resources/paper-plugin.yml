@@ -1,5 +1,5 @@
 name: Ascendancy
-version: '1.0.0-MC1.21.8-SNAPSHOT'
+version: '2.1.0-MC1.21.8-SNAPSHOT'
 main: io.github.hyscript7.ascendancy.AscendancyPlugin
 api-version: '1.21'
 authors: [HyScript7, AngrytrashCZ]
