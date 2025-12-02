@@ -3,6 +3,7 @@ package io.github.hyscript7.ascendancy.registries;
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowHealth;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowLive;
+import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnLives;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
 import io.github.Youngcoder45.ascendancy.spells.Fulmen;
@@ -66,6 +67,7 @@ public class RegistryManager {
 
     private void registerInnateCommands() {
         innateCommandRegistry.register(new GetOwnName());
+        innateCommandRegistry.register(new GetOwnLives());
         innateCommandRegistry.register(new BestowItem());
         innateCommandRegistry.register(new BestowHealth());
         innateCommandRegistry.register(new BestowLive());
