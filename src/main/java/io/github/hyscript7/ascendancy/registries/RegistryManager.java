@@ -6,9 +6,9 @@ import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowLive;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnLives;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
-import io.github.Youngcoder45.ascendancy.spells.Fulmen;
-import io.github.Youngcoder45.ascendancy.spells.Sanatio;
-import io.github.Youngcoder45.ascendancy.spells.Ventus;
+import io.github.youngcoder45.ascendancy.spells.Fulmen;
+import io.github.youngcoder45.ascendancy.spells.Sanatio;
+import io.github.youngcoder45.ascendancy.spells.Ventus;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfDeathReturn;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfHomeComing;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfSoulSending;
@@ -19,8 +19,8 @@ import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnName;
 import io.github.hyscript7.ascendancy.features.magic.Spell;
 import io.github.hyscript7.ascendancy.features.rituals.Ritual;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfLevitation;
-import io.github.Youngcoder45.ascendancy.rituals.RitualOfSunshine;
-import io.github.Youngcoder45.ascendancy.rituals.RitualOfTheWolf;
+import io.github.youngcoder45.ascendancy.rituals.RitualOfSunshine;
+import io.github.youngcoder45.ascendancy.rituals.RitualOfTheWolf;
 import lombok.Getter;
 
 /**

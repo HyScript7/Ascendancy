@@ -1,4 +1,4 @@
-package io.github.Youngcoder45.ascendancy.rituals;
+package io.github.youngcoder45.ascendancy.rituals;
 
 import io.github.hyscript7.ascendancy.features.rituals.*;
 import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemExclusivityFactory;

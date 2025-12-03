@@ -1,4 +1,4 @@
-package io.github.Youngcoder45.ascendancy.spells;
+package io.github.youngcoder45.ascendancy.spells;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.features.magic.AbstractRegexIncantationSpell;
