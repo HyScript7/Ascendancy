@@ -6,6 +6,7 @@ import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowLive;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnLives;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
+import io.github.hyscript7.ascendancy.builtins.magic.spells.Vonszol;
 import io.github.youngcoder45.ascendancy.spells.Fulmen;
 import io.github.youngcoder45.ascendancy.spells.Sanatio;
 import io.github.youngcoder45.ascendancy.spells.Ventus;
@@ -91,6 +92,7 @@ public class RegistryManager {
         spellRegistry.register(new Fulmen());
         spellRegistry.register(new Ventus());
         spellRegistry.register(new Sanatio());
+        spellRegistry.register(new Vonszol());
         // TODO: Add spells
     }
 }
