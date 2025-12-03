@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 
 public class Ventus extends AbstractRegexIncantationSpell {
     public Ventus() {
-        super("ventus", "Ventus", ".*([Vv]entus|[Dd]ash|[Ww]ind).*", SpellTier.COMMON, 15, 5 * 1000);
+        super("ventus", "Ventus", ".*\\b([Vv]entus|[Dd]ash|[Ww]ind)\\b.*", SpellTier.COMMON, 15, 5 * 1000);
     }
 
     @Override

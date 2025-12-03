@@ -7,7 +7,7 @@ import io.github.hyscript7.ascendancy.features.magic.SpellTier;
 
 public class FireballSpell extends AbstractRegexIncantationSpell {
     public FireballSpell() {
-        super("fireball", "Ignis", ".*([Ff]ire\\s[Bb]all|[Ff]ire\\s[Ss]phere|[Ii]gnis).*", SpellTier.COMMON, 20, 10 * 1000);
+        super("fireball", "Ignis", ".*\\b([Ff]ire\\s[Bb]all|[Ff]ire\\s[Ss]phere|[Ii]gnis)\\b.*", SpellTier.COMMON, 20, 10 * 1000);
     }
 
     @Override

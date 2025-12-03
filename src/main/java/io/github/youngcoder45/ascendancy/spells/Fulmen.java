@@ -9,7 +9,7 @@ import org.bukkit.block.Block;
 
 public class Fulmen extends AbstractRegexIncantationSpell {
     public Fulmen() {
-        super("fulmen", "Fulmen", ".*([Ff]ulmen|[Ll]ightning\\s[Ss]trike|[Tt]hunder).*", SpellTier.UNCOMMON, 30, 15 * 1000);
+        super("fulmen", "Fulmen", ".*\\b([Ff]ulmen|[Ll]ightning\\s[Ss]trike|[Tt]hunder)\\b.*", SpellTier.UNCOMMON, 30, 15 * 1000);
     }
 
     @Override

@@ -35,12 +35,13 @@ public class SpellUtility {
         }
         if (spell.canCast(context)) {
             // TODO: Check mana & send feedback if low
-            SpellCooldownManager.getInstance().setPlayerOnCooldown(context.getCaster(), spell);
             Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () -> {
                 if (spell.cast(context)) {
                     AscendancyMessagingAPI.getInstance().send(context.getCaster(), AscendancyMessagingAPI.MessageType.SUCCESS, "You cast " + spell.getDisplayName() + "!");
+                    SpellCooldownManager.getInstance().setPlayerOnCooldown(context.getCaster(), spell);
                 } else {
                     AscendancyMessagingAPI.getInstance().send(context.getCaster(), AscendancyMessagingAPI.MessageType.ERROR, "You whispered the words to cast " + spell.getDisplayName() + ", but the spell failed!");
+                    // Don't CD if the spell didn't cast (exited with a false)
                 }
             });
         }
