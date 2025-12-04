@@ -10,6 +10,7 @@ import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.Vonszol;
 import io.github.hyscript7.ascendancy.builtins.threefolds.existences.ThePrimordialAbyss;
+import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.AbyssInnateProtect;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.AbyssLayerAscend;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.AbyssLayerDescend;
 import io.github.hyscript7.ascendancy.features.threefold.ThreefoldAudience;
@@ -120,5 +121,6 @@ public class RegistryManager {
         // TODO: Register threefold incantations
         threefoldIncantationRegistry.register(new AbyssLayerDescend());
         threefoldIncantationRegistry.register(new AbyssLayerAscend());
+        threefoldIncantationRegistry.register(new AbyssInnateProtect());
     }
 }
