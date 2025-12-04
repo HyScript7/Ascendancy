@@ -21,7 +21,7 @@ public class AbyssLayerAscend extends AbstractThreefoldIncantation {
     public AbyssLayerAscend() {
         super("abyss ascent", "Abysmal Ascent", new String[]{
                 "I pray for your attention",
-                "I pray for you to let me exit this empty realm"
+                "I pray for you to let me leave this empty realm"
         }, ThePrimordialAbyss.id);
     }
 
@@ -29,8 +29,12 @@ public class AbyssLayerAscend extends AbstractThreefoldIncantation {
     public void execute(ThreefoldContext context) {
         Player player = context.player();
         VoidRealmLayer oldLayer = getPlayersLayer(player);
-        if (!(oldLayer == VoidRealmLayer.ABYSS && player.isDead())) {
+        if (player.isDead()) return;
+        if (oldLayer == VoidRealmLayer.ABYSS) {
             player.addPotionEffect(PotionEffectType.LEVITATION.createEffect(10 * 20, 99));
+        } else {
+            // If in oblivion, go to abyss, otherwise if in reflection, go to oblivion.
+            layerChanger.changeLayer(player, oldLayer == VoidRealmLayer.REFLECTION ? VoidRealmLayer.OBLIVION : VoidRealmLayer.ABYSS);
         }
     }
 
