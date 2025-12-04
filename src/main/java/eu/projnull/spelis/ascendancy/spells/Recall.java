@@ -36,6 +36,11 @@ public class Recall extends AbstractRegexIncantationSpell {
 
     @Override
     public boolean canCast(SpellContext context) {
+        // Since this collides with an innate name command, we won't execute in cases where it seems to be one.
+        if (context.getRawIncantation().toLowerCase().startsWith("i recall my")) {
+            return false;
+        }
+        // I know IDEA is screaming to return the condition itself, but screw that.
         return true;
     }
 
