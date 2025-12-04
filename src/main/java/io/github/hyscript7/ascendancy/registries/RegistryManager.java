@@ -7,6 +7,10 @@ import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnLives;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.Vonszol;
+import io.github.hyscript7.ascendancy.builtins.threefolds.existences.ThePrimordialAbyss;
+import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.AbyssLayerDescend;
+import io.github.hyscript7.ascendancy.features.threefold.ThreefoldAudience;
+import io.github.hyscript7.ascendancy.features.threefold.ThreefoldIncantation;
 import io.github.youngcoder45.ascendancy.spells.Fulmen;
 import io.github.youngcoder45.ascendancy.spells.Sanatio;
 import io.github.youngcoder45.ascendancy.spells.Ventus;
@@ -34,6 +38,8 @@ public class RegistryManager {
     private final Registry<InnateCommand> innateCommandRegistry;
     private final Registry<Ritual> ritualRegistry;
     private final Registry<Spell> spellRegistry;
+    private final Registry<ThreefoldAudience> threefoldAudienceRegistry;
+    private final Registry<ThreefoldIncantation> threefoldIncantationRegistry;
 
     private boolean initialized;
 
@@ -42,6 +48,8 @@ public class RegistryManager {
         this.innateCommandRegistry = new Registry<>("InnateCommands");
         this.ritualRegistry = new Registry<>("Rituals");
         this.spellRegistry= new Registry<>("Spells");
+        this.threefoldAudienceRegistry = new Registry<>("ThreefoldAudiences");
+        this.threefoldIncantationRegistry = new Registry<>("ThreefoldIncantations");
     }
 
     public static RegistryManager getInstance() {
@@ -60,6 +68,8 @@ public class RegistryManager {
         registerInnateCommands();
         registerRituals();
         registerSpells();
+        registerThreefoldAudiences();
+        registerThreefoldIncantations();
 
         // Lock all registries
 
@@ -94,5 +104,13 @@ public class RegistryManager {
         spellRegistry.register(new Sanatio());
         spellRegistry.register(new Vonszol());
         // TODO: Add spells
+    }
+
+    private void registerThreefoldAudiences() {
+        // TODO: Register threefold audiences
+    }
+
+    private void registerThreefoldIncantations() {
+        // TODO: Register threefold incantations
     }
 }
