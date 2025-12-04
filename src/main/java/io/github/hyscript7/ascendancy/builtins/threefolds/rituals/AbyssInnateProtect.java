@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class AbyssInnateProtect extends AbstractThreefoldIncantation {
     public AbyssInnateProtect() {
-        super("abyss ascent", "Abysmal Ascent", new String[]{
+        super("abyss innate name protect", "Abysmal Ascent", new String[]{
                 "I beg for your attention",
                 "I beg of you to hide my true name within the void"
         }, ThePrimordialAbyss.id);
