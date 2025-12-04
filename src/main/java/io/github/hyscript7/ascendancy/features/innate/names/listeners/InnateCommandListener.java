@@ -55,7 +55,12 @@ public class InnateCommandListener implements Listener {
 
         builder.target(target);
 
-        builder.targetHasImmunity(InnateProtectionManager.getInstance().isProtected(target.getUniqueId()));
+        // Only protect if the invoker isn't targeting self.
+        if (!selfTarget) {
+            builder.targetHasImmunity(InnateProtectionManager.getInstance().isProtected(target.getUniqueId()));
+        } else {
+            builder.targetHasImmunity(false);
+        }
 
         InnateCommand command = parseInnateCommand(message, selfTarget);
 
