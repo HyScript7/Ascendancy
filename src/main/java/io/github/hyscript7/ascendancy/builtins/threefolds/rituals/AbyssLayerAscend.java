@@ -29,7 +29,7 @@ public class AbyssLayerAscend extends AbstractThreefoldIncantation {
     public void execute(ThreefoldContext context) {
         Player player = context.player();
         VoidRealmLayer oldLayer = getPlayersLayer(player);
-        if (oldLayer != VoidRealmLayer.ABYSS && !player.isDead()) {
+        if (!(oldLayer == VoidRealmLayer.ABYSS && player.isDead())) {
             player.addPotionEffect(PotionEffectType.LEVITATION.createEffect(10 * 20, 99));
         }
     }
