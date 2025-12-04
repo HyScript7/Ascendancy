@@ -217,6 +217,7 @@ public class RitualOfVoidRevealing extends AbstractRitual {
             }
 
             // Can you tell ChatGPT wrote this?
+            // Yes. - Spelis
 
             currentRadius++;
         }

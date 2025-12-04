@@ -1,5 +1,7 @@
 package io.github.hyscript7.ascendancy.registries;
 
+import eu.projnull.spelis.ascendancy.rituals.RitualOfTheAnchor;
+import eu.projnull.spelis.ascendancy.spells.Recall;
 import io.github.hyscript7.ascendancy.AlreadyInitializedException;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowHealth;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.other.BestowLive;
@@ -94,6 +96,7 @@ public class RegistryManager {
         ritualRegistry.register(new RitualOfVoidRevealing());
         ritualRegistry.register(new RitualOfSunshine());
         ritualRegistry.register(new RitualOfTheWolf());
+        ritualRegistry.register(new RitualOfTheAnchor());
         // TODO: Add rituals
     }
 
@@ -104,6 +107,7 @@ public class RegistryManager {
         spellRegistry.register(new Ventus());
         spellRegistry.register(new Sanatio());
         spellRegistry.register(new Vonszol());
+        spellRegistry.register(new Recall());
         // TODO: Add spells
     }
 
