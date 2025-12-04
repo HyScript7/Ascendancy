@@ -3,6 +3,7 @@ package io.github.hyscript7.ascendancy.features.voidrealm.listeners;
 import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
+import io.github.hyscript7.ascendancy.features.voidrealm.LayerChanger;
 import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -31,14 +32,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class VoidRealmLayerChanger implements Listener {
     private final Map<UUID, BukkitTask> breakerTasks = new ConcurrentHashMap<>();
+    private final LayerChanger layerChanger = new LayerChanger();
 
     private final double escapeThresholdPercentage;
-    private final int defaultWorldHeightVoidTerminatorOffset;
     private final int reflectionWorldSizeRadius;
 
     public VoidRealmLayerChanger() {
         escapeThresholdPercentage = 1.0d + AscendancyConfig.getInstance().getVoidRealm().escapeHeightOvershootPercentage() / 100.0d;
-        defaultWorldHeightVoidTerminatorOffset = AscendancyConfig.getInstance().getVoidRealm().defaultWorldHeightVoidTerminatorOffset();
         reflectionWorldSizeRadius = AscendancyConfig.getInstance().getVoidRealm().reflectionWorldSizeRadius();
     }
 
@@ -48,9 +48,9 @@ public class VoidRealmLayerChanger implements Listener {
             VoidRealmLayer layer = VoidRealmLayer.fromWorld(event.getEntity().getWorld());
             if (layer != null) {
                 switch (layer) {
-                    case ABYSS -> changeLayer(event.getEntity(), VoidRealmLayer.OBLIVION);
+                    case ABYSS -> layerChanger.changeLayer(event.getEntity(), VoidRealmLayer.OBLIVION);
                     // All roads lead to Reflection of Self
-                    case OBLIVION, REFLECTION -> changeLayer(event.getEntity(), VoidRealmLayer.REFLECTION);
+                    case OBLIVION, REFLECTION -> layerChanger.changeLayer(event.getEntity(), VoidRealmLayer.REFLECTION);
                     default -> {}
                 }
                 event.setCancelled(true);
@@ -59,20 +59,20 @@ public class VoidRealmLayerChanger implements Listener {
                     case Player playerEntity -> {
                         // Teleport players who jump into the void out of combat into the Void Realm
                         // TODO: If in combat, don't teleport.
-                        changeLayer(playerEntity, VoidRealmLayer.ABYSS);
+                        layerChanger.changeLayer(playerEntity, VoidRealmLayer.ABYSS);
                         event.setCancelled(true);
                     }
                     case LivingEntity entity -> {
                         // Save mobs with more than 50% HP
                         double maxHealth = Optional.ofNullable(entity.getAttribute(Attribute.MAX_HEALTH)).map(AttributeInstance::getValue).orElse(20.0d);
                         if (entity.getHealth() > (maxHealth / 2)) {
-                            changeLayer(entity, VoidRealmLayer.ABYSS);
+                            layerChanger.changeLayer(entity, VoidRealmLayer.ABYSS);
                             event.setCancelled(true);
                         }
                     }
                     case Item itemEntity -> {
                         // Always save items
-                        changeLayer(itemEntity, VoidRealmLayer.ABYSS);
+                        layerChanger.changeLayer(itemEntity, VoidRealmLayer.ABYSS);
                         event.setCancelled(true);
                     }
                     default -> {}
@@ -111,104 +111,14 @@ public class VoidRealmLayerChanger implements Listener {
                 return;
             }
             switch (layer) {
-                case ABYSS -> changeToOverworld(event.getPlayer());
-                case OBLIVION -> changeLayer(event.getPlayer(), VoidRealmLayer.ABYSS, true);
-                case REFLECTION -> changeLayer(event.getPlayer(), VoidRealmLayer.REFLECTION, true);
+                case ABYSS -> {
+                    layerChanger.changeToOverworld(event.getPlayer());
+                    startBedrockBreaker(event.getPlayer());
+                }
+                case OBLIVION -> layerChanger.changeLayer(event.getPlayer(), VoidRealmLayer.ABYSS, true);
+                case REFLECTION -> layerChanger.changeLayer(event.getPlayer(), VoidRealmLayer.REFLECTION, true);
                 default -> {}
             }
-        }
-    }
-
-    private void handleReflectionWraparound(Player player) {
-        Location loc = player.getLocation();
-        double x = loc.getX();
-        double z = loc.getZ();
-
-        // Calculate distance from [0, y, 0]
-        double distanceSquared = x * x + z * z;
-        double radiusSquared = reflectionWorldSizeRadius * reflectionWorldSizeRadius;
-
-        // Check if player is outside the circular boundary
-        if (distanceSquared > radiusSquared) {
-            // Calculate the angle from origin
-            double angle = Math.atan2(z, x);
-
-            // Teleport to opposite side of the circle
-            // Subtract a small epsilon to ensure they're inside the boundary
-            double newX = -Math.cos(angle) * (reflectionWorldSizeRadius - 2);
-            double newZ = -Math.sin(angle) * (reflectionWorldSizeRadius - 2);
-
-            Location newLoc = loc.clone();
-            newLoc.setX(newX);
-            newLoc.setZ(newZ);
-
-            player.teleport(newLoc);
-        }
-    }
-
-    private void changeLayer(Entity entity, @Nullable VoidRealmLayer newLayer) {
-        changeLayer(entity, newLayer, false);
-    }
-
-    private void changeLayer(Entity entity, @Nullable VoidRealmLayer newLayer, boolean spawnAtBottom) {
-        if (newLayer == null) {
-            return;
-        }
-        switch (newLayer) {
-            case ABYSS -> {
-                Location location = entity.getLocation();
-                location = translateCoordinates(location, location.getWorld(), VoidRealmLayer.ABYSS.getWorld());
-                if (spawnAtBottom) {
-                    location.setY(VoidRealmLayer.ABYSS.getWorld().getMinHeight());
-                } else {
-                    location.setY(VoidRealmLayer.ABYSS.getWorld().getMaxHeight());
-                }
-                entity.teleport(location);
-            }
-            case OBLIVION -> {
-                Location location = entity.getLocation();
-                location = translateCoordinates(location, location.getWorld(), VoidRealmLayer.OBLIVION.getWorld());
-                if (spawnAtBottom) {
-                    location.setY(VoidRealmLayer.OBLIVION.getWorld().getMinHeight());
-                } else {
-                    location.setY(VoidRealmLayer.OBLIVION.getWorld().getMaxHeight());
-                }
-                entity.teleport(location);
-            }
-            case REFLECTION -> {
-                // Any -> Reflection is a special case. It always leads to 0, 320, 0 in the Reflection
-                if (entity instanceof Player player) {
-                    if (PlayerDataManager.getInstance().getPlayerData(player).isDead()) {
-                        Location location = player.getLocation();
-                        if (location.getY() < location.getWorld().getMinHeight()) {
-                            location.setY(location.getWorld().getMaxHeight());
-                            player.teleport(location);
-                        }
-                        return;
-                    }
-                }
-                World world = VoidRealmLayer.REFLECTION.getWorld();
-                Location location = new Location(world, 0, spawnAtBottom ? world.getMinHeight() : world.getMaxHeight(), 0, 0, 0);
-                entity.teleport(location);
-            }
-        }
-    }
-
-    private void changeToOverworld(Entity entity) {
-        Player player = (entity instanceof Player p) ? p : null;
-        if (player != null && PlayerDataManager.getInstance().getPlayerData(player).isDead()) {
-            return;
-        }
-
-        World world = Bukkit.getWorld("world"); // deal with it
-
-        Location location = entity.getLocation();
-        location = translateCoordinates(location, location.getWorld(), world);
-        location.setY(world.getMinHeight() - defaultWorldHeightVoidTerminatorOffset);
-        entity.teleport(location);
-
-        if (player != null) {
-            startBedrockBreaker(player);
         }
     }
 
@@ -221,7 +131,7 @@ public class VoidRealmLayerChanger implements Listener {
 
         BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(
                 AscendancyPlugin.getInstance(),
-                new BedrockBreakerTask(player),
+                new VoidRealmLayerChanger.BedrockBreakerTask(player),
                 10L,
                 5L
         );
@@ -242,6 +152,7 @@ public class VoidRealmLayerChanger implements Listener {
             this.player = player;
 
             World world = Bukkit.getWorld("world");
+            assert world != null; // If world "world" is null, the server is either retarded or an API changed
             this.cancelY = world.getMinHeight()
                     + AscendancyConfig.getInstance().getVoidRealm().defaultWorldHeightVoidTerminatorOffset();
             this.radius = AscendancyConfig.getInstance().getVoidRealm().bedrockBreakerRadius();
@@ -297,50 +208,30 @@ public class VoidRealmLayerChanger implements Listener {
         }
     }
 
-    private Location translateCoordinates(Location source, World oldWorld, World newWorld) {
+    private void handleReflectionWraparound(Player player) {
+        Location loc = player.getLocation();
+        double x = loc.getX();
+        double z = loc.getZ();
 
-        if (oldWorld.equals(newWorld)) {
-            return source.clone();
+        // Calculate distance from [0, y, 0]
+        double distanceSquared = x * x + z * z;
+        double radiusSquared = reflectionWorldSizeRadius * reflectionWorldSizeRadius;
+
+        // Check if player is outside the circular boundary
+        if (distanceSquared > radiusSquared) {
+            // Calculate the angle from origin
+            double angle = Math.atan2(z, x);
+
+            // Teleport to opposite side of the circle
+            // Subtract a small epsilon to ensure they're inside the boundary
+            double newX = -Math.cos(angle) * (reflectionWorldSizeRadius - 2);
+            double newZ = -Math.sin(angle) * (reflectionWorldSizeRadius - 2);
+
+            Location newLoc = loc.clone();
+            newLoc.setX(newX);
+            newLoc.setZ(newZ);
+
+            player.teleport(newLoc);
         }
-
-        double oldScale = getWorldScale(oldWorld);
-        double newScale = getWorldScale(newWorld);
-
-        // Conversion factor (downscaling or upscaling)
-        double factor = newScale / oldScale;
-
-        Location out = source.clone();
-        out.setWorld(newWorld);
-
-        out.setX(source.getX() * factor);
-        out.setZ(source.getZ() * factor);
-
-        // Y unchanged unless you tell me otherwise
-        out.setY(source.getY());
-
-        return out;
     }
-
-    private double getWorldScale(World world) {
-        // Check void layers first
-        VoidRealmLayer layer = VoidRealmLayer.fromWorld(world);
-        if (layer != null) {
-            return switch (layer) {
-                case ABYSS -> 1.0 / 16.0;       // 1 abyss block = 16 overworld
-                case OBLIVION -> 1.0 / 32.0;    // 1 oblivion block = 32 overworld
-                case REFLECTION -> 1.0 / 128.0; // 1 reflection = 128 overworld
-            };
-        }
-
-        // Overworld / Nether / End
-        String name = world.getName().toLowerCase();
-
-        if (name.contains("world")) return 1.0;
-        if (name.contains("nether")) return 1.0 / 8.0;   // 1 nether = 8 overworld
-        if (name.contains("the_end")) return 1.0 / 16.0; // 1 end = 16 overworld
-
-        // unknown → assume overworld
-        return 1.0;
-    }
-
 }
