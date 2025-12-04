@@ -2,6 +2,7 @@ package io.github.hyscript7.ascendancy.builtins.rituals.instant;
 
 import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
+import io.github.hyscript7.ascendancy.features.innate.protections.InnateProtectionManager;
 import io.github.hyscript7.ascendancy.features.rituals.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -93,6 +94,11 @@ public class RitualOfSoulSending extends AbstractRitual {
 
         if (target == null) {
             AscendancyMessagingAPI.getInstance().send(context.getInvoker(), AscendancyMessagingAPI.MessageType.ERROR, "You invoked the ritual, but it couldn't find the targeted soul.\n<dark_gray>(Target player is offline)");
+            return defaultInstantRitualContext(this, context);
+        }
+
+        if (InnateProtectionManager.getInstance().isProtected(targetUuid)) {
+            AscendancyMessagingAPI.getInstance().send(context.getInvoker(), AscendancyMessagingAPI.MessageType.ERROR, "You invoked the ritual, but it couldn't find the targeted soul.");
             return defaultInstantRitualContext(this, context);
         }
 
