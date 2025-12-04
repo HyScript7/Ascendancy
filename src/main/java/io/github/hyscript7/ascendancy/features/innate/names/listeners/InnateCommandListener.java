@@ -2,12 +2,11 @@ package io.github.hyscript7.ascendancy.features.innate.names.listeners;
 
 import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
-import io.github.hyscript7.ascendancy.data.players.PlayerData;
-import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.data.players.names.TrueNameManager;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateContext;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateUtils;
+import io.github.hyscript7.ascendancy.features.innate.protections.InnateProtectionManager;
 import io.github.hyscript7.ascendancy.registries.RegistryManager;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
@@ -29,12 +28,11 @@ public class InnateCommandListener implements Listener {
         Player invoker = event.getPlayer();
         String message = ((TextComponent) event.message()).content();
 
-        // TODO: Figure out immunities
+        // TODO: Figure out immunity bypasses
         InnateContext.InnateContextBuilder builder = InnateContext.builder()
                 .invoker(invoker)
                 .originalMessage(message)
-                .invokerHasImmunityBypass(false)
-                .targetHasImmunity(false);
+                .invokerHasImmunityBypass(false);
 
         boolean selfTarget = InnateUtils.removeNonAlpha(message).startsWith("I");
         Player target;
@@ -53,7 +51,11 @@ public class InnateCommandListener implements Listener {
             target = Bukkit.getPlayer(targetUuid);
         }
 
+        if (target == null) return;
+
         builder.target(target);
+
+        builder.targetHasImmunity(InnateProtectionManager.getInstance().isProtected(target.getUniqueId()));
 
         InnateCommand command = parseInnateCommand(message, selfTarget);
 
@@ -67,11 +69,12 @@ public class InnateCommandListener implements Listener {
     }
 
     private void handleExecution(InnateContext context, InnateCommand command) {
+        boolean hasImmunity = context.targetHasImmunity();
         boolean canExecute = command.canExecute(context);
 
         logInnateCommand(context, command, canExecute);
 
-        if (canExecute) {
+        if (canExecute && !hasImmunity) {
             playCommandCastEffects(context, command);
             command.execute(context);
         } else {
@@ -96,6 +99,9 @@ public class InnateCommandListener implements Listener {
 
     private void playCommandFailEffects(InnateContext ctx, InnateCommand cmd) {
         playEffect(ctx.invoker(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE, Particle.ANGRY_VILLAGER, 30);
+        if (ctx.targetHasImmunity() && !ctx.invokerHasImmunityBypass()) {
+            AscendancyMessagingAPI.getInstance().send(ctx.invoker(), AscendancyMessagingAPI.MessageType.ERROR, "A mysterious force prevents the name from resonating with its owners soul.");
+        }
     }
 
     private void playEffect(Player p, Sound sound, Particle particle, int count) {
