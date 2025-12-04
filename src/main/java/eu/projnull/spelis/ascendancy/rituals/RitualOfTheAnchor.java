@@ -41,7 +41,6 @@ public class RitualOfTheAnchor extends AbstractRitual {
     @Override
     public ActiveRitualContext perform(RitualContext context) {
         Location location = context.getLocation().clone();
-        location.setY(location.getY()-1);
         Block lodestoneBlock = location.getWorld().getBlockAt(location);
         lodestoneBlock.setType(Material.LODESTONE);
 
