@@ -26,7 +26,7 @@ public class ThreefoldHistory {
     public void update(String content) {
         ptr += 1;
         ptr = ptr % arr.length;
-        arr[ptr] = content;
+        arr[ptr] = ThreefoldUtils.normalizeContent(content);
     }
 
     public void clear() {

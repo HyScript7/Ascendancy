@@ -16,4 +16,8 @@ public class ThreefoldUtils {
                 .filter(threefoldIncantation -> threefoldIncantation.matches(context))
                 .findFirst().orElse(null);
     }
+
+    public static String normalizeContent(String content) {
+        return content.replaceAll("[^a-zA-Z0-9_ ]", "");
+    }
 }
