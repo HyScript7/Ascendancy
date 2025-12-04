@@ -7,7 +7,6 @@ import io.github.hyscript7.ascendancy.features.magic.SpellTier;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 
@@ -19,20 +18,19 @@ public class Recall extends AbstractRegexIncantationSpell {
     @Override
     public boolean cast(SpellContext context) {
         ItemStack mainHandItem = context.getCaster().getInventory().getItemInMainHand();
+        NamespacedKey compassKey = new NamespacedKey(AscendancyPlugin.getInstance(), "teleportation_compass");
+
         if (mainHandItem.getType() != Material.COMPASS) return false;
-        if (mainHandItem.getItemMeta() instanceof CompassMeta compassMeta) {
-            NamespacedKey telecompass_key = new NamespacedKey(AscendancyPlugin.getInstance(),"teleportation_compass");
-            if (compassMeta.hasLodestone() && compassMeta.getPersistentDataContainer().has(telecompass_key)) {
-                Location lodestoneLocation = compassMeta.getLodestone();
-                assert lodestoneLocation != null;
-                if (lodestoneLocation.getBlock().getType() != Material.LODESTONE) return false; // the compass' link is not valid.
-                lodestoneLocation.setY(lodestoneLocation.getY()+1);
-                context.getCaster().teleport(lodestoneLocation);
-            }
-        }
-        else {
-            return false;
-        }
+        if (!(mainHandItem.getItemMeta() instanceof CompassMeta compassMeta)) return false;
+        if (!compassMeta.hasLodestone() || !compassMeta.getPersistentDataContainer().has(compassKey)) return false;
+
+        Location lodestoneLocation = compassMeta.getLodestone();
+
+        assert lodestoneLocation != null;
+        if (lodestoneLocation.getBlock().getType() != Material.LODESTONE) return false;
+
+        lodestoneLocation.add(0.5,1,0.5);
+        context.getCaster().teleport(lodestoneLocation);
         return true;
     }
 

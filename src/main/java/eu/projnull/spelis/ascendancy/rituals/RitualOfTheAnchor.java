@@ -7,11 +7,10 @@ import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemSacrific
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
@@ -40,20 +39,30 @@ public class RitualOfTheAnchor extends AbstractRitual {
 
     @Override
     public ActiveRitualContext perform(RitualContext context) {
+        ActiveRitualContext defaultInstant = defaultInstantRitualContext(this, context);
+        Player invoker = context.getInvoker();
         Location location = context.getLocation().clone();
         Block lodestoneBlock = location.getWorld().getBlockAt(location);
         lodestoneBlock.setType(Material.LODESTONE);
 
-        ItemStack compassItem = new ItemStack(Material.COMPASS);
-        compassItem.setAmount(1);
-        if (compassItem.getItemMeta() instanceof CompassMeta compassMeta) {
-            compassMeta.setLodestone(location);
-            compassMeta.setLodestoneTracked(true);
-            compassMeta.getPersistentDataContainer().set(new NamespacedKey(AscendancyPlugin.getInstance(),"teleportation_compass"), PersistentDataType.BOOLEAN, true);
-            compassItem.setItemMeta(compassMeta);
-        }
-        context.getInvoker().give(compassItem);
+        ItemStack compassItem = new ItemStack(Material.COMPASS,1);
+        if (!(compassItem.getItemMeta() instanceof CompassMeta compassMeta)) {
+            invoker.give(compassItem);
+            invoker.give(new ItemStack(Material.LODESTONE,1));
+            invoker.give(new ItemStack(Material.ENDER_PEARL,5));
+            // Please correct me if this is the wrong way to refund, because I didn't check lmao.
+            lodestoneBlock.setType(Material.AIR); // make sure not to duplicate the lodestone.
 
-        return defaultInstantRitualContext(this,context);
+            return defaultInstant;
+        }
+
+        compassMeta.setLodestone(location);
+        compassMeta.setLodestoneTracked(true);
+        compassMeta.getPersistentDataContainer().set(new NamespacedKey(AscendancyPlugin.getInstance(), "teleportation_compass"), PersistentDataType.BOOLEAN, true);
+        compassItem.setItemMeta(compassMeta);
+
+        invoker.give(compassItem);
+
+        return defaultInstant;
     }
 }
