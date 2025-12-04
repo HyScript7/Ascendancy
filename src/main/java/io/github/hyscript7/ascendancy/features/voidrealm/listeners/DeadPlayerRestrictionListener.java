@@ -3,6 +3,7 @@ package io.github.hyscript7.ascendancy.features.voidrealm.listeners;
 import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
+import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,26 +28,23 @@ public class DeadPlayerRestrictionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlacingBlocksWhileDead(BlockPlaceEvent event) {
-        if (!preventPlacing) return;
         PlayerData data = PlayerDataManager.getInstance().getPlayerData(event.getPlayer());
-        if (shouldRestrict(event.getPlayer(), data)) {
+        if (shouldRestrict(event.getPlayer(), data, preventPlacing)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBreakingBlocksWhileDead(BlockBreakEvent event) {
-        if (!preventBreaking) return;
         PlayerData data = PlayerDataManager.getInstance().getPlayerData(event.getPlayer());
-        if (shouldRestrict(event.getPlayer(), data)) {
+        if (shouldRestrict(event.getPlayer(), data, preventBreaking)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInteractingBlocksWhileDead(PlayerInteractEvent event) {
-        if (!preventInteracting) return;
-        if (shouldRestrict(event.getPlayer(), PlayerDataManager.getInstance().getPlayerData(event.getPlayer()))) {
+        if (shouldRestrict(event.getPlayer(), PlayerDataManager.getInstance().getPlayerData(event.getPlayer()), preventInteracting)) {
             if (event.getClickedBlock() != null) {
                 event.setCancelled(true);
             }
@@ -59,8 +57,19 @@ public class DeadPlayerRestrictionListener implements Listener {
      * @param player The player to test
      * @return true if the player has bypass, otherwise false.
      */
-    private boolean shouldRestrict(Player player, PlayerData playerData) {
-        return playerData.isDead() && (!player.getGameMode().equals(GameMode.CREATIVE) && !player.getGameMode().equals(GameMode.SPECTATOR));
+    private boolean shouldRestrict(Player player, PlayerData playerData, boolean featureFlag) {
+        if (!featureFlag) return false;
+        if (player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) return false;
+        return playerData.isDead() || isInReflectionOfSelf(player);
+    }
+
+    /**
+     * Checks whether the player is in the Reflection of Self layer of the void realm.
+     * @param player The player to test
+     * @return true if the player is in the third layer, otherwise false
+     */
+    private boolean isInReflectionOfSelf(Player player) {
+        return VoidRealmLayer.fromWorld(player.getWorld()) == VoidRealmLayer.REFLECTION;
     }
 
 }
