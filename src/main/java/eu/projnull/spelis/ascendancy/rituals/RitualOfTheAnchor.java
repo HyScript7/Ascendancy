@@ -59,6 +59,7 @@ public class RitualOfTheAnchor extends AbstractRitual {
         compassMeta.setLodestone(location);
         compassMeta.setLodestoneTracked(true);
         compassMeta.getPersistentDataContainer().set(new NamespacedKey(AscendancyPlugin.getInstance(), "teleportation_compass"), PersistentDataType.BOOLEAN, true);
+        compassMeta.getPersistentDataContainer().set(new NamespacedKey(AscendancyPlugin.getInstance(), "teleportation_owner"), PersistentDataType.STRING, context.getInvoker().getUniqueId().toString());
         compassItem.setItemMeta(compassMeta);
 
         invoker.give(compassItem);
