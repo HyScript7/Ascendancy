@@ -9,7 +9,10 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.Objects;
 
 public class Recall extends AbstractRegexIncantationSpell {
     public Recall() {
@@ -24,8 +27,10 @@ public class Recall extends AbstractRegexIncantationSpell {
 
         if (mainHandItem.getType() != Material.COMPASS) return false;
         if (!(mainHandItem.getItemMeta() instanceof CompassMeta compassMeta)) return false;
-        if (!compassMeta.hasLodestone() || !compassMeta.getPersistentDataContainer().has(compassKey)) return false;
-        if (!compassMeta.getPersistentDataContainer().get(ownerKey, PersistentDataType.STRING).equals(context.getCaster().getUniqueId().toString())) return false;
+        PersistentDataContainer dataContainer = compassMeta.getPersistentDataContainer();
+        if (!compassMeta.hasLodestone() || !dataContainer.has(compassKey)) return false;
+        if (!dataContainer.has(ownerKey)) dataContainer.set(ownerKey,PersistentDataType.STRING,context.getCaster().getUniqueId().toString());
+        if (!Objects.equals(dataContainer.get(ownerKey, PersistentDataType.STRING), context.getCaster().getUniqueId().toString())) return false;
 
         Location lodestoneLocation = compassMeta.getLodestone();
 
