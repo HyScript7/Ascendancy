@@ -51,8 +51,12 @@ public class ReflectionListener implements Listener {
         }
 
         // Spawn reflection
+        double offsetX = (Math.random() - 0.5) * 32;
+        double offsetZ = (Math.random() - 0.5) * 32;
         Location spawnLocation = VoidRealmLayer.REFLECTION.getWorld().getSpawnLocation();
-        spawnLocation.setY(1);
+        spawnLocation.setY(3);
+        spawnLocation.setX(spawnLocation.getX() + offsetX);
+        spawnLocation.setZ(spawnLocation.getZ() + offsetZ);
 
         UUID reflectionUuid = spawnPlayerReflection(player, spawnLocation);
         playerData.setReflectionUuid(reflectionUuid);
@@ -60,7 +64,7 @@ public class ReflectionListener implements Listener {
         // Notify player
         AscendancyMessagingAPI.getInstance().sendBoxed(
                 player,
-                AscendancyMessagingAPI.MessageType.HIGHLIGHT,
+                AscendancyMessagingAPI.MessageType.INFO,
                 "Resurrection",
                 null,
                 "You have descended to the 3rd layer of the Void Realm: <bold>Reflection of Self</bold>\n\nSomeone is waiting for you..."
@@ -142,12 +146,21 @@ public class ReflectionListener implements Listener {
     }
 
     private void handleReflectionKilledByOwner(Player owner, Player reflectionEntity) {
+        PlayerData playerData = PlayerDataManager.getInstance().getPlayerData(owner);
+
+        String newResurrection = "N/A";
+
+        if (playerData != null) {
+            playerData.incrementResurrection(1);
+            newResurrection = String.valueOf(playerData.getResurrection());
+        }
+
         AscendancyMessagingAPI.getInstance().sendBoxed(
                 owner,
                 AscendancyMessagingAPI.MessageType.INFO,
                 "Resurrection",
                 null,
-                "You have killed your <bold>Reflection of Self</bold>"
+                "You have killed your <bold>Reflection of Self</bold>\n\nYou are now at Resurrection <bold><white>" + newResurrection + "</white></bold>"
         );
 
         reflectionEntity.getLocation().getWorld().playSound(
@@ -180,7 +193,7 @@ public class ReflectionListener implements Listener {
 
         AscendancyPlugin.getInstance().getLogger().info(
                 "Reflection owned by " + owner.getName() +
-                        " has been killed by " + reflectionEntity.getKiller().getName() +
+                        " has been killed by " + (reflectionEntity.getKiller() != null ? reflectionEntity.getKiller().getName() : "an unknown entity") +
                         ", not giving kill credit."
         );
     }

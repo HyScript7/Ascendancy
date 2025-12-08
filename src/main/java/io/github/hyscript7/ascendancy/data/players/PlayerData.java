@@ -76,6 +76,11 @@ public class PlayerData {
         this.resurrection = resurrection;
     }
 
+    public synchronized void incrementResurrection(int amount) {
+        markDirty();
+        this.resurrection += amount;
+    }
+
     public void setMaxLives(int maxLives) {
         markDirty();
         this.maxLives = maxLives;
