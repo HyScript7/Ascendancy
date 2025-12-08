@@ -153,6 +153,7 @@ public class ReflectionListener implements Listener {
         if (playerData != null) {
             playerData.incrementResurrection(1);
             newResurrection = String.valueOf(playerData.getResurrection());
+            playerData.setLives(playerData.getMaxLives());
         }
 
         AscendancyMessagingAPI.getInstance().sendBoxed(
