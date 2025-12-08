@@ -114,6 +114,7 @@ public class RegistryManager {
         spellRegistry.register(new Ventus());
         spellRegistry.register(new Sanatio());
         spellRegistry.register(new Vonszol());
+        spellRegistry.register(new Recall());
         spellRegistry.register(new Aeroburst());
         spellRegistry.register(new Expelliarmus());
         spellRegistry.register(new Glacius());
