@@ -21,6 +21,11 @@ Ascendancy is a plugin for Minecraft which introduces new magic and perma-death 
 
 Originally developed for HyScript7's ScriptSMP.
 
+## Documentation
+
+*   [**Spells**](SPELLS.md): A complete list of all available spells, their incantations, and effects.
+*   [**Rituals**](RITUALS.md): A guide to performing rituals, including required sacrifices and effects.
+
 Feature overview and setup guide coming soon!
 
 ## License
