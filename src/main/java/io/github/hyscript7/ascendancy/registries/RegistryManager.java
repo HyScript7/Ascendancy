@@ -19,7 +19,6 @@ import io.github.youngcoder45.ascendancy.spells.Sanatio;
 import io.github.youngcoder45.ascendancy.spells.Ventus;
 import io.github.youngcoder45.ascendancy.spells.Aeroburst;
 import io.github.youngcoder45.ascendancy.spells.Expelliarmus;
-import io.github.youngcoder45.ascendancy.spells.Ignis;
 import io.github.youngcoder45.ascendancy.spells.Glacius;
 import io.github.youngcoder45.ascendancy.spells.Tractum;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfDeathReturn;
@@ -117,10 +116,8 @@ public class RegistryManager {
         spellRegistry.register(new Vonszol());
         spellRegistry.register(new Aeroburst());
         spellRegistry.register(new Expelliarmus());
-        spellRegistry.register(new Ignis());
         spellRegistry.register(new Glacius());
         spellRegistry.register(new Tractum());
-        spellRegistry.register(new Fulmen());
         // TODO: Add spells
     }
 
