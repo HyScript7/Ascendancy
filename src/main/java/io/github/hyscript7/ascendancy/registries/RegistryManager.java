@@ -9,10 +9,14 @@ import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.Vonszol;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.*;
+import io.github.hyscript7.ascendancy.builtins.threefolds.existences.SelfAudience;
 import io.github.hyscript7.ascendancy.builtins.threefolds.existences.ThePrimordialAbyss;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal.AbyssInnateProtect;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal.AbyssLayerAscend;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal.AbyssLayerDescend;
+import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.EscapeReflection;
+import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.NameForsake;
+import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.NameRecall;
 import io.github.hyscript7.ascendancy.features.threefold.ThreefoldAudience;
 import io.github.hyscript7.ascendancy.features.threefold.ThreefoldIncantation;
 import io.github.youngcoder45.ascendancy.spells.Fulmen;
@@ -114,7 +118,7 @@ public class RegistryManager {
         spellRegistry.register(new Vonszol());
         spellRegistry.register(new Recall());
         spellRegistry.register(new Aeroburst());
-        spellRegistry.register(new Expelliarmus());
+        // spellRegistry.register(new Expelliarmus()); -- Too OP as it is now, nerf and re-add later.
         spellRegistry.register(new Glacius());
         spellRegistry.register(new Tractum());
         // TODO: Add spells
@@ -122,13 +126,17 @@ public class RegistryManager {
 
     private void registerThreefoldAudiences() {
         threefoldAudienceRegistry.register(new ThePrimordialAbyss());
+        threefoldAudienceRegistry.register(new SelfAudience());
         // TODO: Register threefold audiences
     }
 
     private void registerThreefoldIncantations() {
-        // TODO: Register threefold incantations
         threefoldIncantationRegistry.register(new AbyssLayerDescend());
         threefoldIncantationRegistry.register(new AbyssLayerAscend());
         threefoldIncantationRegistry.register(new AbyssInnateProtect());
+        threefoldIncantationRegistry.register(new NameRecall());
+        threefoldIncantationRegistry.register(new NameForsake());
+        threefoldIncantationRegistry.register(new EscapeReflection());
+        // TODO: Register threefold incantations
     }
 }

@@ -34,7 +34,7 @@ public abstract class ThreefoldAudience implements Identifiable {
                 continue;
             }
             matched++;
-            if (matched == 3) {
+            if (matched == incantation.length) {
                 return true;
             }
         }

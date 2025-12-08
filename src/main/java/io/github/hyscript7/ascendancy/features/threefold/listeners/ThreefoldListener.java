@@ -28,6 +28,7 @@ public class ThreefoldListener implements Listener {
         int audienceMaxLength = RegistryManager.getInstance().getThreefoldAudienceRegistry().getAll().stream().map(ThreefoldAudience::getIncantation).map(Array::getLength).max(Comparator.comparingInt(Integer::intValue)).orElse(0);
         int incantationMaxLength = RegistryManager.getInstance().getThreefoldIncantationRegistry().getAll().stream().map(ThreefoldIncantation::getIncantations).map(Array::getLength).max(Comparator.comparingInt(Integer::intValue)).orElse(0);
         this.defaultWindowSize = audienceMaxLength + incantationMaxLength;
+        AscendancyPlugin.getInstance().getLogger().info("Using threefold incantation window size " + defaultWindowSize);
         this.contexts = new ConcurrentHashMap<>();
     }
 
