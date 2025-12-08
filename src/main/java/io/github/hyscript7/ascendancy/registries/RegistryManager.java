@@ -17,6 +17,7 @@ import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal.AbyssL
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.EscapeReflection;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.NameForsake;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.NameRecall;
+import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.self.ReflectionFace;
 import io.github.hyscript7.ascendancy.features.threefold.ThreefoldAudience;
 import io.github.hyscript7.ascendancy.features.threefold.ThreefoldIncantation;
 import io.github.youngcoder45.ascendancy.spells.Fulmen;
@@ -137,6 +138,7 @@ public class RegistryManager {
         threefoldIncantationRegistry.register(new NameRecall());
         threefoldIncantationRegistry.register(new NameForsake());
         threefoldIncantationRegistry.register(new EscapeReflection());
+        threefoldIncantationRegistry.register(new ReflectionFace());
         // TODO: Register threefold incantations
     }
 }

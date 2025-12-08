@@ -22,7 +22,7 @@ public class NameRecall extends AbstractThreefoldIncantation {
 
     public NameRecall() {
         super("innate name remember", "Innate Name Library", new String[]{
-                "Recall all the names I've heard"
+                "Recall all the names Ive heard"
         }, SelfAudience.id);
     }
 
