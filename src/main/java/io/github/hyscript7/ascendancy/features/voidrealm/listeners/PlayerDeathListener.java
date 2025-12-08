@@ -4,6 +4,7 @@ import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
+import net.citizensnpcs.api.CitizensAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -24,6 +25,7 @@ public class PlayerDeathListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        if (CitizensAPI.getNPCRegistry().isNPC(player)) return;
         // "You won't use the shorthand" they said. Oh, yeah? What's this then?
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerData(player);
 
@@ -55,7 +57,9 @@ public class PlayerDeathListener implements Listener {
 
         if (isPvPDeath) {
             playerData.incrementPvpDeaths();
-            PlayerDataManager.getInstance().getPlayerData(killer).incrementPvpKills();
+            if (CitizensAPI.getNPCRegistry().isNPC(killer)) {
+                PlayerDataManager.getInstance().getPlayerData(killer).incrementPvpKills();
+            }
         } else if (isPvEDeath) {
             playerData.incrementPveDeaths();
         }
@@ -68,16 +72,18 @@ public class PlayerDeathListener implements Listener {
             // Still alive
             AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Life Lost", null, "You have died to " + killer.getName() + "!\nYou are now at " + playerData.getLives() + "/" + playerData.getMaxLives() + " lives!");
         } else {
+            // Fucking dead
             if (!playerData.isDead()) {
-                AscendancyMessagingAPI.getInstance().broadcastBoxed(AscendancyMessagingAPI.MessageType.INFO, "Void Death", null, player.getName() + " has died to " + killer.getName() + " and will respawn in the Void Realm!");
-                PlayerData killerData = PlayerDataManager.getInstance().getPlayerData(killer);
-                // Fucking dead
-                if (!playerData.knowsTrueName(playerData.getTrueName())) {
-                    killerData.learnName(playerData.getTrueName());
-                    AscendancyMessagingAPI.getInstance().sendBoxed(killer, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Final Kill", null, "You have void banned " + player.getName() + " and learned their true name: " + playerData.getTrueName() + "!");
-                } else {
-                    AscendancyMessagingAPI.getInstance().sendBoxed(killer, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Final Kill", null, "You have void banned " + player.getName() + "!");
+                if (!CitizensAPI.getNPCRegistry().isNPC(killer)) {
+                    PlayerData killerData = PlayerDataManager.getInstance().getPlayerData(killer);
+                    if (!playerData.knowsTrueName(playerData.getTrueName())) {
+                        killerData.learnName(playerData.getTrueName());
+                        AscendancyMessagingAPI.getInstance().sendBoxed(killer, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Final Kill", null, "You have void banned " + player.getName() + " and learned their true name: " + playerData.getTrueName() + "!");
+                    } else {
+                        AscendancyMessagingAPI.getInstance().sendBoxed(killer, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Final Kill", null, "You have void banned " + player.getName() + "!");
+                    }
                 }
+                AscendancyMessagingAPI.getInstance().broadcastBoxed(AscendancyMessagingAPI.MessageType.INFO, "Void Death", null, player.getName() + " has died to " + killer.getName() + " and will respawn in the Void Realm!");
                 playerData.setDead(true);
 
                 AscendancyMessagingAPI.getInstance().sendBoxed(player, AscendancyMessagingAPI.MessageType.HIGHLIGHT, "Out of Lives", null, "You have run out of all your lives!\nYou will respawn in the Void Realm, good luck!\n\nYour true name has been disclosed to " + killer.getName());

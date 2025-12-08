@@ -12,10 +12,21 @@ repositories {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
     }
+    maven {
+        name = 'citizens-repo'
+        url = 'https://maven.citizensnpcs.co/repo'
+    }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    // If someone changes to 1.21.10 again, I will personally defenestrate them.
+    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
+    compileOnly('net.citizensnpcs:citizens-main:2.0.40-SNAPSHOT') {
+        exclude group: '*', module: '*'
+    }
+    compileOnly('org.mcmonkey:sentinel:2.9.2-SNAPSHOT') {
+        exclude group: '*', module: '*'
+    }
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
 }

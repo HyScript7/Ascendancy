@@ -2,6 +2,7 @@ package io.github.hyscript7.ascendancy.features.voidrealm;
 
 import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -55,7 +56,7 @@ public class LayerChanger {
             case REFLECTION -> {
                 // Any -> Reflection is a special case. It always leads to 0, 320, 0 in the Reflection
                 if (entity instanceof Player player) {
-                    if (PlayerDataManager.getInstance().getPlayerData(player).isDead()) {
+                    if ((!CitizensAPI.getNPCRegistry().isNPC(player)) && PlayerDataManager.getInstance().getPlayerData(player).isDead()) {
                         Location location = player.getLocation();
                         if (location.getY() < location.getWorld().getMinHeight()) {
                             location.setY(location.getWorld().getMaxHeight());
