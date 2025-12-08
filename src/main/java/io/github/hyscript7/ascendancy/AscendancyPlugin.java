@@ -14,6 +14,7 @@ import io.github.hyscript7.ascendancy.features.magic.listeners.SpellIncantationL
 import io.github.hyscript7.ascendancy.features.reflection.listeners.ReflectionListener;
 import io.github.hyscript7.ascendancy.features.reflection.citizens.ReflectionTrait;
 import io.github.hyscript7.ascendancy.features.rituals.listeners.RitualCraftingListener;
+import io.github.hyscript7.ascendancy.features.secretchat.InternalDebugListener;
 import io.github.hyscript7.ascendancy.features.secretchat.SecretChatListener;
 import io.github.hyscript7.ascendancy.features.threefold.listeners.ThreefoldListener;
 import io.github.hyscript7.ascendancy.features.voidrealm.listeners.*;
@@ -89,6 +90,7 @@ public final class AscendancyPlugin extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new BossKillListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new EquipmentRestrictionEnforcer(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new SecretChatListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new InternalDebugListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ThreefoldListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ReflectionListener(), this);
     }

@@ -17,6 +17,10 @@ import io.github.hyscript7.ascendancy.features.threefold.ThreefoldIncantation;
 import io.github.youngcoder45.ascendancy.spells.Fulmen;
 import io.github.youngcoder45.ascendancy.spells.Sanatio;
 import io.github.youngcoder45.ascendancy.spells.Ventus;
+import io.github.youngcoder45.ascendancy.spells.Aeroburst;
+import io.github.youngcoder45.ascendancy.spells.Expelliarmus;
+import io.github.youngcoder45.ascendancy.spells.Glacius;
+import io.github.youngcoder45.ascendancy.spells.Tractum;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfDeathReturn;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfHomeComing;
 import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfSoulSending;
@@ -111,6 +115,10 @@ public class RegistryManager {
         spellRegistry.register(new Sanatio());
         spellRegistry.register(new Vonszol());
         spellRegistry.register(new Recall());
+        spellRegistry.register(new Aeroburst());
+        spellRegistry.register(new Expelliarmus());
+        spellRegistry.register(new Glacius());
+        spellRegistry.register(new Tractum());
         // TODO: Add spells
     }
 
