@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.builtins.threefolds.rituals;
+package io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal;
 
 import io.github.hyscript7.ascendancy.builtins.threefolds.existences.ThePrimordialAbyss;
 import io.github.hyscript7.ascendancy.features.innate.protections.InnateProtection;

@@ -1,19 +1,13 @@
-package io.github.hyscript7.ascendancy.builtins.threefolds.rituals;
+package io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal;
 
-import io.github.hyscript7.ascendancy.AscendancyPlugin;
 import io.github.hyscript7.ascendancy.builtins.threefolds.existences.ThePrimordialAbyss;
 import io.github.hyscript7.ascendancy.features.threefold.AbstractThreefoldIncantation;
 import io.github.hyscript7.ascendancy.features.threefold.ThreefoldContext;
 import io.github.hyscript7.ascendancy.features.voidrealm.LayerChanger;
 import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
-import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class AbyssLayerAscend extends AbstractThreefoldIncantation {
     private final LayerChanger layerChanger = new LayerChanger();
