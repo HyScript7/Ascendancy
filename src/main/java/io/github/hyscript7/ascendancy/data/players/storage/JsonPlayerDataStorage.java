@@ -86,6 +86,7 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
         JsonObject json = new JsonObject();
 
         json.addProperty("uuid", data.getUuid().toString());
+        json.addProperty("resurrection", data.getResurrection());
         json.addProperty("maxLives", data.getMaxLives());
         json.addProperty("lives", data.getLives());
         json.addProperty("dead", data.isDead());
@@ -114,6 +115,7 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
 
         json.addProperty("firstSeenTimestamp", data.getFirstSeenTimestamp());
         json.addProperty("lastSeenTimestamp", data.getLastSeenTimestamp());
+        json.addProperty("reflectionUuid", data.getReflectionUuid() != null ? data.getReflectionUuid().toString() : "");
 
         return json;
     }
@@ -121,6 +123,10 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
     private PlayerData deserialize(JsonObject json) {
         UUID uuid = UUID.fromString(json.get("uuid").getAsString());
         PlayerData data = new PlayerData(uuid);
+
+        if (json.has("resurrection")) {
+            data.setResurrection(json.get("resurrection").getAsInt());
+        }
 
         if (json.has("maxLives")) {
             data.setMaxLives(json.get("maxLives").getAsInt());
@@ -188,6 +194,14 @@ public class JsonPlayerDataStorage implements PlayerDataStorage {
 
         if (json.has("lastSeenTimestamp")) {
             data.setLastSeenTimestamp(json.get("lastSeenTimestamp").getAsLong());
+        }
+
+        if (json.has("reflectionUuid")) {
+            String reflectionUuidString = json.get("reflectionUuid").getAsString();
+            if (!reflectionUuidString.isEmpty()) {
+                UUID reflectionUuid = UUID.fromString(reflectionUuidString);
+                data.setReflectionUuid(reflectionUuid);
+            }
         }
 
         data.markClean(); // Clean, since we just loaded it

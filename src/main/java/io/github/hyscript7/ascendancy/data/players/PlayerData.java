@@ -5,6 +5,7 @@ import io.github.hyscript7.ascendancy.features.bossprog.BossType;
 import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -15,6 +16,8 @@ public class PlayerData {
 
     private int maxLives;
     private int lives;
+
+    private int resurrection;
 
     // This is a flag which serves as a way to let us know whether we performed onVoidBan actions already.
     private boolean dead;
@@ -39,11 +42,14 @@ public class PlayerData {
     private long firstSeenTimestamp;
     private long lastSeenTimestamp;
 
+    private @Nullable UUID reflectionUuid;
+
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
         this.dirty = true;
         this.maxLives = AscendancyConfig.getInstance().getVoidBan().defaultMaxLives();
         this.lives = AscendancyConfig.getInstance().getVoidBan().startingLives();
+        this.resurrection = 0;
         this.dead = false;
         this.inVoidRealm = false;
         this.currentVoidRealmLayer = null;
@@ -54,6 +60,7 @@ public class PlayerData {
         this.knownTrueNames = new HashSet<>();
         this.knownSpells = new HashSet<>();
         this.killedBosses = new HashSet<>();
+        this.reflectionUuid = null;
     }
 
     public void markDirty() {
@@ -62,6 +69,11 @@ public class PlayerData {
 
     public void markClean() {
         this.dirty = false;
+    }
+
+    public void setResurrection(int resurrection) {
+        markDirty();
+        this.resurrection = resurrection;
     }
 
     public void setMaxLives(int maxLives) {
@@ -207,5 +219,14 @@ public class PlayerData {
 
     public void updateLastSeenTimestamp() {
         setLastSeenTimestamp(System.currentTimeMillis());
+    }
+
+    public void setReflectionUuid(UUID uuid) {
+        markDirty();
+        this.reflectionUuid = uuid;
+    }
+
+    public boolean hasReflection() {
+        return reflectionUuid != null;
     }
 }
