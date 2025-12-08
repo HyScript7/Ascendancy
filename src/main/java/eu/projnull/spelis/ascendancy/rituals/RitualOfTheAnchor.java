@@ -1,7 +1,11 @@
 package eu.projnull.spelis.ascendancy.rituals;
 
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
-import io.github.hyscript7.ascendancy.features.rituals.*;
+import io.github.hyscript7.ascendancy.features.rituals.AbstractRitual;
+import io.github.hyscript7.ascendancy.features.rituals.ActiveRitualContext;
+import io.github.hyscript7.ascendancy.features.rituals.RitualContext;
+import io.github.hyscript7.ascendancy.features.rituals.RitualGrade;
+import io.github.hyscript7.ascendancy.features.rituals.RitualStage;
 import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemExclusivityFactory;
 import io.github.hyscript7.ascendancy.features.rituals.requirements.ItemSacrifice;
 import org.bukkit.Location;

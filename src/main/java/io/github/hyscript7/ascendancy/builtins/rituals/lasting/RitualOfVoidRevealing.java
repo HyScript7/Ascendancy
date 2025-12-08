@@ -3,12 +3,20 @@ package io.github.hyscript7.ascendancy.builtins.rituals.lasting;
 import io.github.hyscript7.ascendancy.AscendancyConfig;
 import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.AscendancyPlugin;
-import io.github.hyscript7.ascendancy.features.rituals.*;
+import io.github.hyscript7.ascendancy.features.rituals.AbstractRitual;
+import io.github.hyscript7.ascendancy.features.rituals.ActiveRitualContext;
+import io.github.hyscript7.ascendancy.features.rituals.RitualContext;
+import io.github.hyscript7.ascendancy.features.rituals.RitualGrade;
+import io.github.hyscript7.ascendancy.features.rituals.RitualStage;
 import io.github.hyscript7.ascendancy.features.voidrealm.VoidRealmLayer;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.vehicle.VehicleCollisionEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -22,7 +30,7 @@ public class RitualOfVoidRevealing extends AbstractRitual {
     private final int maximumRadius;
 
     public RitualOfVoidRevealing() {
-        super("ritual orbital laser", "Void Revealing", RitualGrade.MASTER, buildStages());
+        super("ritual_orbital_laser", "Void Revealing", RitualGrade.MASTER, buildStages());
         allowedHeight = AscendancyConfig.getInstance().getRituals().voidRevealing().spawnProtectionBypassHeightBelow();
         spawnProtectionDistance = AscendancyConfig.getInstance().getRituals().voidRevealing().spawnProtectionDistance();
         maximumRadius = AscendancyConfig.getInstance().getRituals().voidRevealing().maxRange();
@@ -204,7 +212,9 @@ public class RitualOfVoidRevealing extends AbstractRitual {
 
                     // Block crumble
                     Block block = world.getBlockAt(x, topY, z);
-                    world.spawnParticle(Particle.BLOCK_CRUMBLE, surface, 8, 0.2, 0.2, 0.2, block.getBlockData());
+                    if (!block.getType().isAir()) {
+                        world.spawnParticle(Particle.BLOCK_CRUMBLE, surface, 8, 0.2, 0.2, 0.2, block.getBlockData());
+                    }
 
 
                     // 🕳️ Now delete the planet below this point
