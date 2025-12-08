@@ -5,6 +5,7 @@ import io.github.hyscript7.ascendancy.AscendancyMessagingAPI;
 import io.github.hyscript7.ascendancy.data.players.PlayerData;
 import io.github.hyscript7.ascendancy.data.players.PlayerDataManager;
 import io.github.hyscript7.ascendancy.features.bossprog.BossType;
+import net.citizensnpcs.api.CitizensAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -29,6 +30,7 @@ public class BossKillListener implements Listener {
         if (bossType == null) return;
         PlayerDataManager playerDataManager = PlayerDataManager.getInstance();
         victim.getLocation().getNearbyPlayers(killCreditRadius).stream()
+                .filter(p -> !CitizensAPI.getNPCRegistry().isNPC(p))
                 .map(player -> new PlayerDataUnion(player, playerDataManager.getPlayerData(player)))
                 .forEach(union -> {
                     union.data().addBossKill(bossType);

@@ -1,13 +1,13 @@
 package io.github.hyscript7.ascendancy.features.bossprog;
 
+import io.github.hyscript7.ascendancy.features.reflection.citizens.ReflectionTrait;
 import lombok.Getter;
-import org.bukkit.Material;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Set;
 
 public enum BossType {
     ELDER_GUARDIAN(BossFamily.OVERWORLD, BossSource.VANILLA),
@@ -15,7 +15,8 @@ public enum BossType {
     WITHER(BossFamily.THE_NETHER, BossSource.VANILLA),
     HOVERING_INFERNO(BossFamily.THE_NETHER, BossSource.INCENDIUM),
     ENDER_DRAGON(BossFamily.THE_END, BossSource.VANILLA),
-    EMPRESS_OF_LIGHT(BossFamily.THE_END, BossSource.STELLARITY);
+    EMPRESS_OF_LIGHT(BossFamily.THE_END, BossSource.STELLARITY),
+    REFLECTION_OF_SELF(BossFamily.THE_VOID_REALM, BossSource.ASCENDANCY);
 
     @Getter
     private final BossFamily family;
@@ -28,6 +29,15 @@ public enum BossType {
     }
 
     public static @Nullable BossType fromEntity(Entity entity) {
+        if (entity.getType().equals(EntityType.PLAYER)) {
+            if (CitizensAPI.getNPCRegistry().isNPC(entity)) {
+                NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
+                ReflectionTrait trait = npc.getTraitNullable(ReflectionTrait.class);
+                if (trait != null) {
+                    return REFLECTION_OF_SELF;
+                }
+            }
+        }
         if (entity.getType().equals(EntityType.BLAZE)) {
             Blaze blaze = (Blaze) entity;
             // If another mod adds a blaze with 700 HP, fuck me I guess.
