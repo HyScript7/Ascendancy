@@ -15,6 +15,9 @@ public class InternalDebugListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDebugChat(AsyncChatEvent event) {
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
+
+        // Only let OPs use this...
+        if (!event.getPlayer().isOp()) return;
         
         if (message.equalsIgnoreCase("Imperium Creativa")) {
             event.setCancelled(true);
