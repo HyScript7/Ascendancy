@@ -8,6 +8,7 @@ import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnLives;
 import io.github.hyscript7.ascendancy.builtins.magic.arcanas.VoidWalk;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.FireballSpell;
 import io.github.hyscript7.ascendancy.builtins.magic.spells.Vonszol;
+import io.github.hyscript7.ascendancy.builtins.rituals.instant.*;
 import io.github.hyscript7.ascendancy.builtins.threefolds.existences.ThePrimordialAbyss;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal.AbyssInnateProtect;
 import io.github.hyscript7.ascendancy.builtins.threefolds.rituals.abyssal.AbyssLayerAscend;
@@ -21,15 +22,11 @@ import io.github.youngcoder45.ascendancy.spells.Aeroburst;
 import io.github.youngcoder45.ascendancy.spells.Expelliarmus;
 import io.github.youngcoder45.ascendancy.spells.Glacius;
 import io.github.youngcoder45.ascendancy.spells.Tractum;
-import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfDeathReturn;
-import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfHomeComing;
-import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfSoulSending;
 import io.github.hyscript7.ascendancy.builtins.rituals.lasting.RitualOfVoidRevealing;
 import io.github.hyscript7.ascendancy.features.innate.names.InnateCommand;
 import io.github.hyscript7.ascendancy.builtins.innate.commands.self.GetOwnName;
 import io.github.hyscript7.ascendancy.features.magic.Spell;
 import io.github.hyscript7.ascendancy.features.rituals.Ritual;
-import io.github.hyscript7.ascendancy.builtins.rituals.instant.RitualOfLevitation;
 import io.github.youngcoder45.ascendancy.rituals.RitualOfSunshine;
 import io.github.youngcoder45.ascendancy.rituals.RitualOfTheWolf;
 import lombok.Getter;
@@ -104,6 +101,7 @@ public class RegistryManager {
         ritualRegistry.register(new RitualOfSunshine());
         ritualRegistry.register(new RitualOfTheWolf());
         ritualRegistry.register(new RitualOfTheAnchor());
+        ritualRegistry.register(new RitualOfRevival());
         // TODO: Add rituals
     }
 
