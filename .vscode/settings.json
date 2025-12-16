@@ -1,0 +1,16 @@
+{
+    "cSpell.words": [
+        "builtinpack",
+        "carbonchat",
+        "citizensnpcs",
+        "datapack",
+        "hexaoxi",
+        "jpenilla",
+        "mcmeta",
+        "mcmonkey",
+        "papermc",
+        "subprojects"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

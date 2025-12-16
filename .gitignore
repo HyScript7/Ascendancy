@@ -1,4 +1,12 @@
-### Java template
+# -- Custom --
+
+# Run Paper (Dev Server Directory)
+**/run/
+
+# I have no clue, but legacy had this line as well
+**/runs/
+
+# -- Java --
 # Compiled class file
 *.class
 
@@ -24,7 +32,7 @@
 hs_err_pid*
 replay_pid*
 
-### Gradle template
+# -- Gradle --
 .gradle
 **/build/
 !src/**/build/
@@ -46,4 +54,3 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
-
