@@ -4,6 +4,21 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.2.0/samples
  */
+plugins {
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+}
+
+tasks {
+    runServer {
+        minecraftVersion(libs.versions.minecraft.get())
+        downloadPlugins {
+           modrinth("carbon", libs.versions.carbon.get())
+           url("https://ci.citizensnpcs.co/job/Citizens2/4022/artifact/dist/target/Citizens-2.0.41-b4022.jar")
+           url("https://ci.citizensnpcs.co/job/Sentinel/lastStableBuild/artifact/target/Sentinel-2.9.2-SNAPSHOT-b529.jar")
+        }
+    }
+}
+
 dependencies {
     implementation project(":api") 
     compileOnly(libs.bundles.chat)

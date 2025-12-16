@@ -6,6 +6,9 @@
 # I have no clue, but legacy had this line as well
 **/runs/
 
+# I don't even know why this is being created, or by what
+**/bin/
+
 # -- Java --
 # Compiled class file
 *.class
