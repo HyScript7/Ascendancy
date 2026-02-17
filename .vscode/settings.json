@@ -11,6 +11,7 @@
         "mcmonkey",
         "modrinth",
         "papermc",
+        "projectlombok",
         "subprojects"
     ],
     "java.compile.nullAnalysis.mode": "automatic",
