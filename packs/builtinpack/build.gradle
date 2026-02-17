@@ -12,7 +12,7 @@ tasks {
     runServer {
         minecraftVersion(libs.versions.minecraft.get())
         // This ungodly abomination makes sure to include both the core and this pack.
-        pluginJars(project(":modules:core").tasks.findByName("jar")?.inputs?.files, tasks.findByName("jar")?.inputs?.files)
+        pluginJars(project(":core").tasks.findByName("jar")?.inputs?.files, tasks.findByName("jar")?.inputs?.files)
         // And this installs dependencies
         downloadPlugins {
            modrinth("carbon", libs.versions.carbon.get())
