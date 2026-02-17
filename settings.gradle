@@ -7,6 +7,10 @@
 
 rootProject.name = 'Ascendancy'
 
-include("api", "core")
+include("api")
+
+include("modules:core")
+project(":modules:core").projectDir = file("modules/core")
+
 include("packs:builtInPack")
 project(":packs:builtInPack").projectDir = file("packs/builtinpack")

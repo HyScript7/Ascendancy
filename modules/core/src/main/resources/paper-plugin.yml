@@ -1,0 +1,21 @@
+name: AscendancyCore
+version: ${projectVersion}
+main: io.github.hyscript7.ascendancy.AscendancyPlugin
+api-version: ${mcVersion}
+authors: [HyScript7]
+description: A mystical plugin which adds magic, perma-death, relics and rituals.
+bootstrapper: io.github.hyscript7.ascendancy.AscendancyPluginBootstrap
+dependencies:
+  server:
+    Citizens:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    Sentinel:
+      load: BEFORE
+      required: true
+      join-classpath: true
+    Carbon:
+      load: BEFORE
+      required: true
+      join-classpath: true

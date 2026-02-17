@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-    A mystical Paper 1.21.8+ plugin which makes minecraft a fantasy world of magic and gods.
+    A mystical Paper 1.21.11+ plugin which makes minecraft a fantasy world of magic and gods.
 </p>
 
 <p align="center">

@@ -1,0 +1,12 @@
+name: AscendancyBuiltinPack
+version: ${projectVersion}
+main: io.github.hyscript7.ascendancy.packs.AscendancyBuiltinPack
+api-version: ${mcVersion}
+authors: [HyScript7]
+description: Built-in resources for Ascendancy
+dependencies:
+  server:
+    AscendancyCore:
+      load: BEFORE
+      required: true
+      join-classpath: true

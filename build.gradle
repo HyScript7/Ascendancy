@@ -5,7 +5,7 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.2.0/samples
  */
 subprojects {
-    // This disgusting if statement is here to prevent the intermediary :packs being treated as a jar producing project.
+    // This disgusting if statement is here to prevent the intermediary :packs and :modules being treated as a jar producing project.
     if (project.file('build.gradle').exists() || project.file('build.gradle.kts').exists()) {
         apply plugin: "java"
 
