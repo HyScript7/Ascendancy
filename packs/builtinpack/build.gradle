@@ -23,5 +23,6 @@ tasks {
 }
 
 dependencies {
+    compileOnly(libs.bundles.server)
     implementation(project(":api"))
 }

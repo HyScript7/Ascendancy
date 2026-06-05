@@ -29,7 +29,6 @@ subprojects {
         dependencies {
             compileOnly("org.projectlombok:lombok:1.18.42")
             annotationProcessor("org.projectlombok:lombok:1.18.42")
-            compileOnly(libs.paper)
             // In case we ever decide to test...
             // testImplementation(libs.junit)
         }

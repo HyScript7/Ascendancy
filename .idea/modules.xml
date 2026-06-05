@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api/Ascendancy.api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api/Ascendancy.api.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/core/Ascendancy.modules.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/core/Ascendancy.modules.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/Ascendancy.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/Ascendancy.core.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/packs/builtinpack/Ascendancy.packs.builtInPack.main.iml" filepath="$PROJECT_DIR$/.idea/modules/packs/builtinpack/Ascendancy.packs.builtInPack.main.iml" />
     </modules>
   </component>

@@ -20,5 +20,7 @@ citizens = { module = "net.citizensnpcs:citizens-main", version.ref = "citizens"
 sentinel = { module = "org.mcmonkey:sentinel", version.ref = "sentinel" }
 
 [bundles]
+server = ["paper"]
+client = []
 chat = ["carbon"]
 npc = ["citizens", "sentinel"]

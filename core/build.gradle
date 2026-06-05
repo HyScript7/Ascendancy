@@ -20,6 +20,7 @@ tasks {
 }
 
 dependencies {
+    compileOnly(libs.bundles.server)
     implementation project(":api") 
     compileOnly(libs.bundles.chat)
     // If we don't exclude this, we might bundle Citizens and Sentinel into our jar, which we don't want to do.
