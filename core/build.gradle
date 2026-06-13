@@ -5,17 +5,23 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.2.0/samples
  */
 plugins {
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 tasks {
     runServer {
         minecraftVersion(libs.versions.minecraft.get())
         downloadPlugins {
-           modrinth("carbon", libs.versions.carbon.get())
-           url("https://ci.citizensnpcs.co/job/Citizens2/4022/artifact/dist/target/Citizens-2.0.41-b4022.jar")
-           url("https://ci.citizensnpcs.co/job/Sentinel/lastStableBuild/artifact/target/Sentinel-2.9.2-SNAPSHOT-b529.jar")
+           hangar("carbon", libs.versions.carbon.get())
+           url("https://download.luckperms.net/1643/bukkit/loader/LuckPerms-Bukkit-5.5.55.jar")
+           url("https://ci.citizensnpcs.co/job/Citizens2/4190/artifact/dist/target/Citizens-2.0.42-b4190.jar")
+           url("https://ci.citizensnpcs.co/job/Sentinel/lastStableBuild/artifact/target/Sentinel-2.9.3-SNAPSHOT-b533.jar")
         }
+    }
+
+    shadowJar {
+        relocate 'com.github.stefvanschie.inventoryframework', 'io.github.hyscript7.ascendancy.inventoryframework'
     }
 }
 
@@ -23,6 +29,7 @@ dependencies {
     compileOnly(libs.bundles.server)
     implementation project(":api") 
     compileOnly(libs.bundles.chat)
+    implementation(libs.bundles.menu)
     // If we don't exclude this, we might bundle Citizens and Sentinel into our jar, which we don't want to do.
     // Not only will this break the user's server, but also the last remaining bit of sanity I have.
     compileOnly(libs.bundles.npc) {

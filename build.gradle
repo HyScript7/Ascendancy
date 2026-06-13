@@ -4,6 +4,11 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.2.0/samples
  */
+plugins {
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" apply false
+    id("com.gradleup.shadow") version "9.4.1"
+}
+
 subprojects {
     // This disgusting if statement is here to prevent the intermediary :packs and :modules being treated as a jar producing project.
     if (project.file('build.gradle').exists() || project.file('build.gradle.kts').exists()) {
@@ -16,7 +21,7 @@ subprojects {
 
         java {
             toolchain {
-                languageVersion = JavaLanguageVersion.of(21)
+                languageVersion = JavaLanguageVersion.of(25)
             }
         }
 
