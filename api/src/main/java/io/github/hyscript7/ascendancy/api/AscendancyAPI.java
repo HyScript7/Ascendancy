@@ -3,6 +3,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import java.util.Optional;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicesManager;
+import static org.bukkit.Bukkit.getServer;
 
 public interface class AscendancyAPI {
     class Holder {
@@ -17,10 +19,10 @@ public interface class AscendancyAPI {
     }
 
     static Optional<AscendancyAPI> fromServicesManager(){
-        if (Optional.of(Holder.INSTANCE).isPresent()) {
-            return Optional.of(Holder.INSTANCE);
+        if (Optional.of(getServer().getServicesManager().load(AscendancyAPI.class)).isPresent()) {
+            return Optional.of(getServer().getServicesManager().load(AscendancyAPI.class));
         }
-        return Optional.empty()
+        return Optional.empty();
     }
 
     static void set(AscendancyAPI instance, Plugin plugin){
