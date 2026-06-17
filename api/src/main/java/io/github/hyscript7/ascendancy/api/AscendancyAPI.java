@@ -3,12 +3,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import java.util.Optional;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.ServicesManager;
-import static org.bukkit.Bukkit.getServer;
 
-public interface class AscendancyAPI {
+public interface AscendancyAPI {
     class Holder {
-        private static final AscendancyAPI INSTANCE;
+        private static AscendancyAPI INSTANCE;
     }
 
     static AscendancyAPI get(){
@@ -19,13 +17,13 @@ public interface class AscendancyAPI {
     }
 
     static Optional<AscendancyAPI> fromServicesManager(){
-        if (Optional.of(getServer().getServicesManager().load(AscendancyAPI.class)).isPresent()) {
-            return Optional.of(getServer().getServicesManager().load(AscendancyAPI.class));
+        if (Optional.ofNullable(Bukkit.getServer().getServicesManager().load(AscendancyAPI.class)).isPresent()) {
+            return Optional.of(Bukkit.getServer().getServicesManager().load(AscendancyAPI.class));
         }
         return Optional.empty();
     }
 
-    static void set(AscendancyAPI instance, Plugin plugin){
+    static void set(AscendancyAPI instance, Plugin plugin) throws AscendancyAPIAlreadyInitializedException {
         if (Holder.INSTANCE != null) {
             throw new AscendancyAPIAlreadyInitializedException("AscendancyAPI instance is already set. Cannot set it again.");
         }
