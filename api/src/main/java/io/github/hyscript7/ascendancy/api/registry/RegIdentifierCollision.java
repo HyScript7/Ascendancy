@@ -5,4 +5,9 @@ package io.github.hyscript7.ascendancy.api.registry;
 */
 public class RegIdentifierCollision extends Exception
 {
+
+    public RegIdentifierCollision(String message) {
+        super(message);
+    }
+    
 }
