@@ -16,7 +16,7 @@ tasks {
            hangar("carbon", libs.versions.carbon.get())
            url("https://download.luckperms.net/1643/bukkit/loader/LuckPerms-Bukkit-5.5.55.jar")
            url("https://ci.citizensnpcs.co/job/Citizens2/4190/artifact/dist/target/Citizens-2.0.42-b4190.jar")
-           url("https://ci.citizensnpcs.co/job/Sentinel/lastStableBuild/artifact/target/Sentinel-2.9.3-SNAPSHOT-b533.jar")
+           url("https://ci.citizensnpcs.co/job/Sentinel/534/artifact/target/Sentinel-2.9.4-SNAPSHOT-b534.jar")
         }
     }
 
