@@ -1,0 +1,14 @@
+{
+  "has_skylight": false,
+  "has_ceiling": true,
+  "has_ender_dragon_fight": false,
+  "coordinate_scale": 32,
+  "ambient_light": 0.4,
+  "logical_height": 384,
+  "skybox": "none",
+  "infiniburn": "#minecraft:infiniburn_end",
+  "min_y": -64,
+  "height": 384,
+  "monster_spawn_light_level": 0,
+  "monster_spawn_block_light_limit": 0
+}
