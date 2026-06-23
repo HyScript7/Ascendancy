@@ -8,7 +8,7 @@ paper = "26.1.2.build.+"
 
 carbon = "3.0.0-beta.37"
 citizens = "2.0.42-SNAPSHOT"
-sentinel = "2.9.2-SNAPSHOT"
+sentinel = "2.9.4-SNAPSHOT"
 if = "0.12.0"
 
 [libraries]
