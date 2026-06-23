@@ -1,4 +1,5 @@
 package io.github.hyscript7.ascendancy.api;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import java.util.Optional;
