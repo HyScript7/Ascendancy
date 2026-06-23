@@ -6,11 +6,11 @@ import java.util.Optional;
 /**
 *The Registry which binds a unified key to a generic object
 */
-public interface Reg<E extends RegIdentifiable> {
+public interface Registry<E extends Identifiable> {
     /**
     *Adds an object to the register
     */
-    void register(E value) throws RegIdentifierCollision;
+    void register(E value) throws RegistryIdentifierCollisionException;
     /**
     *Returns all registered elements
     */
@@ -19,5 +19,5 @@ public interface Reg<E extends RegIdentifiable> {
     *Returns the element associated with the provided id
     *Implementation detail: Must log a warning when a lookup fails
     */
-    Optional<E> get(RegIdentifier id);
+    Optional<E> get(Identifier id);
 }

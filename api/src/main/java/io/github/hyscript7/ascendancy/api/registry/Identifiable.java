@@ -1,8 +1,8 @@
 package io.github.hyscript7.ascendancy.api.registry;
 
-public interface RegIdentifiable{
+public interface Identifiable{
     /**
     * Must return the identifier for the object implementing this method
     */
-    RegIdentifier getIdentifier();
+    Identifier getIdentifier();
 }
