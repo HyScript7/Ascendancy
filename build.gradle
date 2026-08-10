@@ -7,12 +7,31 @@
 plugins {
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" apply false
     id("com.gradleup.shadow") version "9.4.1"
+    id("com.diffplug.spotless") version "8.0.0" apply false
 }
 
 subprojects {
     // This disgusting if statement is here to prevent the intermediary :packs and :modules being treated as a jar producing project.
     if (project.file('build.gradle').exists() || project.file('build.gradle.kts').exists()) {
         apply plugin: "java"
+        apply plugin: "com.diffplug.spotless"
+
+        // Palantir is used over google-java-format because it matches the existing
+        // 4-space / 120-column style instead of reformatting the world to 2 spaces.
+        spotless {
+            // The codebase predates Spotless, so every file currently reports violations.
+            // Formatting stays opt-in (`./gradlew spotlessApply`) so `build` isn't held hostage.
+            // Once the tree has been formatted once, delete this line to enforce on every build.
+            enforceCheck = false
+
+            java {
+                target 'src/**/*.java'
+                palantirJavaFormat()
+                removeUnusedImports()
+                trimTrailingWhitespace()
+                endWithNewline()
+            }
+        }
 
         def mcVersion = libs.versions.minecraft.get()
         def projectName = name.capitalize()
