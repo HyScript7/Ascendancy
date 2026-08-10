@@ -9,6 +9,12 @@
 # I don't even know why this is being created, or by what
 **/bin/
 
+# Obsidian per-user UI state (which panes you had open). Churns on every vault open.
+# The rest of docs/.obsidian/ stays tracked on purpose, so cloning the vault prompts
+# everyone to install the same community plugins.
+docs/.obsidian/workspace.json
+docs/.obsidian/workspace-mobile.json
+
 # -- Java --
 # Compiled class file
 *.class
