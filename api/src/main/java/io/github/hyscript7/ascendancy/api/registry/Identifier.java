@@ -4,7 +4,7 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * An Ascendancy Identifier used for data storage and registries.
- * 
+ *
  * Will throw IllegalArgumentException when instantiating with:
  * - A blank namespace
  * - A blank path
@@ -31,7 +31,7 @@ public record Identifier(String namespace, String path) {
 
     /**
      * A shorthand for creating an identifier using the given namespace and path.
-     * 
+     *
      * @param namespace The namespace that owns the identifier
      * @param path      The path
      * @throws IllegalArgumentException When validation of the namespace or path fail
@@ -44,7 +44,7 @@ public record Identifier(String namespace, String path) {
     /**
      * Shorthand for creating an identifier of path using the plugin as the
      * namespace.
-     * 
+     *
      * @param plugin The plugin that owns this identifier (used as namespace)
      * @param path   The path
      * @throws IllegalArgumentException When (a) the provided plugin is null, (b) validation of the namespace or path fail
@@ -60,7 +60,7 @@ public record Identifier(String namespace, String path) {
     /**
      * Parses a stringified Identifier into it's corresponding namespace and path
      * using a colon (:) as the separator.
-     * 
+     *
      * @param value A stringified identifier in the format of [namespace]:[path]
      * @throws IllegalArgumentException When (a) the identifier is null or blank,
      *                                  (b) either part of the identifier is blank,

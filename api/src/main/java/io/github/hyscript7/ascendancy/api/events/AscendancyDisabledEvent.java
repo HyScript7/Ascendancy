@@ -3,7 +3,7 @@ package io.github.hyscript7.ascendancy.api.events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class AscendancyDisabledEvent extends Event{
+public class AscendancyDisabledEvent extends Event {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     public static HandlerList getHandlerList() {

@@ -1,9 +1,8 @@
 package io.github.hyscript7.ascendancy.api.events;
 
+import io.github.hyscript7.ascendancy.api.AscendancyAPI;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import io.github.hyscript7.ascendancy.api.AscendancyAPI;
 
 public class AscendancyEnabledEvent extends Event {
 
@@ -17,7 +16,6 @@ public class AscendancyEnabledEvent extends Event {
     public AscendancyAPI getApi() {
         return api;
     }
-    
 
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
