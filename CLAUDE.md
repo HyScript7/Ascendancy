@@ -110,7 +110,7 @@ Content packs must not assume Core is loaded at their `onEnable()`. The intended
 1. `paper-plugin.yml` declares `AscendancyCore` with `load: BEFORE`, `required: true`.
 2. Register a `Listener` in `onEnable()`.
 3. Do actual registration inside an `@EventHandler` for `AscendancyEnabledEvent`
-   (`io.github.hyscript7.ascendancy.api.events` — note the plural package).
+   (`io.github.hyscript7.ascendancy.api.event` — singular).
 4. Reach the API via `AscendancyAPI.get()` (throws if Core hasn't registered yet) or
    `AscendancyAPI.fromServicesManager()` for the `Optional` form.
 5. **Cache the instance in a field and null it out on disable.** `get()` is a services manager
