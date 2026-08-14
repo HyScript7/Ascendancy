@@ -12,8 +12,15 @@ import org.bukkit.plugin.Plugin;
  * - A null path
  * - A path containing the ':' symbol
  * - A namespace containing the ':' symbol
+ *
+ * @param namespace Who owns the identifier, by convention the name of the plugin that declared it
+ * @param path      What it names within that namespace
  */
 public record Identifier(String namespace, String path) {
+    /**
+     * @throws IllegalArgumentException If either part is null, blank, or contains a colon — the
+     *                                  colon is reserved as the separator in the string form
+     */
     public Identifier {
         if (namespace == null || namespace.isBlank()) {
             throw new IllegalArgumentException("Namespace cannot be empty");
