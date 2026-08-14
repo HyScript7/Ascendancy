@@ -147,7 +147,15 @@ behavioural changes, a manual `runServer` session (see the caveat above about st
 - Trunk is **`3.0.0`** — branch from it and target it with PRs. The local `Main` branch is a leftover
   from an older versioning scheme; don't treat it as trunk.
 - Branch names: `<Author>/ASC-<ticket>` (e.g. `lipinoDaDerg/ASC-7`).
-- Commits use gitmoji prefixes (`✨` feature, `🔧` config, `♻️` refactor, `📝` docs, `⬆️` deps).
+- Commits use gitmoji prefixes. Used in this repo so far, with their official meanings: `✨` new
+  feature, `🐛` bug fix, `♻️` refactor, `🎨` improve structure/formatting, `🔧` config files,
+  `📝` docs, `⬆️` upgrade dependencies, `➕` add a dependency, `🍱` assets, `💥` breaking change,
+  `🚚` move or rename, `🙈` .gitignore, `🏗️` architectural change, `👷` CI, `🔨` dev scripts,
+  `🎉` begin a project.
+  Need one that isn't listed? `curl https://gitmoji.dev/api/gitmojis` returns all 75 as JSON
+  (`emoji`, `code`, `description`, `semver`) — far cleaner to read than scraping the site. Add
+  whatever you end up using to the list above, so it keeps describing *this* project's habits rather
+  than becoming a copy of the catalogue nobody reads.
 - Don't commit unless asked.
 
 ## Documentation
