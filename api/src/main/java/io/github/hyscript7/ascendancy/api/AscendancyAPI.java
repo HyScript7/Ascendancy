@@ -8,7 +8,8 @@ import org.bukkit.plugin.ServicePriority;
 
 public interface AscendancyAPI {
     /**
-     * The persistence layer, used to attach arbitrary data to players, chunks, factions, or anything
+     * The persistence layer, used to attach arbitrary data to players, chunks,
+     * factions, or anything
      * else a feature decides to store data on.
      *
      * @return The persistence entry point
@@ -16,33 +17,44 @@ public interface AscendancyAPI {
     Persistence persistence();
 
     /**
-     * A holder for the API instance
+     * Retrieves the AscendancyAPI instance from Bukkit's services manager.
+     * Unwraps the optional and throws if uninitialized.
+     *
+     * @return The AscendancyAPI instance
+     * @throws IllegalStateException If not initialized
      */
-    class Holder {
-        private static AscendancyAPI INSTANCE;
-
-        private Holder() {}
-    }
-
     static AscendancyAPI get() {
-        if (Holder.INSTANCE == null) {
+        Optional<AscendancyAPI> instance = fromServicesManager();
+        if (instance.isEmpty()) {
             throw new IllegalStateException(
                     "AscendancyAPI instance is not set. Ensure your content pack loads AFTER the Core has registered itself with the API.");
         }
-        return Holder.INSTANCE;
+        return instance.get();
     }
 
+    /**
+     * Retrieves the AscendancyAPI instance from Bukkit's services manager and wraps
+     * it in an optional.
+     *
+     * @return An optional containing the API if it is initialized, otherwise an
+     *         empty optional.
+     */
     static Optional<AscendancyAPI> fromServicesManager() {
         return Optional.ofNullable(Bukkit.getServer().getServicesManager().load(AscendancyAPI.class));
     }
 
+    /**
+     * A shortcut for registering the API instance with Bukkit's services manager.
+     *
+     * @param instance The AscendancyAPI instance
+     * @param plugin   The plugin providing the Core implementation.
+     * @throws AscendancyAPIAlreadyInitializedException If already registered.
+     */
     static void set(AscendancyAPI instance, Plugin plugin) throws AscendancyAPIAlreadyInitializedException {
-        if (Holder.INSTANCE != null) {
+        if (fromServicesManager().isPresent()) {
             throw new AscendancyAPIAlreadyInitializedException(
                     "AscendancyAPI instance is already set. Cannot set it again.");
         }
-
-        Holder.INSTANCE = instance;
-        Bukkit.getServicesManager().register(AscendancyAPI.class, Holder.INSTANCE, plugin, ServicePriority.Normal);
+        Bukkit.getServicesManager().register(AscendancyAPI.class, instance, plugin, ServicePriority.Normal);
     }
 }
