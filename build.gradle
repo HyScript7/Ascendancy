@@ -19,11 +19,6 @@ subprojects {
         // Palantir is used over google-java-format because it matches the existing
         // 4-space / 120-column style instead of reformatting the world to 2 spaces.
         spotless {
-            // The codebase predates Spotless, so every file currently reports violations.
-            // Formatting stays opt-in (`./gradlew spotlessApply`) so `build` isn't held hostage.
-            // Once the tree has been formatted once, delete this line to enforce on every build.
-            enforceCheck = false
-
             java {
                 target 'src/**/*.java'
                 palantirJavaFormat()
@@ -70,7 +65,7 @@ subprojects {
 
             def projectVersion = project.version
             def ascendancyVersion = ascendancyVersion
-            
+
             filesMatching("paper-plugin.yml") {
                 expand(
                     projectVersion: projectVersion,

@@ -59,12 +59,18 @@ Spotless (Palantir Java Format, 4-space / 120-col) is configured in the root bui
 ./gradlew spotlessCheck     # report violations without writing
 ```
 
-`enforceCheck = false` is set in `build.gradle`, so `./gradlew build` does **not** currently fail on
-formatting — the codebase predates Spotless and has never been formatted. Once someone runs
-`spotlessApply` across the tree in a dedicated commit, delete that line to enforce it on every build.
+The whole tree was formatted in one dedicated commit, so **`./gradlew build` now fails on formatting
+violations** — `spotlessCheck` runs as part of `check`. Run `spotlessApply` before committing.
 
-Until then, don't opportunistically reformat files you're editing for other reasons — it buries the
-real change in whitespace noise.
+`spotlessApply` reformats an entire module. To format a single file without dragging unrelated ones
+into your diff:
+
+```sh
+./gradlew :api:spotlessApply -PspotlessIdeHook=$PWD/path/to/File.java
+```
+
+Note that `build` does **not** run `javadoc`, so broken `{@link}` targets compile happily. Run
+`./gradlew :api:javadoc` after moving or renaming anything in `:api`.
 
 ## Versioning
 
