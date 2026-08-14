@@ -8,9 +8,23 @@ plugins {
     id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
+configurations {
+    // Resolvable counterpart to :core's `pluginJar`. Its whole job is to name Core's shaded jar
+    // in a way Gradle can build on demand, so `runServer` below never has to point at a path.
+    corePluginJar {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
 tasks {
     runServer {
         minecraftVersion(libs.versions.minecraft.get())
+        // run-paper only ever stages the jar of the project it was invoked from, which for a pack
+        // is useless on its own: paper-plugin.yml declares AscendancyCore as required, so Paper
+        // refuses to load the pack at all without it. Staging Core through a configuration rather
+        // than a copied file means it is rebuilt from source on every run and cannot go stale.
+        pluginJars(configurations.corePluginJar)
         downloadPlugins {
            hangar("carbon", libs.versions.carbon.get())
            url("https://download.luckperms.net/1643/bukkit/loader/LuckPerms-Bukkit-5.5.55.jar")
@@ -23,4 +37,5 @@ tasks {
 dependencies {
     compileOnly(libs.bundles.server)
     implementation(project(":api"))
+    corePluginJar project(path: ":core", configuration: "pluginJar")
 }

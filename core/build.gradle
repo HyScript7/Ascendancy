@@ -25,6 +25,25 @@ tasks {
     }
 }
 
+configurations {
+    // A consumable view of the shaded jar, so a pack's runServer can stage a real Core to sit
+    // behind it. Deliberately artifact-only: a pack wants the *plugin*, not Core's dependency
+    // graph, and resolving this as a normal dependency would drag half of Paper onto its
+    // compile classpath through the back door.
+    pluginJar {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    // shadowJar, not jar. Packs compile against :api but never bundle it — at runtime those
+    // classes exist only inside Core's shaded jar, reached via `join-classpath: true`. Handing
+    // over the thin jar instead produces a NoClassDefFoundError that looks nothing like the
+    // build misconfiguration it actually is.
+    pluginJar tasks.named("shadowJar")
+}
+
 dependencies {
     compileOnly(libs.bundles.server)
     implementation project(":api") 

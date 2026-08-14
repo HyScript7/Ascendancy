@@ -28,22 +28,31 @@ deploy); pack jars are thin and get Core's classes via `join-classpath: true` in
 `paper-plugin.yml`.
 
 ```sh
-./gradlew build                 # build all modules
-./gradlew :core:runServer       # starts a Paper server in core/run/ with Core only
-./gradlew clean                 # root clean (wipes build/libs) + each subproject's clean
+./gradlew build                         # build all modules
+./gradlew :core:runServer               # Paper server in core/run/, Core only
+./gradlew :packs:builtInPack:runServer  # Paper server in packs/builtinpack/run/, Core + the pack
+./gradlew clean                         # root clean (wipes build/libs) + each subproject's clean
 ```
 
 `runServer` (run-paper) auto-downloads CarbonChat, LuckPerms, Citizens and Sentinel into the run dir.
 `core/run/` and `packs/builtinpack/run/` are gitignored; treat them as disposable.
 
-**Neither `runServer` task boots the full stack.** run-paper stages only its *own* project's jar:
+**`:packs:builtInPack:runServer` is the full-stack task** — use it for anything behavioural.
+run-paper only ever stages the project it was invoked from, so the pack build adds Core explicitly:
+`:core` exposes its shaded jar through a consumable `pluginJar` configuration, and the pack resolves
+it via a `corePluginJar` configuration into `runServer.pluginJars`. Core is therefore rebuilt from
+source on every run and cannot go stale.
 
-- `:core:runServer` → Core alone. Pack changes are not exercised by it.
-- `:packs:builtInPack:runServer` → the pack alone, which Paper will refuse to load, since its
-  `paper-plugin.yml` declares `AscendancyCore` as `required: true`.
+Note that run-paper does **not** copy staged jars into `run/plugins/` — that directory holds only
+plugin data directories, never a jar. Plugins are handed to the server by path out of `build/libs/`
+instead. Corollary: **never drop an Ascendancy jar into `run/plugins/` by hand.** It will not
+overwrite the staged one, it loads *beside* it, and Paper then trips over a duplicate plugin name.
 
-To test Core and a pack together, run `:core:runServer` and manually copy the pack jar from
-`build/libs/` into `core/run/plugins/`.
+It has to be the pack that names Core, not the reverse. `:core:runServer` stays Core-only on
+purpose: a framework build that reaches for its own content inverts the module hierarchy. A pack
+depending on Core is just the hierarchy written down, which is why `corePluginJar` lives in the
+pack. It is also artifact-only and touches no classpath — packs still compile against `:api` alone,
+per the boundary rule.
 
 **Gradle path casing:** the canonical project path is `:packs:builtInPack` (capital I) even though the
 directory is `packs/builtinpack` — `settings.gradle` remaps it. Gradle's name matching also accepts
@@ -140,7 +149,8 @@ non-compliant with the spec in `docs/`. Check `docs/` before designing one.
 
 There are no tests and JUnit is deliberately commented out in `libs.versions.toml`. **Ask before
 adding a test framework or test files.** Default verification is `./gradlew build` plus, for
-behavioural changes, a manual `runServer` session (see the caveat above about staging both jars).
+behavioural changes, a `./gradlew :packs:builtInPack:runServer` session — that one boots the whole
+stack, so it is the one that can actually catch a broken Core↔pack handshake.
 
 ## Git
 
