@@ -52,6 +52,22 @@ subprojects {
             // testImplementation(libs.junit)
         }
 
+        // javac never checks {@link} targets, so a rename can leave dangling references that compile
+        // perfectly and only surface when someone finally generates docs. Running javadoc as part of
+        // `check` turns that into a build failure instead of a discovery.
+        tasks.withType(Javadoc).configureEach {
+            options.encoding = "UTF-8"
+            // Everything except the `missing` group: dangling references and malformed HTML are bugs,
+            // whereas a javadoc block that is only @param/@return is a deliberate style here. Leaving
+            // `missing` on would bury the real errors under ~60 warnings nobody intends to fix.
+            // The second argument is the usual Gradle workaround for a flag that takes no value.
+            options.addStringOption("Xdoclint:all,-missing", "-quiet")
+        }
+
+        tasks.named("check").configure {
+            dependsOn tasks.named("javadoc")
+        }
+
         tasks.withType(Jar).configureEach {
             archiveBaseName.set(ascendancyVersion)
             // Make jars output directly into the root projects' build/libs
