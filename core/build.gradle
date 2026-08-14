@@ -9,17 +9,9 @@ plugins {
     id("com.gradleup.shadow") version "9.4.1"
 }
 
+// runServer's Minecraft version and plugin downloads come from the root build, shared with every
+// other module that runs a dev server.
 tasks {
-    runServer {
-        minecraftVersion(libs.versions.minecraft.get())
-        downloadPlugins {
-           hangar("carbon", libs.versions.carbon.get())
-           url("https://download.luckperms.net/1643/bukkit/loader/LuckPerms-Bukkit-5.5.55.jar")
-           url("https://ci.citizensnpcs.co/job/Citizens2/4190/artifact/dist/target/Citizens-2.0.42-b4190.jar")
-           url("https://ci.citizensnpcs.co/job/Sentinel/534/artifact/target/Sentinel-2.9.4-SNAPSHOT-b534.jar")
-        }
-    }
-
     shadowJar {
         relocate 'com.github.stefvanschie.inventoryframework', 'io.github.hyscript7.ascendancy.inventoryframework'
     }

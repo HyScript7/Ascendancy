@@ -17,20 +17,15 @@ configurations {
     }
 }
 
+// Minecraft version and plugin downloads come from the root build. Only the Core staging is
+// pack-specific, so only it lives here.
 tasks {
     runServer {
-        minecraftVersion(libs.versions.minecraft.get())
         // run-paper only ever stages the jar of the project it was invoked from, which for a pack
         // is useless on its own: paper-plugin.yml declares AscendancyCore as required, so Paper
         // refuses to load the pack at all without it. Staging Core through a configuration rather
         // than a copied file means it is rebuilt from source on every run and cannot go stale.
         pluginJars(configurations.corePluginJar)
-        downloadPlugins {
-           hangar("carbon", libs.versions.carbon.get())
-           url("https://download.luckperms.net/1643/bukkit/loader/LuckPerms-Bukkit-5.5.55.jar")
-           url("https://ci.citizensnpcs.co/job/Citizens2/4190/artifact/dist/target/Citizens-2.0.42-b4190.jar")
-           url("https://ci.citizensnpcs.co/job/Sentinel/534/artifact/target/Sentinel-2.9.4-SNAPSHOT-b534.jar")
-        }
     }
 }
 

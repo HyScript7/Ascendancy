@@ -68,6 +68,26 @@ subprojects {
             dependsOn tasks.named("javadoc")
         }
 
+        // The dev-server plugin set, shared by every module that runs one. It used to be copy-pasted
+        // into :core and the pack, which meant two lists of pinned CI build URLs quietly drifting
+        // apart — and a dev server that disagrees with itself about which Citizens build it is
+        // testing against is worse than no dev server.
+        //
+        // Guarded by plugins.withId rather than applied to all subprojects, so it only ever touches
+        // modules that actually apply run-paper. :api has no dev server and must not grow one: it is
+        // contracts only, and nothing in it should know a server exists.
+        plugins.withId("xyz.jpenilla.run-paper") {
+            tasks.named("runServer") {
+                minecraftVersion(libs.versions.minecraft.get())
+                downloadPlugins {
+                    hangar("carbon", libs.versions.carbon.get())
+                    url("https://download.luckperms.net/1643/bukkit/loader/LuckPerms-Bukkit-5.5.55.jar")
+                    url("https://ci.citizensnpcs.co/job/Citizens2/4190/artifact/dist/target/Citizens-2.0.42-b4190.jar")
+                    url("https://ci.citizensnpcs.co/job/Sentinel/534/artifact/target/Sentinel-2.9.4-SNAPSHOT-b534.jar")
+                }
+            }
+        }
+
         tasks.withType(Jar).configureEach {
             archiveBaseName.set(ascendancyVersion)
             // Make jars output directly into the root projects' build/libs
