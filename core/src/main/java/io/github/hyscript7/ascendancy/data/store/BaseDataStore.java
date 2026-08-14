@@ -7,9 +7,9 @@ import io.github.hyscript7.ascendancy.api.data.store.DataScope;
 import io.github.hyscript7.ascendancy.api.data.store.DataStorageException;
 import io.github.hyscript7.ascendancy.api.data.store.DataStore;
 import io.github.hyscript7.ascendancy.api.data.store.ResidencyPolicy;
-import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import io.github.hyscript7.ascendancy.data.backend.StorageBackend;
+import io.github.hyscript7.ascendancy.data.backend.StoredComponent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.bukkit.Bukkit;
 
 /**
  * The {@link DataStore} implementation, holding resident entities in memory and pushing writes to a
@@ -33,6 +34,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class BaseDataStore implements DataStore {
+    /** Roughly a fifth of a tick — slow enough to matter, generous enough not to cry wolf. */
+    public static final long DEFAULT_COLD_READ_WARN_MILLIS = 5L;
+
     private final StorageBackend backend;
 
     /** Resident entities. Which of these stay resident is decided by their scope's policy. */
@@ -60,13 +64,33 @@ public class BaseDataStore implements DataStore {
     private final ExecutorService ioExecutor;
 
     /**
+     * How long a main-thread cold read may take before it is worth complaining about, in
+     * milliseconds. Zero or less disables the warning.
+     */
+    private final long coldReadWarnMillis;
+
+    /**
+     * Builds a store that warns about main-thread cold reads slower than
+     * {@value #DEFAULT_COLD_READ_WARN_MILLIS}ms.
+     *
      * @param backend Where entity data is stored
      * @throws IllegalArgumentException If the backend is null
      */
     public BaseDataStore(StorageBackend backend) {
+        this(backend, DEFAULT_COLD_READ_WARN_MILLIS);
+    }
+
+    /**
+     * @param backend            Where entity data is stored
+     * @param coldReadWarnMillis How slow a main-thread cold read must be to earn a warning; zero or
+     *                           less silences it
+     * @throws IllegalArgumentException If the backend is null
+     */
+    public BaseDataStore(StorageBackend backend, long coldReadWarnMillis) {
         if (backend == null) {
             throw new IllegalArgumentException("Storage backend cannot be null");
         }
+        this.coldReadWarnMillis = coldReadWarnMillis;
         this.backend = backend;
         this.ioExecutor = Executors.newSingleThreadExecutor(runnable -> {
             Thread thread = new Thread(runnable, "Ascendancy-Persistence");
@@ -131,7 +155,47 @@ public class BaseDataStore implements DataStore {
     @Override
     public ComponentHolder get(DataKey key) {
         requireKey(key);
-        return loaded.computeIfAbsent(key, this::read);
+        BaseComponentHolder resident = loaded.get(key);
+        if (resident != null) {
+            return resident;
+        }
+        // Not resident, so this call is about to hit the disk on whatever thread asked.
+        long startedAt = System.nanoTime();
+        BaseComponentHolder holder = loaded.computeIfAbsent(key, this::read);
+        reportColdRead(key, System.nanoTime() - startedAt);
+        return holder;
+    }
+
+    /**
+     * Reports a read that had to reach the storage backend.
+     * <p>
+     * Warns only when such a read blocks the main thread for longer than
+     * {@link #coldReadWarnMillis}. Warning on every cold main-thread read would be useless noise:
+     * chunk data is deliberately read on demand rather than preloaded, because the overwhelming
+     * majority of chunks never carry any Ascendancy data. A threshold keeps the log quiet in normal
+     * operation and loud exactly when the read is actually costing tick time.
+     *
+     * @param key     The entity that was read
+     * @param elapsed How long the read took, in nanoseconds
+     */
+    private void reportColdRead(DataKey key, long elapsed) {
+        long millis = elapsed / 1_000_000L;
+        if (coldReadWarnMillis > 0 && millis >= coldReadWarnMillis && onMainThread()) {
+            log.warn(
+                    "Cold read of {} blocked the main thread for {}ms. Consider DataStore#preload(key) ahead of time.",
+                    key,
+                    millis);
+        } else {
+            log.debug("Cold read of {} took {}ms", key, millis);
+        }
+    }
+
+    /**
+     * @return True if the caller is on the server's main thread, and false when there is no server
+     *         at all — which is how this class stays usable from tooling outside a running Paper
+     */
+    private static boolean onMainThread() {
+        return Bukkit.getServer() != null && Bukkit.isPrimaryThread();
     }
 
     @Override
@@ -266,7 +330,7 @@ public class BaseDataStore implements DataStore {
             return CompletableFuture.completedFuture(null);
         }
         DataKey key = holder.getKey();
-        Map<Identifier, DataValue> snapshot = holder.snapshot();
+        Map<Identifier, StoredComponent> snapshot = holder.snapshot();
 
         return CompletableFuture.runAsync(
                         () -> {
@@ -293,7 +357,7 @@ public class BaseDataStore implements DataStore {
      * @return A holder seeded with whatever was stored, or an empty one for a new entity
      */
     private BaseComponentHolder read(DataKey key) {
-        Map<Identifier, DataValue> stored = backend.read(key).orElseGet(Map::of);
+        Map<Identifier, StoredComponent> stored = backend.read(key).orElseGet(Map::of);
         return new BaseComponentHolder(key, stored, this::isComponentRegistered);
     }
 

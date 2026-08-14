@@ -41,7 +41,17 @@ public class BasePersistence implements Persistence {
      * @throws IllegalArgumentException If the backend is null
      */
     public BasePersistence(StorageBackend backend) {
-        this.store = new BaseDataStore(backend);
+        this(backend, BaseDataStore.DEFAULT_COLD_READ_WARN_MILLIS);
+    }
+
+    /**
+     * @param backend            Where entity data is stored
+     * @param coldReadWarnMillis How slow a main-thread cold read must be to earn a warning; zero or
+     *                           less silences it
+     * @throws IllegalArgumentException If the backend is null
+     */
+    public BasePersistence(StorageBackend backend, long coldReadWarnMillis) {
+        this.store = new BaseDataStore(backend, coldReadWarnMillis);
         this.componentTypes = new ComponentTypeRegistry(store);
         this.scopes = new DataScopeRegistry(store);
         registerBuiltInScopes();

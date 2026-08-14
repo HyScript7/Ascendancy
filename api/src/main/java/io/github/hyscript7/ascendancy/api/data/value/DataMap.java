@@ -83,7 +83,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds another type
      * @return The nested map, or empty if absent
      */
-    public Optional<DataMap> getMap(String key) {
+    public Optional<DataMap> getMap(String key) throws DataCodecException {
         return expect(key, DataMap.class);
     }
 
@@ -94,7 +94,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds another type
      * @return The nested list, or empty if absent
      */
-    public Optional<DataList> getList(String key) {
+    public Optional<DataList> getList(String key) throws DataCodecException {
         return expect(key, DataList.class);
     }
 
@@ -105,7 +105,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds another type
      * @return The string, or empty if absent
      */
-    public Optional<String> getString(String key) {
+    public Optional<String> getString(String key) throws DataCodecException {
         return expect(key, DataString.class).map(DataString::value);
     }
 
@@ -116,7 +116,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds another type
      * @return The number, or empty if absent
      */
-    public Optional<Long> getInteger(String key) {
+    public Optional<Long> getInteger(String key) throws DataCodecException {
         return expect(key, DataInteger.class).map(DataInteger::value);
     }
 
@@ -128,7 +128,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds a non-numeric type
      * @return The number, or empty if absent
      */
-    public Optional<Double> getDecimal(String key) {
+    public Optional<Double> getDecimal(String key) throws DataCodecException {
         DataValue value = entries.get(key);
         if (value == null) {
             return Optional.empty();
@@ -147,7 +147,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds another type
      * @return The boolean, or empty if absent
      */
-    public Optional<Boolean> getBoolean(String key) {
+    public Optional<Boolean> getBoolean(String key) throws DataCodecException {
         return expect(key, DataBoolean.class).map(DataBoolean::value);
     }
 
@@ -158,7 +158,7 @@ public record DataMap(Map<String, DataValue> entries) implements DataValue {
      * @throws DataCodecException If the key is present but holds another type
      * @return A copy of the bytes, or empty if absent
      */
-    public Optional<byte[]> getBytes(String key) {
+    public Optional<byte[]> getBytes(String key) throws DataCodecException {
         return expect(key, DataBytes.class).map(DataBytes::value);
     }
 

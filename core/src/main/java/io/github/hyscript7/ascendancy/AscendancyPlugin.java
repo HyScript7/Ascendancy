@@ -6,6 +6,8 @@ import io.github.hyscript7.ascendancy.api.events.AscendancyDisabledEvent;
 import io.github.hyscript7.ascendancy.api.events.AscendancyEnabledEvent;
 import io.github.hyscript7.ascendancy.data.BasePersistence;
 import io.github.hyscript7.ascendancy.data.DataLifecycleListener;
+import io.github.hyscript7.ascendancy.data.backend.JsonFileStorageBackend;
+import io.github.hyscript7.ascendancy.data.store.BaseDataStore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -24,7 +26,10 @@ public class AscendancyPlugin extends JavaPlugin implements AscendancyAPI {
 
     @Override
     public void onEnable() {
-        persistence = new BasePersistence(getDataFolder().toPath().resolve("data"));
+        long coldReadWarnMillis =
+                getConfig().getLong("persistence.cold-read-warn-millis", BaseDataStore.DEFAULT_COLD_READ_WARN_MILLIS);
+        persistence = new BasePersistence(
+                new JsonFileStorageBackend(getDataFolder().toPath().resolve("data")), coldReadWarnMillis);
         AscendancyAPI.set(this, this);
         Bukkit.getPluginManager().registerEvents(new DataLifecycleListener(persistence.store()), this);
 

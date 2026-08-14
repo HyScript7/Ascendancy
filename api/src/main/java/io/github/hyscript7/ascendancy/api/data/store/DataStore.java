@@ -26,7 +26,7 @@ public interface DataStore {
      * @throws DataStorageException     If the entity is not resident and loading it fails
      * @return The entity's components
      */
-    ComponentHolder get(DataKey key);
+    ComponentHolder get(DataKey key) throws DataStorageException;
 
     /**
      * Retrieves an entity only if it is already in memory, never touching the disk.
@@ -56,7 +56,7 @@ public interface DataStore {
      * @throws DataStorageException     If the backend cannot be queried
      * @return True if the entity is resident or present in storage
      */
-    boolean exists(DataKey key);
+    boolean exists(DataKey key) throws DataStorageException;
 
     /**
      * Lists every entity in a scope.
@@ -70,7 +70,7 @@ public interface DataStore {
      * @throws DataStorageException     If the backend cannot be enumerated
      * @return The keys of every entity in the scope
      */
-    Collection<DataKey> keys(Identifier scope);
+    Collection<DataKey> keys(Identifier scope) throws DataStorageException;
 
     /**
      * Permanently deletes an entity, evicting it from memory and removing it from storage.
@@ -80,7 +80,7 @@ public interface DataStore {
      * @throws DataStorageException     If the backend cannot be written to
      * @return True if the entity existed
      */
-    boolean delete(DataKey key);
+    boolean delete(DataKey key) throws DataStorageException;
 
     /**
      * Writes an entity's pending changes to storage.

@@ -1,11 +1,14 @@
 package io.github.hyscript7.ascendancy.data.store;
 
 import io.github.hyscript7.ascendancy.api.data.component.ComponentHolder;
+import io.github.hyscript7.ascendancy.api.data.component.ComponentMigrator;
 import io.github.hyscript7.ascendancy.api.data.component.ComponentType;
 import io.github.hyscript7.ascendancy.api.data.component.ComponentTypeNotRegisteredException;
 import io.github.hyscript7.ascendancy.api.data.store.DataKey;
+import io.github.hyscript7.ascendancy.api.data.value.DataCodecException;
 import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
+import io.github.hyscript7.ascendancy.data.backend.StoredComponent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +32,7 @@ public class BaseComponentHolder implements ComponentHolder {
     private final DataKey key;
 
     /** The authoritative stored form of every component, including unrecognised ones. */
-    private final Map<Identifier, DataValue> raw = new ConcurrentHashMap<>();
+    private final Map<Identifier, StoredComponent> raw = new ConcurrentHashMap<>();
 
     /** Decoded values, to avoid paying for a decode on every read. */
     private final Map<Identifier, Object> decoded = new ConcurrentHashMap<>();
@@ -50,7 +53,7 @@ public class BaseComponentHolder implements ComponentHolder {
      * @throws IllegalArgumentException If any argument is null
      */
     public BaseComponentHolder(
-            DataKey key, Map<Identifier, DataValue> components, Predicate<Identifier> registrationCheck) {
+            DataKey key, Map<Identifier, StoredComponent> components, Predicate<Identifier> registrationCheck) {
         if (key == null) {
             throw new IllegalArgumentException("Key cannot be null");
         }
@@ -85,14 +88,60 @@ public class BaseComponentHolder implements ComponentHolder {
             return Optional.of(type.valueType().cast(cached));
         }
 
-        DataValue stored = raw.get(identifier);
+        StoredComponent stored = raw.get(identifier);
         if (stored == null) {
             return Optional.empty();
         }
 
-        T value = type.decode(stored);
+        T value = type.decode(bringForward(type, stored).data());
         decoded.put(identifier, value);
         return Optional.of(value);
+    }
+
+    /**
+     * Brings a component's stored data up to the type's current version, if it is behind.
+     * <p>
+     * A successful migration is written back into {@link #raw} and marks the entity dirty, so the
+     * upgrade is paid for once rather than on every read. That does mean a pure read can schedule a
+     * write — which is the intended behaviour, since the alternative is migrating the same data
+     * forever.
+     *
+     * @param <T>    The component's value type
+     * @param type   The component being read
+     * @param stored The data as it sits in storage
+     * @throws DataCodecException If the data is newer than the running code, or older with no
+     *                            migration path, or the migration itself fails
+     * @return The data at the type's current version
+     */
+    private <T> StoredComponent bringForward(ComponentType<T> type, StoredComponent stored) {
+        int current = type.version();
+        if (stored.version() == current) {
+            return stored;
+        }
+        Identifier identifier = type.getIdentifier();
+
+        if (stored.version() > current) {
+            // Someone downgraded the pack. Guessing at a shape from the future would corrupt it.
+            throw new DataCodecException("Component " + identifier + " was stored at version " + stored.version()
+                    + " but this build only understands version " + current
+                    + "; the content pack appears to have been downgraded");
+        }
+
+        ComponentMigrator migrator = type.migrator();
+        if (migrator == null) {
+            throw new DataCodecException("Component " + identifier + " was stored at version " + stored.version()
+                    + " but is now version " + current + ", and declares no migrator to bridge the two");
+        }
+
+        DataValue migrated = migrator.migrate(stored.data(), stored.version());
+        if (migrated == null) {
+            throw new DataCodecException("Migrator for component " + identifier + " returned null");
+        }
+
+        StoredComponent upgraded = new StoredComponent(current, migrated);
+        raw.put(identifier, upgraded);
+        dirty.set(true);
+        return upgraded;
     }
 
     @Override
@@ -108,7 +157,7 @@ public class BaseComponentHolder implements ComponentHolder {
         }
         // Encoded now rather than at flush time, so a failure surfaces at the call site that caused
         // it instead of on a background thread ten minutes later.
-        raw.put(identifier, type.encode(value));
+        raw.put(identifier, new StoredComponent(type.version(), type.encode(value)));
         decoded.put(identifier, value);
         dirty.set(true);
     }
@@ -150,7 +199,7 @@ public class BaseComponentHolder implements ComponentHolder {
      *
      * @return An independent copy of every stored component
      */
-    Map<Identifier, DataValue> snapshot() {
+    Map<Identifier, StoredComponent> snapshot() {
         return new LinkedHashMap<>(raw);
     }
 

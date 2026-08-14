@@ -8,7 +8,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import io.github.hyscript7.ascendancy.api.data.store.DataKey;
 import io.github.hyscript7.ascendancy.api.data.store.DataStorageException;
-import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import java.io.IOException;
 import java.io.Reader;
@@ -50,6 +49,15 @@ public class JsonFileStorageBackend implements StorageBackend {
 
     private static final int CURRENT_VERSION = 1;
 
+    /**
+     * Marks a component entry as carrying its own version. An entry without it predates component
+     * versioning and is read back as version 1.
+     */
+    private static final String COMPONENT_VERSION_KEY = "$v";
+
+    /** Holds the component's actual data inside a versioned entry. */
+    private static final String COMPONENT_DATA_KEY = "$d";
+
     private static final String FILE_EXTENSION = ".json";
 
     private final Path root;
@@ -68,7 +76,7 @@ public class JsonFileStorageBackend implements StorageBackend {
     }
 
     @Override
-    public Optional<Map<Identifier, DataValue>> read(DataKey key) {
+    public Optional<Map<Identifier, StoredComponent>> read(DataKey key) {
         Path file = fileFor(key);
         if (!Files.isRegularFile(file)) {
             return Optional.empty();
@@ -78,12 +86,12 @@ public class JsonFileStorageBackend implements StorageBackend {
             if (!parsed.isJsonObject()) {
                 throw new DataStorageException("Expected a JSON object at the root of " + file);
             }
-            Map<Identifier, DataValue> components = new LinkedHashMap<>();
+            Map<Identifier, StoredComponent> components = new LinkedHashMap<>();
             for (Map.Entry<String, JsonElement> entry : parsed.getAsJsonObject().entrySet()) {
                 if (entry.getKey().startsWith("$")) {
                     continue;
                 }
-                components.put(Identifier.parse(entry.getKey()), JsonDataValueCodec.decode(entry.getValue()));
+                components.put(Identifier.parse(entry.getKey()), readComponent(entry.getValue()));
             }
             return Optional.of(components);
         } catch (IOException | JsonParseException | IllegalArgumentException exception) {
@@ -92,14 +100,14 @@ public class JsonFileStorageBackend implements StorageBackend {
     }
 
     @Override
-    public void write(DataKey key, Map<Identifier, DataValue> components) {
+    public void write(DataKey key, Map<Identifier, StoredComponent> components) {
         Path file = fileFor(key);
         JsonObject document = new JsonObject();
         document.addProperty(VERSION_KEY, CURRENT_VERSION);
         // Sorted by identifier so that repeated saves of unchanged data produce identical files.
-        Map<String, DataValue> sorted = new TreeMap<>();
+        Map<String, StoredComponent> sorted = new TreeMap<>();
         components.forEach((identifier, value) -> sorted.put(identifier.toString(), value));
-        sorted.forEach((identifier, value) -> document.add(identifier, JsonDataValueCodec.encode(value)));
+        sorted.forEach((identifier, value) -> document.add(identifier, writeComponent(value)));
 
         // Written beside the target rather than into a temp directory, so the atomic move below
         // cannot be defeated by the two paths landing on different filesystems.
@@ -182,6 +190,47 @@ public class JsonFileStorageBackend implements StorageBackend {
     @Override
     public void close() {
         // Nothing to release; every write closes its own handle. Present for backends that do.
+    }
+
+    /**
+     * Reads one component entry, tolerating both the versioned envelope and the bare form written
+     * before component versioning existed.
+     * <p>
+     * The two are told apart by the reserved {@code $v} key. That discrimination is safe because
+     * {@link io.github.hyscript7.ascendancy.api.data.value.DataMap} forbids callers from using
+     * {@code $}-prefixed keys, so no component's own data can imitate an envelope.
+     *
+     * @param element The JSON value stored under a component identifier
+     * @throws DataStorageException If the entry is malformed
+     * @return The component and the version that wrote it
+     */
+    private static StoredComponent readComponent(JsonElement element) {
+        if (element.isJsonObject()) {
+            JsonObject object = element.getAsJsonObject();
+            if (object.has(COMPONENT_VERSION_KEY)) {
+                if (!object.has(COMPONENT_DATA_KEY)) {
+                    throw new DataStorageException(
+                            "Component entry declares " + COMPONENT_VERSION_KEY + " but has no " + COMPONENT_DATA_KEY);
+                }
+                int version = object.get(COMPONENT_VERSION_KEY).getAsInt();
+                return new StoredComponent(version, JsonDataValueCodec.decode(object.get(COMPONENT_DATA_KEY)));
+            }
+        }
+        // Written before versioning, so by definition it is whatever version 1 looked like.
+        return StoredComponent.unversioned(JsonDataValueCodec.decode(element));
+    }
+
+    /**
+     * Writes one component entry, wrapping the data with the version that produced it.
+     *
+     * @param component The component to write
+     * @return The JSON value to store under the component's identifier
+     */
+    private static JsonElement writeComponent(StoredComponent component) {
+        JsonObject envelope = new JsonObject();
+        envelope.addProperty(COMPONENT_VERSION_KEY, component.version());
+        envelope.add(COMPONENT_DATA_KEY, JsonDataValueCodec.encode(component.data()));
+        return envelope;
     }
 
     /**

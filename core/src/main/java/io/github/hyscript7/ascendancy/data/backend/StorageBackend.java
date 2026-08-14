@@ -29,7 +29,7 @@ public interface StorageBackend {
      * @throws DataStorageException If the entity exists but cannot be read or parsed
      * @return The stored components, or empty if the entity has never been stored
      */
-    Optional<Map<Identifier, DataValue>> read(DataKey key);
+    Optional<Map<Identifier, StoredComponent>> read(DataKey key);
 
     /**
      * Writes an entity's components, replacing whatever was there.
@@ -38,7 +38,7 @@ public interface StorageBackend {
      * @param components The complete component set to store
      * @throws DataStorageException If the write fails
      */
-    void write(DataKey key, Map<Identifier, DataValue> components);
+    void write(DataKey key, Map<Identifier, StoredComponent> components);
 
     /**
      * Removes an entity from storage.

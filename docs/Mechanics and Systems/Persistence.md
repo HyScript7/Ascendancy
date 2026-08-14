@@ -191,10 +191,55 @@ server, at 3am.
 Entities are also flushed when unloaded, and everything is flushed **synchronously** during shutdown —
 after [[Events|AscendancyDisabledEvent]], so packs get their last writes in.
 
-> [!TODO]
-> Reading a `LAZY` entity that is not resident blocks on disk. `preload()` returns a future for
-> callers that can avoid it. Whether Core should log a warning when this happens on the main thread is
-> unresolved — useful for catching mistakes, noisy if it turns out to be a normal pattern.
+### Cold reads
+
+Reading a `LAZY` entity that is not resident blocks on the disk, on whatever thread asked.
+`preload()` returns a future for callers that can plan ahead.
+
+Core warns about this **only when it is actually slow**: a cold read on the main thread taking longer
+than `persistence.cold-read-warn-millis` (default 5ms) logs a warning naming the key; everything else
+goes to `DEBUG`.
+
+The threshold is the whole point. Warning on *every* cold main-thread read would be useless, because
+for chunks that is the intended design — chunk data is read on demand rather than preloaded on
+`ChunkLoadEvent`, since the overwhelming majority of chunks never carry any Ascendancy data and
+preloading them all would cost far more than it saved. A warning that fires constantly is one people
+learn to scroll past, which is worse than no warning at all. Set the threshold to `0` to silence it
+entirely.
+
+## Versioning and Migration
+
+Every component carries a `version()`, starting at 1, written to disk beside its data. When stored
+data is behind the running code, the component's `migrator()` brings it forward *in `DataValue`
+space* — before `decode` is ever called, because the whole point is that the old shape cannot be
+decoded by the current codec.
+
+```java
+ComponentType.<Stats>builder(id, Stats.class)
+    .defaultValue(() -> new Stats(1))
+    .version(2)
+    .mapCodec(encoder, decoder)
+    .migrator((data, fromVersion) -> /* rename, retype, restructure */)
+    .build();
+```
+
+Three rules keep this from going wrong:
+
+- **A version bump without a migrator fails at construction**, not on some player's next login. You
+  cannot ship a component that renders existing data unreadable with no way back.
+- **Data from a newer version is refused**, never guessed at. Downgrading a pack throws rather than
+  misreading a shape from the future.
+- **A migration is paid for once.** The upgraded data is written back into the entity and marks it
+  dirty, so the next flush persists the new shape. This does mean a pure read can schedule a write —
+  intended, since the alternative is migrating the same data on every read forever.
+
+Migrators should handle *every* version they might meet, not just the previous one. A player who has
+not logged in for a year arrives with whatever was current back then.
+
+> [!NOTE]
+> A component belonging to an uninstalled pack keeps its own version untouched alongside its data, so
+> removing a pack for one restart cannot silently downgrade it. This is the same guarantee as
+> [[#Unknown Components Must Survive]], extended to the version.
 
 ## Storage Backend
 
@@ -212,6 +257,20 @@ The scope `Identifier` *is* the directory path, which is a nice accident of it a
 
 Writes are **atomic** — written to a temporary file, then moved into place. A server killed mid-write
 leaves the previous version intact rather than a half-written file that fails to parse on boot.
+
+Each component is stored inside a small envelope carrying its version:
+
+```json
+{
+  "$version": 1,
+  "ascendancy:stats": { "$v": 2, "$d": { "experience": 1234.0 } }
+}
+```
+
+`$version` is the *file* format; `$v` is the *component* version and `$d` its data. Reserving the
+`$` prefix in `DataMap` up front is what makes this unambiguous — no component's own data can imitate
+an envelope. An entry with no `$v` predates versioning and is read back as version 1, so files
+written before this existed still load.
 
 ### JSON Encoding Notes
 
@@ -273,10 +332,24 @@ Deliberately out of scope, each pending its own page:
   need to carry.
 - **Queries by component value.** Enumerating a scope is supported. "Find every faction containing
   player X" is an index, and indexes are a feature, not a foundation.
-- **Migrations.** When a `ComponentType`'s shape changes, old data currently fails to decode. A
-  version field on components is the likely answer, but nothing needs it yet.
+- **Cross-component migrations.** A component migrates itself. Moving data *between* two components,
+  or migrating on behalf of a pack that is not loaded, is not supported.
 
-> [!TODO]
-> Decide whether component decode failure should throw, or fall back to the default value and retain
-> the raw data. Throwing is honest; falling back is what keeps a typo in one pack from making a player
-> unloadable. Currently it throws.
+## Failure Is Loud
+
+**Decode failure throws.** A component whose stored data cannot be read raises `DataCodecException`
+rather than quietly resetting to its default — silently discarding a player's levels because one
+field was renamed is the worse outcome by a wide margin.
+
+Because it throws, every method that can trigger a decode **declares it**, following the same
+convention as `Registry#register`: the exception is unchecked, but naming it in the `throws` clause is
+what makes it visible in an IDE and catchable on purpose rather than by accident.
+
+| Declares | Methods |
+| -------- | ------- |
+| `DataCodecException` | `ComponentHolder#get`, `#find`, `#set`; `ComponentType#encode`, `#decode`, `#defaultValue`; `ComponentMigrator#migrate`; `DataMap`'s typed accessors |
+| `DataStorageException` | `DataStore#get`, `#exists`, `#keys`, `#delete` |
+| `ComponentTypeNotRegisteredException` | `ComponentHolder#set` |
+
+The entity itself still loads — the failure is confined to the one component, and its raw data is
+retained untouched, so nothing is lost while the bug is fixed.

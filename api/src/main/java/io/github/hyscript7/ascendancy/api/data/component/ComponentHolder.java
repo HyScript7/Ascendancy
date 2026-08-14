@@ -31,7 +31,7 @@ public interface ComponentHolder {
      * @throws DataCodecException       If stored data for this component cannot be decoded
      * @return The stored value, or the component's default
      */
-    <T> T get(ComponentType<T> type);
+    <T> T get(ComponentType<T> type) throws DataCodecException;
 
     /**
      * Reads a component without falling back to its default, for the rare caller that needs to tell
@@ -43,7 +43,7 @@ public interface ComponentHolder {
      * @throws DataCodecException       If stored data for this component cannot be decoded
      * @return The stored value, or empty if the component was never set
      */
-    <T> Optional<T> find(ComponentType<T> type);
+    <T> Optional<T> find(ComponentType<T> type) throws DataCodecException;
 
     /**
      * Attaches or replaces a component and marks the entity dirty.
@@ -59,7 +59,7 @@ public interface ComponentHolder {
      *                                              {@link Persistence#componentTypes()}
      * @throws DataCodecException                   If the value cannot be encoded
      */
-    <T> void set(ComponentType<T> type, T value);
+    <T> void set(ComponentType<T> type, T value) throws DataCodecException, ComponentTypeNotRegisteredException;
 
     /**
      * @param type The component to test for

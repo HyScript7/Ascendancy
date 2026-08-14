@@ -7,8 +7,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A {@link ComponentType} assembled from functions, backing {@link ComponentType#of} and
- * {@link ComponentType#ofMap}.
+ * A {@link ComponentType} assembled from functions, backing {@link ComponentType.Builder}.
  * <p>
  * Package-private on purpose: packs depend on the {@link ComponentType} contract, not on this shape.
  * <p>
@@ -22,17 +21,21 @@ import java.util.function.Supplier;
  * @param defaultValueSupplier Supplies the value used when the component is absent
  * @param encoder              Converts a value into its persistable form
  * @param decoder              Reconstructs a value from its persistable form
+ * @param storedVersion        The current stored shape
+ * @param componentMigrator    Brings older data forward, or null if there is none
  */
 record FunctionalComponentType<T>(
         Identifier identifier,
         Class<T> valueType,
         Supplier<T> defaultValueSupplier,
         Function<T, DataValue> encoder,
-        Function<DataValue, T> decoder)
+        Function<DataValue, T> decoder,
+        int storedVersion,
+        ComponentMigrator componentMigrator)
         implements ComponentType<T> {
 
     /**
-     * @throws IllegalArgumentException If any argument is null
+     * @throws IllegalArgumentException If any required argument is null
      */
     FunctionalComponentType {
         if (identifier == null) {
@@ -47,6 +50,9 @@ record FunctionalComponentType<T>(
         if (encoder == null || decoder == null) {
             throw new IllegalArgumentException("Component encoder and decoder cannot be null");
         }
+        if (storedVersion < 1) {
+            throw new IllegalArgumentException("Component version must be at least 1, got " + storedVersion);
+        }
     }
 
     @Override
@@ -55,7 +61,17 @@ record FunctionalComponentType<T>(
     }
 
     @Override
-    public T defaultValue() {
+    public int version() {
+        return storedVersion;
+    }
+
+    @Override
+    public ComponentMigrator migrator() {
+        return componentMigrator;
+    }
+
+    @Override
+    public T defaultValue() throws DataCodecException {
         T value = defaultValueSupplier.get();
         if (value == null) {
             throw new DataCodecException("Default value supplier for component " + identifier + " returned null");
@@ -64,7 +80,7 @@ record FunctionalComponentType<T>(
     }
 
     @Override
-    public DataValue encode(T value) {
+    public DataValue encode(T value) throws DataCodecException {
         if (value == null) {
             throw new DataCodecException("Cannot encode a null value for component " + identifier);
         }
@@ -76,7 +92,7 @@ record FunctionalComponentType<T>(
     }
 
     @Override
-    public T decode(DataValue data) {
+    public T decode(DataValue data) throws DataCodecException {
         if (data == null) {
             throw new DataCodecException("Cannot decode a null value for component " + identifier);
         }
@@ -88,10 +104,10 @@ record FunctionalComponentType<T>(
     }
 
     /**
-     * @return The component's identifier, since that is the only part worth reading in a log line
+     * @return The component's identifier and version, since that is all worth reading in a log line
      */
     @Override
     public String toString() {
-        return "ComponentType[" + identifier + "]";
+        return "ComponentType[" + identifier + " v" + storedVersion + "]";
     }
 }
