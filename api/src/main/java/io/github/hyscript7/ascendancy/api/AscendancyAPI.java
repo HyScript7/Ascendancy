@@ -1,19 +1,27 @@
 package io.github.hyscript7.ascendancy.api;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.ServicePriority;
+import io.github.hyscript7.ascendancy.api.data.Persistence;
 import java.util.Optional;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicePriority;
 
 public interface AscendancyAPI {
+    /**
+     * The persistence layer, used to attach arbitrary data to players, chunks, factions, or anything
+     * else a feature decides to store data on.
+     *
+     * @return The persistence entry point
+     */
+    Persistence persistence();
+
     /**
      * A holder for the API instance
      */
     class Holder {
         private static AscendancyAPI INSTANCE;
 
-        private Holder() {
-        }
+        private Holder() {}
     }
 
     static AscendancyAPI get() {
