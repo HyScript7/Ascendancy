@@ -161,7 +161,7 @@ stack, so it is the one that can actually catch a broken Core↔pack handshake.
   feature, `🐛` bug fix, `♻️` refactor, `🎨` improve structure/formatting, `🔧` config files,
   `📝` docs, `⬆️` upgrade dependencies, `➕` add a dependency, `🍱` assets, `💥` breaking change,
   `🚚` move or rename, `🙈` .gitignore, `🏗️` architectural change, `👷` CI, `🔨` dev scripts,
-  `🎉` begin a project.
+  `🎉` begin a project, `🧑‍💻` improve developer experience.
   Need one that isn't listed? `curl https://gitmoji.dev/api/gitmojis` returns all 75 as JSON
   (`emoji`, `code`, `description`, `semver`) — far cleaner to read than scraping the site. Add
   whatever you end up using to the list above, so it keeps describing *this* project's habits rather
