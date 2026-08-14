@@ -121,6 +121,12 @@ Content packs must not assume Core is loaded at their `onEnable()`. The intended
 Teardown work belongs in an `AscendancyDisabledEvent` handler, which Core fires at the start of its
 `onDisable()`.
 
+**Core fires `AscendancyEnabledEvent` on the first tick, not from `onEnable()`.** Packs declare Core
+as a required dependency, so Bukkit enables Core *before* them — firing during `onEnable()` announced
+to an empty room, because no pack had registered a listener yet. `loadEagerScopes()` runs immediately
+after the event for the same reason: a scope registered by a pack has to exist before Core tries to
+populate it.
+
 Core already fires both events, but `AscendancyBuiltinPack` is currently an empty `JavaPlugin` — the
 pattern above is the design, not something you can copy from an existing implementation yet.
 

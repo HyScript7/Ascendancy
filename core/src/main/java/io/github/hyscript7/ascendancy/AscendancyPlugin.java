@@ -33,10 +33,21 @@ public class AscendancyPlugin extends JavaPlugin implements AscendancyAPI {
         AscendancyAPI.set(this, this);
         Bukkit.getPluginManager().registerEvents(new DataLifecycleListener(persistence.store()), this);
 
-        Bukkit.getPluginManager().callEvent(new AscendancyEnabledEvent(this));
+        // Deferred to the first tick rather than fired here. Content packs declare Core as a required
+        // dependency, so Bukkit enables Core *before* them — announcing from inside onEnable would
+        // shout into an empty room, since no pack has registered a listener yet. The first tick is
+        // the earliest moment every plugin is up.
+        Bukkit.getScheduler().runTask(this, this::announceEnabled);
+    }
 
-        // Only now, once packs have had their chance to register scopes of their own, is it safe to
-        // populate the eager ones.
+    /**
+     * Tells everyone Core is ready, then does the work that depends on what they registered.
+     * <p>
+     * Order matters: eager scopes can only be populated once packs have had their chance to declare
+     * scopes of their own, which they do while handling the event below.
+     */
+    private void announceEnabled() {
+        Bukkit.getPluginManager().callEvent(new AscendancyEnabledEvent(this));
         persistence.loadEagerScopes();
         startAutosave();
     }
