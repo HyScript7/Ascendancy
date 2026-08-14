@@ -2,8 +2,8 @@ package io.github.hyscript7.ascendancy;
 
 import io.github.hyscript7.ascendancy.api.AscendancyAPI;
 import io.github.hyscript7.ascendancy.api.data.Persistence;
-import io.github.hyscript7.ascendancy.api.events.AscendancyDisabledEvent;
-import io.github.hyscript7.ascendancy.api.events.AscendancyEnabledEvent;
+import io.github.hyscript7.ascendancy.api.event.AscendancyDisabledEvent;
+import io.github.hyscript7.ascendancy.api.event.AscendancyEnabledEvent;
 import io.github.hyscript7.ascendancy.data.BasePersistence;
 import io.github.hyscript7.ascendancy.data.DataLifecycleListener;
 import io.github.hyscript7.ascendancy.data.backend.JsonFileStorageBackend;

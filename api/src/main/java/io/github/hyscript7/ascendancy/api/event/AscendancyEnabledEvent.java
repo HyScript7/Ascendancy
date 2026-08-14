@@ -1,16 +1,19 @@
-package io.github.hyscript7.ascendancy.api.events;
+package io.github.hyscript7.ascendancy.api.event;
 
-import org.bukkit.event.Event;
+import io.github.hyscript7.ascendancy.api.AscendancyAPI;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class AscendancyEvent extends Event {
-    public AscendancyEvent() {
+public class AscendancyEnabledEvent extends AscendancyEvent {
+    private final AscendancyAPI api;
+
+    public AscendancyEnabledEvent(AscendancyAPI api) {
         super();
+        this.api = api;
     }
 
-    public AscendancyEvent(boolean isAsync) {
-        super(isAsync);
+    public AscendancyAPI getApi() {
+        return api;
     }
 
     @Override
