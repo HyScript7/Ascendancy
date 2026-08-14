@@ -1,10 +1,10 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.store;
 
-import io.github.hyscript7.ascendancy.api.data.ComponentHolder;
-import io.github.hyscript7.ascendancy.api.data.ComponentType;
-import io.github.hyscript7.ascendancy.api.data.ComponentTypeNotRegisteredException;
-import io.github.hyscript7.ascendancy.api.data.DataKey;
-import io.github.hyscript7.ascendancy.api.data.DataValue;
+import io.github.hyscript7.ascendancy.api.data.component.ComponentHolder;
+import io.github.hyscript7.ascendancy.api.data.component.ComponentType;
+import io.github.hyscript7.ascendancy.api.data.component.ComponentTypeNotRegisteredException;
+import io.github.hyscript7.ascendancy.api.data.store.DataKey;
+import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import java.util.LinkedHashMap;
 import java.util.Map;

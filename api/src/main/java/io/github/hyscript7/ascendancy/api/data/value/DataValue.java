@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.value;
 
 /**
  * An immutable, backend-agnostic value that can be persisted.

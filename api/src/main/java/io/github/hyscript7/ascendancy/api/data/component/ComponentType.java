@@ -1,5 +1,9 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.component;
 
+import io.github.hyscript7.ascendancy.api.data.Persistence;
+import io.github.hyscript7.ascendancy.api.data.value.DataCodecException;
+import io.github.hyscript7.ascendancy.api.data.value.DataMap;
+import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifiable;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import java.util.function.Function;

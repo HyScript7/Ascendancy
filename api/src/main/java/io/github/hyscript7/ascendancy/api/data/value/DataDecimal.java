@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.value;
 
 /**
  * A {@link DataValue} holding a fractional number. See {@link DataInteger} for why the two are

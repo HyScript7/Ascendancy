@@ -1,7 +1,7 @@
 package io.github.hyscript7.ascendancy.data;
 
-import io.github.hyscript7.ascendancy.api.data.DataScopes;
-import io.github.hyscript7.ascendancy.api.data.DataStore;
+import io.github.hyscript7.ascendancy.api.data.store.DataScopes;
+import io.github.hyscript7.ascendancy.api.data.store.DataStore;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
- * Drives residency for Core's own {@link io.github.hyscript7.ascendancy.api.data.ResidencyPolicy#LAZY}
+ * Drives residency for Core's own {@link io.github.hyscript7.ascendancy.api.data.store.ResidencyPolicy#LAZY}
  * scopes. Without this, lazily loaded entities would accumulate until the server ran out of memory.
  */
 @Slf4j

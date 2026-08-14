@@ -1,5 +1,10 @@
 package io.github.hyscript7.ascendancy.api.data;
 
+import io.github.hyscript7.ascendancy.api.data.component.ComponentHolder;
+import io.github.hyscript7.ascendancy.api.data.component.ComponentType;
+import io.github.hyscript7.ascendancy.api.data.store.DataScope;
+import io.github.hyscript7.ascendancy.api.data.store.DataStore;
+import io.github.hyscript7.ascendancy.api.data.store.ResidencyPolicy;
 import io.github.hyscript7.ascendancy.api.registry.Registry;
 
 /**

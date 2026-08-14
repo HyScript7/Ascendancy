@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.store;
 
 /**
  * Declares when the entities of a {@link DataScope} are held in memory.

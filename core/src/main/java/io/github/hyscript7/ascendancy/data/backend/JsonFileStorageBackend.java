@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.backend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,9 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import io.github.hyscript7.ascendancy.api.data.DataKey;
-import io.github.hyscript7.ascendancy.api.data.DataStorageException;
-import io.github.hyscript7.ascendancy.api.data.DataValue;
+import io.github.hyscript7.ascendancy.api.data.store.DataKey;
+import io.github.hyscript7.ascendancy.api.data.store.DataStorageException;
+import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import java.io.IOException;
 import java.io.Reader;
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JsonFileStorageBackend implements StorageBackend {
     /**
      * Bumped only if the file layout changes in a way a reader must know about. Written under a
-     * reserved {@code $} key, which {@link io.github.hyscript7.ascendancy.api.data.DataMap} forbids
+     * reserved {@code $} key, which {@link io.github.hyscript7.ascendancy.api.data.value.DataMap} forbids
      * callers from using, so it can never collide with a component identifier.
      */
     private static final String VERSION_KEY = "$version";

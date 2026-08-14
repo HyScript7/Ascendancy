@@ -1,4 +1,6 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.store;
+
+import io.github.hyscript7.ascendancy.api.data.value.DataCodecException;
 
 /**
  * Thrown when the underlying storage backend fails — unreadable file, permission denied, corrupt

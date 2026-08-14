@@ -237,6 +237,33 @@ Persistence persistence();
 from accumulating three methods for one feature, and gives later persistence additions somewhere to
 live that is not `AscendancyAPI`.
 
+## Code Layout
+
+Split by concern rather than left in one `data` package, so a reader looking for "how is a value
+represented" doesn't have to wade past scopes and stores to find out.
+
+```
+:api  io.github.hyscript7.ascendancy.api.data
+        .                 Persistence — the entry point, and nothing else
+        .value            DataValue and its seven implementations, DataCodecException
+        .component        ComponentType, ComponentHolder, and their exception
+        .store            DataStore, DataKey, DataScope, DataScopes, ResidencyPolicy
+
+:core io.github.hyscript7.ascendancy.data
+        .                 BasePersistence, DataLifecycleListener
+        .store            BaseDataStore, BaseComponentHolder, the two registries
+        .backend          StorageBackend and its JSON implementation
+```
+
+Two things pin this arrangement rather than a tidier-looking one:
+
+- **The registries sit with the store, not in a `registry` package of their own.** They call
+  package-private methods on `BaseDataStore` to mirror scopes and component types across. Separating
+  them would mean widening that internal wiring to `public`.
+- **`store` and `backend` are deliberately different words.** `store` is the in-memory access layer
+  callers touch; `backend` is the medium underneath it. Naming the latter `storage` sat one letter
+  away from the former and read as a typo.
+
 ## What This Page Does Not Cover
 
 Deliberately out of scope, each pending its own page:

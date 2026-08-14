@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.value;
 
 /**
  * A {@link DataValue} holding a boolean.

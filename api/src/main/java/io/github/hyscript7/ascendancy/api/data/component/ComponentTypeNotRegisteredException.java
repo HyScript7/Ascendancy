@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.component;
 
 /**
  * Thrown when data is written using a {@link ComponentType} that was never registered in

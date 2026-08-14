@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.value;
 
 /**
  * Thrown when a component value cannot be converted to or from its {@link DataValue} form — a

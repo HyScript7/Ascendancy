@@ -1,5 +1,6 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.store;
 
+import io.github.hyscript7.ascendancy.api.data.component.ComponentHolder;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import java.util.Collection;
 import java.util.Optional;

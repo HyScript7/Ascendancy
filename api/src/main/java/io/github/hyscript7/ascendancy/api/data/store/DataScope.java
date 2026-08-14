@@ -1,4 +1,4 @@
-package io.github.hyscript7.ascendancy.api.data;
+package io.github.hyscript7.ascendancy.api.data.store;
 
 import io.github.hyscript7.ascendancy.api.registry.Identifiable;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;

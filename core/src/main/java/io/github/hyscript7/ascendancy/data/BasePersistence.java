@@ -1,11 +1,16 @@
 package io.github.hyscript7.ascendancy.data;
 
-import io.github.hyscript7.ascendancy.api.data.ComponentType;
-import io.github.hyscript7.ascendancy.api.data.DataScope;
-import io.github.hyscript7.ascendancy.api.data.DataScopes;
-import io.github.hyscript7.ascendancy.api.data.DataStore;
 import io.github.hyscript7.ascendancy.api.data.Persistence;
+import io.github.hyscript7.ascendancy.api.data.component.ComponentType;
+import io.github.hyscript7.ascendancy.api.data.store.DataScope;
+import io.github.hyscript7.ascendancy.api.data.store.DataScopes;
+import io.github.hyscript7.ascendancy.api.data.store.DataStore;
 import io.github.hyscript7.ascendancy.api.registry.Registry;
+import io.github.hyscript7.ascendancy.data.backend.JsonFileStorageBackend;
+import io.github.hyscript7.ascendancy.data.backend.StorageBackend;
+import io.github.hyscript7.ascendancy.data.store.BaseDataStore;
+import io.github.hyscript7.ascendancy.data.store.ComponentTypeRegistry;
+import io.github.hyscript7.ascendancy.data.store.DataScopeRegistry;
 import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 

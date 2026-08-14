@@ -1,8 +1,8 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.backend;
 
-import io.github.hyscript7.ascendancy.api.data.DataKey;
-import io.github.hyscript7.ascendancy.api.data.DataStorageException;
-import io.github.hyscript7.ascendancy.api.data.DataValue;
+import io.github.hyscript7.ascendancy.api.data.store.DataKey;
+import io.github.hyscript7.ascendancy.api.data.store.DataStorageException;
+import io.github.hyscript7.ascendancy.api.data.value.DataValue;
 import io.github.hyscript7.ascendancy.api.registry.Identifier;
 import java.util.Collection;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package io.github.hyscript7.ascendancy.data;
+package io.github.hyscript7.ascendancy.data.store;
 
 import io.github.hyscript7.ascendancy.BaseRegistry;
-import io.github.hyscript7.ascendancy.api.data.DataScope;
+import io.github.hyscript7.ascendancy.api.data.store.DataScope;
 import io.github.hyscript7.ascendancy.api.registry.RegistryIdentifierCollisionException;
 
 /**
