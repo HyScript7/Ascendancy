@@ -107,6 +107,10 @@ Content packs must not assume Core is loaded at their `onEnable()`. The intended
    (`io.github.hyscript7.ascendancy.api.events` — note the plural package).
 4. Reach the API via `AscendancyAPI.get()` (throws if Core hasn't registered yet) or
    `AscendancyAPI.fromServicesManager()` for the `Optional` form.
+5. **Cache the instance in a field and null it out on disable.** `get()` is a services manager
+   lookup that takes a lock, so calling it per entity per tick is a needless main-thread cost.
+   Releasing it in the `AscendancyDisabledEvent` handler is what stops a pack holding a reference to
+   a Core that has gone away.
 
 Teardown work belongs in an `AscendancyDisabledEvent` handler, which Core fires at the start of its
 `onDisable()`.
@@ -114,8 +118,10 @@ Teardown work belongs in an `AscendancyDisabledEvent` handler, which Core fires 
 Core already fires both events, but `AscendancyBuiltinPack` is currently an empty `JavaPlugin` — the
 pattern above is the design, not something you can copy from an existing implementation yet.
 
-`AscendancyAPI` currently exposes only the instance plumbing (`get`, `set`, `fromServicesManager`).
-There is no player, stats, or persistence layer on it yet — an earlier attempt was reverted as
+`AscendancyAPI` exposes the instance plumbing (`get`, `set`, `fromServicesManager`) and
+`persistence()`. The services manager is the only source of truth — there is deliberately no static
+holder, so nothing survives a reload. See `docs/Mechanics and Systems/Persistence.md` for the
+persistence layer; there is no player or stats layer on it yet, and an earlier attempt was reverted as
 non-compliant with the spec in `docs/`. Check `docs/` before designing one.
 
 ## Testing

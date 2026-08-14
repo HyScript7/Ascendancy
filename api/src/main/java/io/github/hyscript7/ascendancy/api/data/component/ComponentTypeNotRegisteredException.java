@@ -1,5 +1,7 @@
 package io.github.hyscript7.ascendancy.api.data.component;
 
+import io.github.hyscript7.ascendancy.api.data.Persistence;
+
 /**
  * Thrown when data is written using a {@link ComponentType} that was never registered in
  * {@link Persistence#componentTypes()}.

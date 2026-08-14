@@ -8,6 +8,8 @@ import java.util.Arrays;
  * <p>
  * The array is defensively copied on the way in and on the way out, so this stays as immutable as
  * every other {@link DataValue} despite wrapping a mutable array.
+ *
+ * @param value The wrapped bytes, never null
  */
 public record DataBytes(byte[] value) implements DataValue {
     /**
